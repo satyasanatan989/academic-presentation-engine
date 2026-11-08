@@ -1,0 +1,42 @@
+# Python & Virtual Environments
+.venv/
+**/.venv/
+venv/
+**/venv/
+ENV/
+env/
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*$py.class
+*.pyd
+
+# Upstream Raw Repositories (Documented in docs/UPSTREAM.md)
+upstream/
+**/upstream/
+
+# Testing & Coverage
+.pytest_cache/
+**/.pytest_cache/
+.coverage
+htmlcov/
+
+# Build & Distribution
+build/
+dist/
+*.egg-info/
+
+# Logs & Temporary Files
+*.log
+tmp/
+temp/
+
+# Output Scratch & Cache (keep samples/ tracked)
+academic-presentation-engine/outputs/*/storage/
+academic-presentation-engine/storage/cache/
+
+# OS Specific
+.DS_Store
+Thumbs.db
+desktop.ini
+*.tmp

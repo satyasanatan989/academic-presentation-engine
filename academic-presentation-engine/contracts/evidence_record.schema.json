@@ -1,0 +1,112 @@
+{
+  "description": "Contract C: Atomic Scientific Evidence Record",
+  "properties": {
+    "evidence_id": {
+      "description": "Unique evidence identifier (e.g. EVD-001)",
+      "title": "Evidence Id",
+      "type": "string"
+    },
+    "claim": {
+      "description": "Atomic scientific claim or finding",
+      "title": "Claim",
+      "type": "string"
+    },
+    "source_ids": {
+      "description": "Traceable source identifiers supporting this claim",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Source Ids",
+      "type": "array"
+    },
+    "evidence_type": {
+      "default": "empirical",
+      "description": "empirical, theoretical, meta_analytic, experimental, observational",
+      "title": "Evidence Type",
+      "type": "string"
+    },
+    "quantitative_data": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Statistical values, p-values, percentages, effect sizes",
+      "title": "Quantitative Data"
+    },
+    "units": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Measurement units if applicable",
+      "title": "Units"
+    },
+    "study_population_or_material": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Subject matrix (e.g. Bovine milk, Spinach leaves, Human cohort)",
+      "title": "Study Population Or Material"
+    },
+    "methodology": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Analytical methodology (e.g. HPLC, GC-MS, Thermal kinetics)",
+      "title": "Methodology"
+    },
+    "limitations": {
+      "description": "Study limitations or caveats",
+      "items": {
+        "type": "string"
+      },
+      "title": "Limitations",
+      "type": "array"
+    },
+    "confidence": {
+      "default": 0.9,
+      "description": "Confidence score",
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Confidence",
+      "type": "number"
+    },
+    "verification_status": {
+      "default": "verified",
+      "description": "verified, contradicted, or pending",
+      "title": "Verification Status",
+      "type": "string"
+    }
+  },
+  "required": [
+    "evidence_id",
+    "claim",
+    "source_ids"
+  ],
+  "title": "EvidenceRecord",
+  "type": "object"
+}

@@ -1,0 +1,16 @@
+# App Configuration
+app_name: "Academic Research Presentation Engine"
+version: "1.0.0"
+environment: "production"
+log_level: "INFO"
+
+paths:
+  storage_dir: "storage"
+  outputs_dir: "outputs"
+  templates_dir: "templates"
+  cache_dir: "storage/cache"
+  logs_dir: "storage/logs"
+
+default_citation_style: "APA"
+default_language: "en"
+low_memory_mode: true

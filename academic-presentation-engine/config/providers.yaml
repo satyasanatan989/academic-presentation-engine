@@ -1,0 +1,28 @@
+# Providers Configuration
+llm_provider:
+  primary: "antigravity"
+  fallback: "offline_structured"
+  offline_deterministic_fallback: true
+  api_key_required: false
+
+search_providers:
+  europe_pmc:
+    enabled: true
+    requires_key: false
+    rate_limit_per_min: 60
+  crossref:
+    enabled: true
+    requires_key: false
+    rate_limit_per_min: 50
+  openalex:
+    enabled: true
+    requires_key: false
+    rate_limit_per_min: 100
+  arxiv:
+    enabled: true
+    requires_key: false
+    rate_limit_per_min: 30
+
+export_providers:
+  pptx_builder: "python-pptx"
+  pdf_converter: "windows_powerpoint_com" # Uses local MS Office 2024

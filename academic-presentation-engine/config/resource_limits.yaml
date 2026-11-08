@@ -1,0 +1,18 @@
+# Resource Limits Configuration (Windows 8GB RAM / RTX 2050 4GB VRAM)
+hardware_limits:
+  max_system_ram_mb: 8192
+  target_engine_ram_mb: 900
+  gpu_acceleration_enabled: false
+  vram_budget_mb: 0
+
+concurrency:
+  max_concurrent_research_workers: 2
+  max_concurrent_doc_processors: 2
+  sequential_slide_generation: true
+  sequential_pdf_export: true
+
+io_limits:
+  max_download_size_mb: 25
+  stream_response_chunk_kb: 64
+  cache_retention_days: 14
+  auto_cleanup_temp_files: true

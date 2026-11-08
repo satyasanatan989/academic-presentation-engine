@@ -1,0 +1,144 @@
+{
+  "$defs": {
+    "SlideSpec": {
+      "description": "Specification for an Individual Academic Slide",
+      "properties": {
+        "slide_id": {
+          "description": "Slide number sequence",
+          "minimum": 1,
+          "title": "Slide Id",
+          "type": "integer"
+        },
+        "title": {
+          "description": "Concise slide title",
+          "title": "Title",
+          "type": "string"
+        },
+        "key_message": {
+          "description": "Single takeaway message for the slide",
+          "title": "Key Message",
+          "type": "string"
+        },
+        "content": {
+          "additionalProperties": true,
+          "description": "Structured content (bullets, sections, stats, tables, comparison points)",
+          "title": "Content",
+          "type": "object"
+        },
+        "evidence_ids": {
+          "description": "Evidence references used on this slide",
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "source_ids": {
+          "description": "Source references cited on this slide",
+          "items": {
+            "type": "string"
+          },
+          "title": "Source Ids",
+          "type": "array"
+        },
+        "suggested_layout": {
+          "default": "two_column",
+          "description": "Layout type: title_slide, background, objectives, methodology, results_split, comparative_table, mechanism_diagram, discussion, limitations, conclusion, references",
+          "title": "Suggested Layout",
+          "type": "string"
+        },
+        "visual_requirements": {
+          "additionalProperties": true,
+          "description": "Visual specifications (table data, chart configs, callouts)",
+          "title": "Visual Requirements",
+          "type": "object"
+        },
+        "speaker_notes": {
+          "description": "Comprehensive speaker notes expanding on context and scientific interpretation",
+          "title": "Speaker Notes",
+          "type": "string"
+        }
+      },
+      "required": [
+        "slide_id",
+        "title",
+        "key_message",
+        "content",
+        "speaker_notes"
+      ],
+      "title": "SlideSpec",
+      "type": "object"
+    }
+  },
+  "description": "Contract E: Presentation Specification",
+  "properties": {
+    "project_id": {
+      "description": "Project identifier",
+      "title": "Project Id",
+      "type": "string"
+    },
+    "presentation_title": {
+      "description": "Full presentation title",
+      "title": "Presentation Title",
+      "type": "string"
+    },
+    "audience": {
+      "default": "Academic peers",
+      "description": "Target audience",
+      "title": "Audience",
+      "type": "string"
+    },
+    "academic_discipline": {
+      "description": "Scientific discipline",
+      "title": "Academic Discipline",
+      "type": "string"
+    },
+    "visual_theme": {
+      "default": "academic_clean",
+      "description": "Design theme (academic_clean, nature_scientific, modern_minimal)",
+      "title": "Visual Theme",
+      "type": "string"
+    },
+    "slide_count": {
+      "description": "Total slide count",
+      "minimum": 1,
+      "title": "Slide Count",
+      "type": "integer"
+    },
+    "slides": {
+      "description": "Array of slide specifications",
+      "items": {
+        "$ref": "#/$defs/SlideSpec"
+      },
+      "minItems": 1,
+      "title": "Slides",
+      "type": "array"
+    },
+    "reference_style": {
+      "default": "APA",
+      "description": "Citation style for slide footnotes and reference slide",
+      "title": "Reference Style",
+      "type": "string"
+    },
+    "notes_requirements": {
+      "default": "detailed_scientific_expansion",
+      "description": "Speaker notes depth requirement",
+      "title": "Notes Requirements",
+      "type": "string"
+    },
+    "export_requirements": {
+      "additionalProperties": true,
+      "title": "Export Requirements",
+      "type": "object"
+    }
+  },
+  "required": [
+    "project_id",
+    "presentation_title",
+    "academic_discipline",
+    "slide_count",
+    "slides"
+  ],
+  "title": "PresentationSpec",
+  "type": "object"
+}

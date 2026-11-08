@@ -1,0 +1,28 @@
+# Research Configuration
+default_target_sources: 25
+min_sources: 10
+max_sources: 50
+search_depth: "deep"
+preferred_period: "2015-2026"
+
+endpoints:
+  europe_pmc: "https://www.ebi.ac.uk/europepmc/webservices/rest/search"
+  crossref: "https://api.crossref.org/works"
+  openalex: "https://api.openalex.org/works"
+  arxiv: "https://export.arxiv.org/api/query"
+
+inclusion_criteria:
+  - "Peer-reviewed scientific journals"
+  - "Systematic reviews and meta-analyses"
+  - "Official regulatory and scientific agencies (WHO, FAO, EFSA, FDA)"
+  - "Quantified experimental methodologies and outcomes"
+
+exclusion_criteria:
+  - "Non-peer-reviewed blogs and marketing materials"
+  - "Outdated studies pre-2010 unless seminal"
+  - "Unsubstantiated claims lacking source provenance"
+
+rate_limiting:
+  request_timeout_seconds: 15
+  retry_count: 3
+  backoff_factor: 1.5

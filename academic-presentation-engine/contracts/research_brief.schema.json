@@ -1,0 +1,315 @@
+{
+  "$defs": {
+    "EvidenceRecord": {
+      "description": "Contract C: Atomic Scientific Evidence Record",
+      "properties": {
+        "evidence_id": {
+          "description": "Unique evidence identifier (e.g. EVD-001)",
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "claim": {
+          "description": "Atomic scientific claim or finding",
+          "title": "Claim",
+          "type": "string"
+        },
+        "source_ids": {
+          "description": "Traceable source identifiers supporting this claim",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Source Ids",
+          "type": "array"
+        },
+        "evidence_type": {
+          "default": "empirical",
+          "description": "empirical, theoretical, meta_analytic, experimental, observational",
+          "title": "Evidence Type",
+          "type": "string"
+        },
+        "quantitative_data": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Statistical values, p-values, percentages, effect sizes",
+          "title": "Quantitative Data"
+        },
+        "units": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Measurement units if applicable",
+          "title": "Units"
+        },
+        "study_population_or_material": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Subject matrix (e.g. Bovine milk, Spinach leaves, Human cohort)",
+          "title": "Study Population Or Material"
+        },
+        "methodology": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Analytical methodology (e.g. HPLC, GC-MS, Thermal kinetics)",
+          "title": "Methodology"
+        },
+        "limitations": {
+          "description": "Study limitations or caveats",
+          "items": {
+            "type": "string"
+          },
+          "title": "Limitations",
+          "type": "array"
+        },
+        "confidence": {
+          "default": 0.9,
+          "description": "Confidence score",
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "verification_status": {
+          "default": "verified",
+          "description": "verified, contradicted, or pending",
+          "title": "Verification Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "claim",
+        "source_ids"
+      ],
+      "title": "EvidenceRecord",
+      "type": "object"
+    },
+    "ResearchSource": {
+      "description": "Contract B: Research Source Metadata and Verification",
+      "properties": {
+        "source_id": {
+          "description": "Unique source identifier (e.g. SRC-001)",
+          "title": "Source Id",
+          "type": "string"
+        },
+        "title": {
+          "description": "Full academic paper or document title",
+          "title": "Title",
+          "type": "string"
+        },
+        "authors": {
+          "description": "Author list",
+          "items": {
+            "type": "string"
+          },
+          "title": "Authors",
+          "type": "array"
+        },
+        "publication_year": {
+          "description": "Year of publication",
+          "title": "Publication Year",
+          "type": "integer"
+        },
+        "journal": {
+          "description": "Journal or publishing institution name",
+          "title": "Journal",
+          "type": "string"
+        },
+        "doi": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Digital Object Identifier (DOI)",
+          "title": "Doi"
+        },
+        "url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Direct URL or landing page",
+          "title": "Url"
+        },
+        "source_type": {
+          "default": "peer_reviewed_journal",
+          "description": "journal_article, systematic_review, meta_analysis, book, report",
+          "title": "Source Type",
+          "type": "string"
+        },
+        "abstract": {
+          "default": "",
+          "description": "Abstract or concise study summary",
+          "title": "Abstract",
+          "type": "string"
+        },
+        "key_findings": {
+          "description": "Extracted core scientific findings",
+          "items": {
+            "type": "string"
+          },
+          "title": "Key Findings",
+          "type": "array"
+        },
+        "limitations": {
+          "description": "Methodological or scope limitations",
+          "items": {
+            "type": "string"
+          },
+          "title": "Limitations",
+          "type": "array"
+        },
+        "relevance_score": {
+          "default": 0.85,
+          "description": "Relevance score to research questions",
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Relevance Score",
+          "type": "number"
+        },
+        "verification_status": {
+          "default": "verified",
+          "description": "verified, unverified, or flagged",
+          "title": "Verification Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source_id",
+        "title",
+        "publication_year",
+        "journal"
+      ],
+      "title": "ResearchSource",
+      "type": "object"
+    }
+  },
+  "description": "Contract D: Comprehensive Research Brief",
+  "properties": {
+    "project_id": {
+      "description": "Project identifier",
+      "title": "Project Id",
+      "type": "string"
+    },
+    "title": {
+      "description": "Research title",
+      "title": "Title",
+      "type": "string"
+    },
+    "executive_summary": {
+      "description": "Executive scientific summary",
+      "title": "Executive Summary",
+      "type": "string"
+    },
+    "research_questions": {
+      "description": "Decomposed research questions",
+      "items": {
+        "type": "string"
+      },
+      "title": "Research Questions",
+      "type": "array"
+    },
+    "major_findings": {
+      "description": "Core thematic findings",
+      "items": {
+        "type": "string"
+      },
+      "title": "Major Findings",
+      "type": "array"
+    },
+    "evidence_records": {
+      "description": "Atomic evidence records",
+      "items": {
+        "$ref": "#/$defs/EvidenceRecord"
+      },
+      "title": "Evidence Records",
+      "type": "array"
+    },
+    "conflicting_evidence": {
+      "description": "Identified contradictions or scientific debates",
+      "items": {
+        "type": "string"
+      },
+      "title": "Conflicting Evidence",
+      "type": "array"
+    },
+    "limitations": {
+      "description": "Synthesized study limitations",
+      "items": {
+        "type": "string"
+      },
+      "title": "Limitations",
+      "type": "array"
+    },
+    "research_gaps": {
+      "description": "Identified gaps in current literature",
+      "items": {
+        "type": "string"
+      },
+      "title": "Research Gaps",
+      "type": "array"
+    },
+    "bibliography": {
+      "description": "Full bibliography",
+      "items": {
+        "$ref": "#/$defs/ResearchSource"
+      },
+      "title": "Bibliography",
+      "type": "array"
+    },
+    "recommended_slide_narrative": {
+      "description": "Recommended progression of slides",
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Recommended Slide Narrative",
+      "type": "array"
+    }
+  },
+  "required": [
+    "project_id",
+    "title",
+    "executive_summary"
+  ],
+  "title": "ResearchBrief",
+  "type": "object"
+}

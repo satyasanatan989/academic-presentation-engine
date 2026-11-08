@@ -1,0 +1,63 @@
+{
+  "description": "Contract F: Final Deliverables Manifest",
+  "properties": {
+    "project_id": {
+      "description": "Project identifier",
+      "title": "Project Id",
+      "type": "string"
+    },
+    "pptx_path": {
+      "description": "Relative or absolute path to the generated editable PPTX",
+      "title": "Pptx Path",
+      "type": "string"
+    },
+    "pdf_path": {
+      "description": "Relative or absolute path to the exported PDF",
+      "title": "Pdf Path",
+      "type": "string"
+    },
+    "notes_path": {
+      "description": "Path to standalone speaker notes document",
+      "title": "Notes Path",
+      "type": "string"
+    },
+    "research_report_path": {
+      "description": "Path to comprehensive research report",
+      "title": "Research Report Path",
+      "type": "string"
+    },
+    "bibliography_path": {
+      "description": "Path to bibliography and source registry",
+      "title": "Bibliography Path",
+      "type": "string"
+    },
+    "qa_report_path": {
+      "description": "Path to automated quality assurance report",
+      "title": "Qa Report Path",
+      "type": "string"
+    },
+    "generation_status": {
+      "default": "SUCCESS",
+      "description": "SUCCESS, FAILED, or PARTIAL",
+      "title": "Generation Status",
+      "type": "string"
+    },
+    "validation_status": {
+      "default": "PASSED",
+      "description": "PASSED, WARNING, or FAILED",
+      "title": "Validation Status",
+      "type": "string"
+    }
+  },
+  "required": [
+    "project_id",
+    "pptx_path",
+    "pdf_path",
+    "notes_path",
+    "research_report_path",
+    "bibliography_path",
+    "qa_report_path"
+  ],
+  "title": "Deliverables",
+  "type": "object"
+}

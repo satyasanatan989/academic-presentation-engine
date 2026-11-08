@@ -1,0 +1,62 @@
+# Presentation & Academic Design System Configuration
+aspect_ratio: "16:9"
+slide_width_inches: 13.333
+slide_height_inches: 7.5
+
+typography:
+  primary_font: "Calibri"
+  fallback_font: "Arial"
+  header_font: "Calibri"
+  title_size_pt: 28
+  subtitle_size_pt: 16
+  heading_size_pt: 20
+  body_size_pt: 14
+  caption_size_pt: 11
+  reference_size_pt: 9
+
+palettes:
+  academic_clean:
+    background: "#F8F9FA"
+    surface: "#FFFFFF"
+    text_primary: "#1A2530"
+    text_secondary: "#4A5568"
+    accent_primary: "#1B4965"    # Deep Academic Navy
+    accent_secondary: "#62B6CB"  # Subdued Cyan
+    highlight: "#2B6CB0"         # Scientific Slate Blue
+    border: "#CBD5E0"
+    success: "#2E7D32"
+    warning: "#D97706"
+  
+  nature_scientific:
+    background: "#F7FAF7"
+    surface: "#FFFFFF"
+    text_primary: "#1B2A20"
+    text_secondary: "#47594E"
+    accent_primary: "#2C5E3B"    # Deep Forest / Bio
+    accent_secondary: "#70A288"
+    highlight: "#1E4C34"
+    border: "#D0D9D4"
+    success: "#2E7D32"
+    warning: "#D97706"
+
+margins_inches:
+  top: 0.8
+  bottom: 0.6
+  left: 0.8
+  right: 0.8
+
+layouts:
+  - "title_slide"
+  - "research_background"
+  - "problem_statement"
+  - "research_objectives"
+  - "literature_review"
+  - "conceptual_framework"
+  - "methodology"
+  - "results_overview"
+  - "results_detail"
+  - "comparative_analysis"
+  - "discussion"
+  - "limitations_and_gaps"
+  - "conclusions"
+  - "references"

@@ -1,0 +1,109 @@
+{
+  "description": "Contract B: Research Source Metadata and Verification",
+  "properties": {
+    "source_id": {
+      "description": "Unique source identifier (e.g. SRC-001)",
+      "title": "Source Id",
+      "type": "string"
+    },
+    "title": {
+      "description": "Full academic paper or document title",
+      "title": "Title",
+      "type": "string"
+    },
+    "authors": {
+      "description": "Author list",
+      "items": {
+        "type": "string"
+      },
+      "title": "Authors",
+      "type": "array"
+    },
+    "publication_year": {
+      "description": "Year of publication",
+      "title": "Publication Year",
+      "type": "integer"
+    },
+    "journal": {
+      "description": "Journal or publishing institution name",
+      "title": "Journal",
+      "type": "string"
+    },
+    "doi": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Digital Object Identifier (DOI)",
+      "title": "Doi"
+    },
+    "url": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Direct URL or landing page",
+      "title": "Url"
+    },
+    "source_type": {
+      "default": "peer_reviewed_journal",
+      "description": "journal_article, systematic_review, meta_analysis, book, report",
+      "title": "Source Type",
+      "type": "string"
+    },
+    "abstract": {
+      "default": "",
+      "description": "Abstract or concise study summary",
+      "title": "Abstract",
+      "type": "string"
+    },
+    "key_findings": {
+      "description": "Extracted core scientific findings",
+      "items": {
+        "type": "string"
+      },
+      "title": "Key Findings",
+      "type": "array"
+    },
+    "limitations": {
+      "description": "Methodological or scope limitations",
+      "items": {
+        "type": "string"
+      },
+      "title": "Limitations",
+      "type": "array"
+    },
+    "relevance_score": {
+      "default": 0.85,
+      "description": "Relevance score to research questions",
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Relevance Score",
+      "type": "number"
+    },
+    "verification_status": {
+      "default": "verified",
+      "description": "verified, unverified, or flagged",
+      "title": "Verification Status",
+      "type": "string"
+    }
+  },
+  "required": [
+    "source_id",
+    "title",
+    "publication_year",
+    "journal"
+  ],
+  "title": "ResearchSource",
+  "type": "object"
+}

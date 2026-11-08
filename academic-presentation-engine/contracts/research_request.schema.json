@@ -1,0 +1,87 @@
+{
+  "description": "Contract A: Research Request Specification",
+  "properties": {
+    "project_id": {
+      "description": "Unique project identifier (e.g. PRJ-2026-001)",
+      "title": "Project Id",
+      "type": "string"
+    },
+    "topic": {
+      "description": "Academic research topic",
+      "title": "Topic",
+      "type": "string"
+    },
+    "research_objective": {
+      "description": "Core objective and scope of the investigation",
+      "title": "Research Objective",
+      "type": "string"
+    },
+    "academic_discipline": {
+      "description": "Discipline (e.g. Food Science, Biotechnology, Nutrition)",
+      "title": "Academic Discipline",
+      "type": "string"
+    },
+    "audience": {
+      "default": "Academic / Scientific Peers",
+      "description": "Target audience level",
+      "title": "Audience",
+      "type": "string"
+    },
+    "research_depth": {
+      "default": "deep",
+      "description": "standard, deep, or comprehensive",
+      "title": "Research Depth",
+      "type": "string"
+    },
+    "preferred_publication_period": {
+      "default": "2015-2026",
+      "description": "Target publication year range",
+      "title": "Preferred Publication Period",
+      "type": "string"
+    },
+    "target_source_count": {
+      "default": 25,
+      "description": "Target number of credible peer-reviewed sources",
+      "maximum": 100,
+      "minimum": 5,
+      "title": "Target Source Count",
+      "type": "integer"
+    },
+    "language": {
+      "default": "en",
+      "description": "Output language (en, zh, etc.)",
+      "title": "Language",
+      "type": "string"
+    },
+    "presentation_duration": {
+      "default": 20,
+      "description": "Expected presentation length in minutes",
+      "maximum": 120,
+      "minimum": 5,
+      "title": "Presentation Duration",
+      "type": "integer"
+    },
+    "slide_count": {
+      "default": 12,
+      "description": "Target number of slides",
+      "maximum": 60,
+      "minimum": 5,
+      "title": "Slide Count",
+      "type": "integer"
+    },
+    "citation_style": {
+      "default": "APA",
+      "description": "Citation style (APA, IEEE, Nature, Harvard)",
+      "title": "Citation Style",
+      "type": "string"
+    }
+  },
+  "required": [
+    "project_id",
+    "topic",
+    "research_objective",
+    "academic_discipline"
+  ],
+  "title": "ResearchRequest",
+  "type": "object"
+}
