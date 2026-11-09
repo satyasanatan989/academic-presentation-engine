@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  @page {
+    size: 1080px 1350px;
+    margin: 0;
+  }
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    width: 1080px;
+    background: #0F1D36;
+    font-family: 'Times New Roman', Times, serif;
+    color: #0F1D36;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .slide {
+    width: 1080px;
+    height: 1350px;
+    position: relative;
+    page-break-after: always;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 80px 90px;
+    background: #F8FAFC;
+    overflow: hidden;
+  }
+  
+  /* Slide 1 - Cover (Dark Oxford Keynote) */
+  .slide.cover {
+    background: radial-gradient(circle at 80% 20%, #1E3A8A 0%, #0F1D36 70%);
+    color: #FFFFFF;
+  }
+  
+  .badge {
+    display: inline-block;
+    padding: 10px 24px;
+    background: rgba(212, 160, 23, 0.15);
+    border: 2px solid #D4A017;
+    color: #F59E0B;
+    border-radius: 50px;
+    font-size: 24px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  .cover .badge {
+    background: rgba(212, 160, 23, 0.2);
+    color: #FCD34D;
+  }
+  
+  .slide-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .tag {
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 22px;
+    color: #64748B;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .cover .tag {
+    color: #94A3B8;
+  }
+  
+  .slide-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 40px 0;
+  }
+  
+  h1.cover-title {
+    font-size: 78px;
+    line-height: 1.15;
+    font-weight: 800;
+    color: #FFFFFF;
+    margin-bottom: 35px;
+    letter-spacing: -1px;
+  }
+  h1.cover-title span.accent {
+    color: #FCD34D;
+    text-decoration: underline;
+    text-decoration-color: #D4A017;
+    text-underline-offset: 8px;
+  }
+  
+  p.cover-sub {
+    font-size: 40px;
+    line-height: 1.35;
+    color: #CBD5E1;
+    font-weight: 400;
+    border-left: 5px solid #D4A017;
+    padding-left: 25px;
+  }
+  
+  h2.slide-title {
+    font-size: 58px;
+    line-height: 1.2;
+    color: #0F1D36;
+    margin-bottom: 30px;
+    font-weight: 800;
+  }
+  
+  .card {
+    background: #FFFFFF;
+    border: 2px solid #E2E8F0;
+    border-radius: 24px;
+    padding: 50px;
+    box-shadow: 0 15px 35px rgba(15, 29, 54, 0.06);
+    margin-top: 15px;
+  }
+  
+  .card p {
+    font-size: 38px;
+    line-height: 1.45;
+    color: #334155;
+  }
+  .card strong {
+    color: #1D4ED8;
+  }
+  
+  .list-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 24px;
+    font-size: 34px;
+    line-height: 1.35;
+    color: #1E293B;
+  }
+  .list-item:last-child {
+    margin-bottom: 0;
+  }
+  .check-icon {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 44px;
+    height: 44px;
+    background: #1D4ED8;
+    color: #FFFFFF;
+    border-radius: 50%;
+    margin-right: 20px;
+    font-size: 24px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    font-family: sans-serif;
+  }
+  
+  .highlight-box {
+    background: #EFF6FF;
+    border-left: 8px solid #1D4ED8;
+    border-radius: 16px;
+    padding: 35px 40px;
+    margin-top: 25px;
+    font-size: 34px;
+    line-height: 1.4;
+    color: #1E3A8A;
+  }
+  
+  .slide-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 2px solid #E2E8F0;
+    padding-top: 30px;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  .cover .slide-footer {
+    border-top-color: rgba(255, 255, 255, 0.15);
+  }
+  
+  .author {
+    font-size: 26px;
+    font-weight: 700;
+    color: #475569;
+    letter-spacing: 0.5px;
+  }
+  .cover .author {
+    color: #94A3B8;
+  }
+  
+  .counter {
+    font-size: 28px;
+    font-weight: 800;
+    color: #1D4ED8;
+    letter-spacing: 1px;
+  }
+  .cover .counter {
+    color: #FCD34D;
+  }
+  
+  /* CTA Special */
+  .cta-box {
+    background: linear-gradient(135deg, #0F1D36, #1E3A8A);
+    color: #FFFFFF;
+    border-radius: 24px;
+    padding: 60px 50px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(15, 29, 54, 0.2);
+  }
+  .cta-box h3 {
+    font-size: 48px;
+    color: #FCD34D;
+    margin-bottom: 25px;
+  }
+  .cta-box p {
+    font-size: 34px;
+    color: #E2E8F0;
+    line-height: 1.4;
+    margin-bottom: 35px;
+  }
+  .repo-pill {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.12);
+    border: 2px dashed #FCD34D;
+    padding: 18px 36px;
+    border-radius: 16px;
+    font-family: monospace;
+    font-size: 32px;
+    color: #FFFFFF;
+  }
+</style>
+</head>
+<body>
+
+  <!-- Slide 1: Cover -->
+  <section class="slide cover">
+    <div class="slide-header">
+      <div class="badge">Open Source Release</div>
+      <div class="tag">Academic Systems</div>
+    </div>
+    <div class="slide-body">
+      <h1 class="cover-title">Stop making <span class="accent">ugly research slides.</span></h1>
+      <p class="cover-sub">How I built an autonomous research-to-PPT engine that cites real peer-reviewed science.</p>
+    </div>
+    <div class="slide-footer">
+      <div class="author">@satyasanatan989</div>
+      <div class="counter">1/9 &rarr;</div>
+    </div>
+  </section>
+
+  <!-- Slide 2: The Stake -->
+  <section class="slide">
+    <div class="slide-header">
+      <div class="badge">The Real Problem</div>
+      <div class="tag">AI Deck Reality</div>
+    </div>
+    <div class="slide-body">
+      <h2 class="slide-title">Most AI tools spit out generic marketing decks.</h2>
+      <div class="card">
+        <p>Commercial slide generators produce fluffy bullet points and hallucinated statistics.</p>
+        <div class="highlight-box">
+          They can't verify an academic paper, format a biochemical pathway, or cite a single genuine DOI.
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="author">@satyasanatan989</div>
+      <div class="counter">2/9 &rarr;</div>
+    </div>
+  </section>
+
+  <!-- Slide 3: Architecture -->
+  <section class="slide">
+    <div class="slide-header">
+      <div class="badge">System Design</div>
+      <div class="tag">Architecture</div>
+    </div>
+    <div class="slide-body">
+      <h2 class="slide-title">My 3-layer open architecture</h2>
+      <div class="card">
+        <div class="list-item">
+          <div class="check-icon">1</div>
+          <div><strong>DeerFlow:</strong> Deep literature discovery and multi-agent evidence mining.</div>
+        </div>
+        <div class="list-item">
+          <div class="check-icon">2</div>
+          <div><strong>ECC Layer:</strong> Strict scientific verification and citation DOI auditing.</div>
+        </div>
+        <div class="list-item">
+          <div class="check-icon">3</div>
+          <div><strong>PPT Master:</strong> 100% native DrawingML vector layout compiler.</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="author">@satyasanatan989</div>
+      <div class="counter">3/9 &rarr;</div>
+    </div>
+  </section>
+
+  <!-- Slide 4: References -->
+  <section class="slide">
+    <div class="slide-header">
+      <div class="badge">Scientific Rigor</div>
+      <div class="tag">Verification</div>
+    </div>
+    <div class="slide-body">
+      <h2 class="slide-title">Zero hallucinated references</h2>
+      <div class="card">
+        <p>The engine queries <strong>Europe PMC</strong> and <strong>Crossref</strong> directly.</p>
+        <div class="highlight-box">
+          Every single slide gets an audited footer capsule with full journal citation and active DOI link.
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="author">@satyasanatan989</div>
+      <div class="counter">4/9 &rarr;</div>
+    </div>
+  </section>
+
+  <!-- Slide 5: Vectors -->
+  <section class="slide">
+    <div class="slide-header">
+      <div class="badge">Vector Graphics</div>
+      <div class="tag">Design Standard</div>
+    </div>
+    <div class="slide-body">
+      <h2 class="slide-title">100% native vector shapes</h2>
+      <div class="card">
+        <p>We don't do flat raster image slop that breaks when resized.</p>
+        <div class="highlight-box">
+          Every flowchart, card, and table imports into <strong>PowerPoint</strong> and <strong>Canva Pro</strong> as crisp, fully editable vector elements.
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="author">@satyasanatan989</div>
+      <div class="counter">5/9 &rarr;</div>
+    </div>
+  </section>
+
+  <!-- Slide 6: Performance -->
+  <section class="slide">
+    <div class="slide-header">
+      <div class="badge">Local Hardware</div>
+      <div class="tag">Accessibility</div>
+    </div>
+    <div class="slide-body">
+      <h2 class="slide-title">Built for 8GB RAM laptops</h2>
+      <div class="card">
+        <p>You don't need a thousand-dollar cloud cluster or heavy local weights.</p>
+        <div class="highlight-box">
+          Runs locally on an AMD Ryzen laptop with sequential slide compilation and zero paid API traps.
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="author">@satyasanatan989</div>
+      <div class="counter">6/9 &rarr;</div>
+    </div>
+  </section>
+
+  <!-- Slide 7: Styling -->
+  <section class="slide">
+    <div class="slide-header">
+      <div class="badge">Academic Theme</div>
+      <div class="tag">Typography</div>
+    </div>
+    <div class="slide-body">
+      <h2 class="slide-title">Royal Oxford keynote styling</h2>
+      <div class="card">
+        <p>Luminous slate-white and deep navy palette with <strong>100% Times New Roman</strong>.</p>
+        <div class="highlight-box">
+          Modeled after Nature publications and Harvard Grand Rounds to command immediate respect from professors.
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="author">@satyasanatan989</div>
+      <div class="counter">7/9 &rarr;</div>
+    </div>
+  </section>
+
+  <!-- Slide 8: Recap -->
+  <section class="slide">
+    <div class="slide-header">
+      <div class="badge">Summary Checklist</div>
+      <div class="tag">Screenshot Slide</div>
+    </div>
+    <div class="slide-body">
+      <h2 class="slide-title">Autonomous Academic Deck Stack</h2>
+      <div class="card">
+        <div class="list-item">
+          <div class="check-icon">&check;</div>
+          <div>Fast automated Europe PMC queries</div>
+        </div>
+        <div class="list-item">
+          <div class="check-icon">&check;</div>
+          <div>Verified peer-reviewed DOIs</div>
+        </div>
+        <div class="list-item">
+          <div class="check-icon">&check;</div>
+          <div>100% editable DrawingML vector cards</div>
+        </div>
+        <div class="list-item">
+          <div class="check-icon">&check;</div>
+          <div>Canva Pro plus PowerPoint compatible</div>
+        </div>
+        <div class="list-item">
+          <div class="check-icon">&check;</div>
+          <div>Runs locally on my 8GB RAM AMD Ryzen setup</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="author">@satyasanatan989</div>
+      <div class="counter">8/9 &rarr;</div>
+    </div>
+  </section>
+
+  <!-- Slide 9: CTA -->
+  <section class="slide">
+    <div class="slide-header">
+      <div class="badge">Get Started</div>
+      <div class="tag">Open Source</div>
+    </div>
+    <div class="slide-body">
+      <div class="cta-box">
+        <h3>Grab the Open-Source Code</h3>
+        <p>Star the repository and download the full 17-slide demo deck, raw vector shapes, and speaker notes:</p>
+        <div class="repo-pill">
+          github.com/satyasanatan989/academic-presentation-engine
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="author">@satyasanatan989</div>
+      <div class="counter">9/9</div>
+    </div>
+  </section>
+
+</body>
+</html>
