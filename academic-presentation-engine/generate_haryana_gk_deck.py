@@ -58,6 +58,21 @@ class HaryanaGKPresentationBuilder:
     COLOR_TEXT_FOOTER = RGBColor(203, 213, 225)    # Silver Slate for Dark Footer
     COLOR_WHITE = RGBColor(255, 255, 255)
 
+    MODULE_THEMES = {
+        1: {"name": "ORIENTATION & STATE FORMATION", "color": RGBColor(29, 78, 216), "accent": RGBColor(252, 211, 77)},
+        2: {"name": "GEOGRAPHY, RELIEF & SOILS", "color": RGBColor(13, 148, 136), "accent": RGBColor(94, 234, 212)},
+        3: {"name": "DRAINAGE, RIVERS & CANALS", "color": RGBColor(14, 116, 144), "accent": RGBColor(56, 189, 248)},
+        4: {"name": "CLIMATE, FORESTS & WILDLIFE", "color": RGBColor(16, 120, 80), "accent": RGBColor(134, 239, 172)},
+        5: {"name": "VEDIC ERA & HARAPPAN SITES", "color": RGBColor(194, 65, 12), "accent": RGBColor(251, 146, 60)},
+        6: {"name": "MEDIEVAL DYNASTIES & PANIPAT", "color": RGBColor(185, 28, 28), "accent": RGBColor(248, 113, 113)},
+        7: {"name": "1857 UPRISING & PEASANT HEROES", "color": RGBColor(217, 119, 6), "accent": RGBColor(251, 191, 36)},
+        8: {"name": "POLITY, GOVERNANCE & HIGH COURT", "color": RGBColor(30, 64, 175), "accent": RGBColor(147, 197, 253)},
+        9: {"name": "FSO SPECIAL: AGRO & DAIRY", "color": RGBColor(202, 138, 4), "accent": RGBColor(253, 224, 71)},
+        10: {"name": "INDUSTRIES, MINERALS & CENSUS", "color": RGBColor(71, 85, 105), "accent": RGBColor(148, 163, 184)},
+        11: {"name": "FOLK CULTURE, SAANG & SPORTS", "color": RGBColor(124, 58, 237), "accent": RGBColor(196, 181, 253)},
+        12: {"name": "22 DISTRICTS & TOP 30 TRAPS", "color": RGBColor(212, 160, 23), "accent": RGBColor(252, 211, 77)}
+    }
+
     TOTAL_SLIDES = 65
 
     def __init__(self):
@@ -66,30 +81,80 @@ class HaryanaGKPresentationBuilder:
         self.prs.slide_height = Inches(7.5)
         self.blank_layout = self.prs.slide_layouts[6]
 
-    def _add_canvas_background(self, slide):
-        content_bg_path = PROJECT_ROOT / "outputs" / "haryana_assets" / "haryana_content_background.jpg"
-        if content_bg_path.exists():
-            bg = slide.shapes.add_picture(str(content_bg_path), 0, 0, self.prs.slide_width, self.prs.slide_height)
+    def get_module(self, slide_num: int):
+        if slide_num <= 6:
+            return 1, self.MODULE_THEMES[1]
+        elif slide_num <= 12:
+            return 2, self.MODULE_THEMES[2]
+        elif slide_num <= 18:
+            return 3, self.MODULE_THEMES[3]
+        elif slide_num <= 24:
+            return 4, self.MODULE_THEMES[4]
+        elif slide_num <= 29:
+            return 5, self.MODULE_THEMES[5]
+        elif slide_num <= 35:
+            return 6, self.MODULE_THEMES[6]
+        elif slide_num <= 40:
+            return 7, self.MODULE_THEMES[7]
+        elif slide_num <= 45:
+            return 8, self.MODULE_THEMES[8]
+        elif slide_num <= 51:
+            return 9, self.MODULE_THEMES[9]
+        elif slide_num <= 56:
+            return 10, self.MODULE_THEMES[10]
+        elif slide_num <= 60:
+            return 11, self.MODULE_THEMES[11]
         else:
-            bg = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, self.prs.slide_width, self.prs.slide_height)
-            bg.fill.solid()
-            bg.fill.fore_color.rgb = self.COLOR_CANVAS
-            bg.line.fill.background()
+            return 12, self.MODULE_THEMES[12]
 
-            top_zone = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, self.prs.slide_width, Inches(1.65))
-            top_zone.fill.solid()
-            top_zone.fill.fore_color.rgb = self.COLOR_HEADER_BG
-            top_zone.line.fill.background()
+    def _add_canvas_background(self, slide):
+        slide_num = len(self.prs.slides)
+        mod_num, mod_info = self.get_module(slide_num)
 
-            gold_line = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, Inches(1.65), self.prs.slide_width, Pt(2.5))
-            gold_line.fill.solid()
-            gold_line.fill.fore_color.rgb = self.COLOR_HEADER_BAR
-            gold_line.line.fill.background()
+        # 1. Base Luminous Slate-White Canvas (Clean, non-glare, maximum contrast)
+        bg = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, self.prs.slide_width, self.prs.slide_height)
+        bg.fill.solid()
+        bg.fill.fore_color.rgb = self.COLOR_CANVAS
+        bg.line.fill.background()
+
+        # 2. Left Spine Architectural Accent Rail (Color-coded to Module Theme)
+        spine = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, Inches(0.14), self.prs.slide_height)
+        spine.fill.solid()
+        spine.fill.fore_color.rgb = mod_info["color"]
+        spine.line.fill.background()
+
+        # 3. Solid Deep Royal Oxford Navy Architectural Header Zone
+        top_zone = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, self.prs.slide_width, Inches(1.72))
+        top_zone.fill.solid()
+        top_zone.fill.fore_color.rgb = self.COLOR_HEADER_BG
+        top_zone.line.fill.background()
+
+        # 4. Primary Metallic Champagne Gold Divider Rule
+        gold_line = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, Inches(1.72), self.prs.slide_width, Pt(2.5))
+        gold_line.fill.solid()
+        gold_line.fill.fore_color.rgb = self.COLOR_HEADER_BAR
+        gold_line.line.fill.background()
+
+        # 5. Secondary Module Accent Line
+        mod_line = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, Inches(1.72) + Pt(2.5), self.prs.slide_width, Pt(1.5))
+        mod_line.fill.solid()
+        mod_line.fill.fore_color.rgb = mod_info["color"]
+        mod_line.line.fill.background()
+
+        # 6. Subtle Watermark Grid Accent in background corner
+        wm = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(12.75), Inches(6.85), Inches(0.40), Inches(0.40))
+        wm.fill.solid()
+        wm.fill.fore_color.rgb = RGBColor(241, 245, 249)
+        wm.line.color.rgb = RGBColor(226, 232, 240)
+        wm.line.width = Pt(0.75)
+
         return bg
 
     def _add_header_and_footer(self, slide, tag: str, title: str, takeaway: str, citation: str, slide_num: int):
-        # 1. Badge Pill
-        pill = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.8), Inches(0.20), Inches(4.8), Inches(0.32))
+        mod_num, mod_info = self.get_module(slide_num)
+
+        # 1. Left Category Badge Pill
+        pill = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.8), Inches(0.20), Inches(4.5), Inches(0.32))
         pill.fill.solid()
         pill.fill.fore_color.rgb = self.COLOR_HEADER_BG
         pill.line.color.rgb = self.COLOR_HEADER_BAR
@@ -105,7 +170,24 @@ class HaryanaGKPresentationBuilder:
         pp.font.bold = True
         pp.font.color.rgb = self.COLOR_GOLD_BRIGHT
 
-        # 2. Main Title
+        # 2. Right Module Tracker Pill (Top-Right of Header)
+        mod_pill = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(7.8), Inches(0.20), Inches(4.733), Inches(0.32))
+        mod_pill.fill.solid()
+        mod_pill.fill.fore_color.rgb = RGBColor(20, 36, 66)
+        mod_pill.line.color.rgb = mod_info["color"]
+        mod_pill.line.width = Pt(1.0)
+        mtf = mod_pill.text_frame
+        mtf.word_wrap = True
+        mtf.margin_top = Pt(2)
+        mp = mtf.paragraphs[0]
+        mp.alignment = PP_ALIGN.CENTER
+        mp.text = f"MODULE {mod_num:02d}/12 • {mod_info['name']}"
+        mp.font.name = self.FONT_FAMILY
+        mp.font.size = Pt(8.5)
+        mp.font.bold = True
+        mp.font.color.rgb = mod_info["accent"]
+
+        # 3. Main Title (High Contrast Pure White)
         title_box = slide.shapes.add_textbox(Inches(0.8), Inches(0.55), Inches(11.733), Inches(0.60))
         ttf = title_box.text_frame
         ttf.word_wrap = True
@@ -117,7 +199,7 @@ class HaryanaGKPresentationBuilder:
         tp.font.bold = True
         tp.font.color.rgb = self.COLOR_TEXT_TITLE
 
-        # 3. Subtitle / Exam Takeaway
+        # 4. Subtitle / Exam Takeaway (Luminous Ice Blue)
         sub_box = slide.shapes.add_textbox(Inches(0.8), Inches(1.18), Inches(11.733), Inches(0.40))
         stf = sub_box.text_frame
         stf.word_wrap = True
@@ -129,7 +211,7 @@ class HaryanaGKPresentationBuilder:
         sp.font.italic = True
         sp.font.color.rgb = self.COLOR_TEXT_SUBTITLE
 
-        # 4. Grounded Footer Capsule
+        # 5. Grounded Footer Capsule
         foot_capsule = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.8), Inches(6.80), Inches(11.733), Inches(0.46))
         foot_capsule.fill.solid()
         foot_capsule.fill.fore_color.rgb = self.COLOR_HEADER_BG
@@ -166,8 +248,11 @@ class HaryanaGKPresentationBuilder:
         np.font.color.rgb = self.COLOR_GOLD_BRIGHT
 
     def _create_card(self, slide, left, top, width, height, title: str, bullet_points: list, accent_color=None, bg_color=None):
+        slide_num = len(self.prs.slides)
+        _, mod_info = self.get_module(slide_num)
+        
         if accent_color is None:
-            accent_color = self.COLOR_COBALT
+            accent_color = mod_info["color"]
         if bg_color is None:
             bg_color = self.COLOR_CARD_WHITE
 
@@ -181,6 +266,8 @@ class HaryanaGKPresentationBuilder:
         # Top Accent Stripe
         stripe = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, left, top, width, Inches(0.36))
         stripe.fill.solid()
+        stripe.fill.fore_color.rgb = accent_color
+        stripe.line.fill.background()
         stripe.fill.fore_color.rgb = accent_color
         stripe.line.fill.background()
 
