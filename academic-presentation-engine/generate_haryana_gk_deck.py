@@ -67,20 +67,24 @@ class HaryanaGKPresentationBuilder:
         self.blank_layout = self.prs.slide_layouts[6]
 
     def _add_canvas_background(self, slide):
-        bg = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, self.prs.slide_width, self.prs.slide_height)
-        bg.fill.solid()
-        bg.fill.fore_color.rgb = self.COLOR_CANVAS
-        bg.line.fill.background()
+        content_bg_path = PROJECT_ROOT / "outputs" / "haryana_assets" / "haryana_content_background.jpg"
+        if content_bg_path.exists():
+            bg = slide.shapes.add_picture(str(content_bg_path), 0, 0, self.prs.slide_width, self.prs.slide_height)
+        else:
+            bg = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, self.prs.slide_width, self.prs.slide_height)
+            bg.fill.solid()
+            bg.fill.fore_color.rgb = self.COLOR_CANVAS
+            bg.line.fill.background()
 
-        top_zone = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, self.prs.slide_width, Inches(1.65))
-        top_zone.fill.solid()
-        top_zone.fill.fore_color.rgb = self.COLOR_HEADER_BG
-        top_zone.line.fill.background()
+            top_zone = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, self.prs.slide_width, Inches(1.65))
+            top_zone.fill.solid()
+            top_zone.fill.fore_color.rgb = self.COLOR_HEADER_BG
+            top_zone.line.fill.background()
 
-        gold_line = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, Inches(1.65), self.prs.slide_width, Pt(2.5))
-        gold_line.fill.solid()
-        gold_line.fill.fore_color.rgb = self.COLOR_HEADER_BAR
-        gold_line.line.fill.background()
+            gold_line = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, Inches(1.65), self.prs.slide_width, Pt(2.5))
+            gold_line.fill.solid()
+            gold_line.fill.fore_color.rgb = self.COLOR_HEADER_BAR
+            gold_line.line.fill.background()
         return bg
 
     def _add_header_and_footer(self, slide, tag: str, title: str, takeaway: str, citation: str, slide_num: int):
@@ -305,10 +309,14 @@ class HaryanaGKPresentationBuilder:
         slide = self.prs.slides.add_slide(self.blank_layout)
         
         # Royal Oxford Dark Background for Title Slide
-        bg = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, self.prs.slide_width, self.prs.slide_height)
-        bg.fill.solid()
-        bg.fill.fore_color.rgb = self.COLOR_HEADER_BG
-        bg.line.fill.background()
+        title_bg_path = PROJECT_ROOT / "outputs" / "haryana_assets" / "haryana_title_background.jpg"
+        if title_bg_path.exists():
+            bg = slide.shapes.add_picture(str(title_bg_path), 0, 0, self.prs.slide_width, self.prs.slide_height)
+        else:
+            bg = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, self.prs.slide_width, self.prs.slide_height)
+            bg.fill.solid()
+            bg.fill.fore_color.rgb = self.COLOR_HEADER_BG
+            bg.line.fill.background()
 
         # Gold decorative frame
         frame = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(0.6), Inches(0.6), self.prs.slide_width - Inches(1.2), self.prs.slide_height - Inches(1.2))
