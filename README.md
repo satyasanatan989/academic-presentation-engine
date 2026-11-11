@@ -153,6 +153,50 @@ Built specifically for high-stakes state examinations (**HPSC Food Safety Office
 
 ---
 
+## 🫀 Human Heart Organ Infographic Presentation (12 Slides)
+
+A publication-grade medical and physiological infographic curriculum detailing the architecture, fluid mechanics, electrical conduction, and whole-body systemic organ perfusion of the human heart organ.
+
+### 1. Keynote Medical Infographic Cover & 4-Pillar Metric Grid
+*Comprehensive executive cover showing the 4 vital roles (Mechanical Pump, Electrical Oscillator, Organ Perfusion Engine, and Endocrine Gland).*
+<div align="center">
+  <img src="samples/gallery_heart_infographic/Slide_01.PNG" alt="Slide 1 - Heart Organ Keynote Cover" width="90%" style="border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"/>
+</div>
+
+---
+
+### 2. Anatomical Blueprint & Four-Chamber Pressure Profiles
+*Detailed comparative vector cards for Right Atrium, Right Ventricle, Left Atrium, and Left Ventricle with chamber pressure gradients and wall thickness specifications.*
+<div align="center">
+  <img src="samples/gallery_heart_infographic/Slide_02.PNG" alt="Slide 2 - Four Chamber Blueprint" width="90%" style="border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"/>
+</div>
+
+---
+
+### 3. Dual Circulation Infographic (Pulmonary vs. Systemic Circuits)
+*Low-pressure pulmonary alveolar circuit vs. high-pressure systemic circuit with Starling capillary filtration mechanics.*
+<div align="center">
+  <img src="samples/gallery_heart_infographic/Slide_04.PNG" alt="Slide 4 - Dual Circulation Circuits" width="90%" style="border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"/>
+</div>
+
+---
+
+### 4. Systemic Organ Perfusion: Brain, Kidneys, Liver & Skeletal Muscles
+*How cardiac output is prioritized across vital organs: Brain (15% CO), Kidneys (22% CO for filtration), Liver (25% CO), and Muscle hyperaemia (up to 85% during exercise).*
+<div align="center">
+  <img src="samples/gallery_heart_infographic/Slide_07.PNG" alt="Slide 7 - Systemic Organ Perfusion" width="90%" style="border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"/>
+</div>
+
+---
+
+### 5. Master Summary Infographic: The 5 Fundamental Uses of the Heart
+*5-pillar synthesis: Pressure Gradient Engine, Respiratory Gas Transporter, Metabolic Highway, Endocrine Sensor (ANP/BNP), and Thermal/Immune Defense Line.*
+<div align="center">
+  <img src="samples/gallery_heart_infographic/Slide_12.PNG" alt="Slide 12 - Master 5-Pillar Summary" width="90%" style="border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"/>
+</div>
+
+---
+
 ## 🎨 Procedural Background Synthesizer (Powered by GreenSock / GSAP)
 
 ARPE incorporates an offline, CPU-friendly background synthesis engine powered by the [GreenSock Animation Platform (GSAP)](https://github.com/greensock/GSAP) v3 and headless Playwright.
@@ -198,6 +242,12 @@ Inspect the raw generated deliverables in the repository:
 - 📄 **[phytochemicals_lecture_deck.pdf](samples/phytochemicals_lecture_deck.pdf)** — Crisp 300 DPI vector PDF exported via Microsoft PowerPoint COM.
 - 📝 **[phytochemicals_speaker_notes.md](samples/phytochemicals_speaker_notes.md)** — Standalone speaker script and slide-by-slide lecture notes.
 - 🖼️ **[Phytochemicals High-Res Gallery (17 Slides)](samples/gallery/)** — Rendered 1080p PNG previews.
+
+### 3. Human Heart Organ Infographic Presentation
+- 🫀 **[heart_organ_infographic_deck.pptx](samples/heart_organ_infographic_deck.pptx)** — Complete 12-Slide Medical Infographic Presentation on Cardiovascular Anatomy, Valves, Dual Circulation, Hemodynamics & Systemic Organ Delivery.
+- 📄 **[heart_organ_infographic_deck.pdf](samples/heart_organ_infographic_deck.pdf)** — Crisp 12-page 300 DPI vector PDF exported via Microsoft PowerPoint COM.
+- 🖼️ **[Heart Infographic Gallery (12 Slides)](samples/gallery_heart_infographic/)** — Rendered 1080p PNG previews.
+- 🌐 **[interactive_heart_infographic.html](outputs/heart_infographic/interactive_heart_infographic.html)** — Standalone responsive interactive vector SVG/HTML medical infographic.
 
 ---
 

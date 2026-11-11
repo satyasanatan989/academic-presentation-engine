@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Human Heart Organ: Medical Infographic & Physiology</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    @keyframes pulse-heart {
+      0%, 100% { transform: scale(1); }
+      15% { transform: scale(1.06); }
+      30% { transform: scale(0.98); }
+      45% { transform: scale(1.04); }
+      60% { transform: scale(1); }
+    }
+    .heart-beating {
+      animation: pulse-heart 1.2s infinite ease-in-out;
+      transform-origin: center center;
+    }
+    @keyframes ecg-flow {
+      0% { stroke-dashoffset: 1000; }
+      100% { stroke-dashoffset: 0; }
+    }
+    .ecg-line {
+      stroke-dasharray: 1000;
+      animation: ecg-flow 3s linear infinite;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans p-4 md:p-6 min-h-screen">
+
+  <!-- Header Banner -->
+  <header class="max-w-6xl mx-auto mb-6 bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-2xl relative overflow-hidden">
+    <div class="absolute -right-12 -top-12 w-48 h-48 bg-rose-600/10 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs font-semibold rounded-full uppercase tracking-wider mb-2">
+          <span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
+          Human Cardiovascular Physiology • Medical Infographic
+        </div>
+        <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-white">
+          THE HUMAN HEART: ARCHITECTURE & SYSTEMIC ORGAN USES
+        </h1>
+        <p class="text-sm text-slate-400 mt-1">
+          How the 300g central muscular pump drives 7,500 L/day of blood to sustain every cell, tissue, and vital organ in the human body.
+        </p>
+      </div>
+
+      <!-- Live Hemodynamic Quick Stat Bar -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 bg-slate-950/80 p-3 rounded-xl border border-slate-800 text-center">
+        <div class="px-2">
+          <div class="text-xs text-slate-400">Heart Rate</div>
+          <div class="text-lg font-bold text-rose-400" id="stat-hr">72 <span class="text-xs font-normal text-slate-400">bpm</span></div>
+        </div>
+        <div class="px-2 border-l border-slate-800">
+          <div class="text-xs text-slate-400">Stroke Vol</div>
+          <div class="text-lg font-bold text-amber-400">70 <span class="text-xs font-normal text-slate-400">mL</span></div>
+        </div>
+        <div class="px-2 border-l border-slate-800">
+          <div class="text-xs text-slate-400">Cardiac Output</div>
+          <div class="text-lg font-bold text-emerald-400">5.0 <span class="text-xs font-normal text-slate-400">L/min</span></div>
+        </div>
+        <div class="px-2 border-l border-slate-800">
+          <div class="text-xs text-slate-400">Mean Art Press</div>
+          <div class="text-lg font-bold text-sky-400">93 <span class="text-xs font-normal text-slate-400">mmHg</span></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Grid: Anatomical Interactive Visualizer + Systemic Perfusion Explorer -->
+  <main class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+    <!-- Left Column: Interactive Vector Heart Anatomy (5 Cols) -->
+    <section class="lg:col-span-5 bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between">
+      <div>
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-sm font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
+            Anatomical Chambers & Valves
+          </h2>
+          <span class="text-xs text-slate-400">Click chamber to inspect</span>
+        </div>
+
+        <!-- SVG Heart Diagram -->
+        <div class="relative bg-slate-950 rounded-xl p-4 border border-slate-800/80 flex items-center justify-center">
+          <svg viewBox="0 0 400 360" class="w-full max-w-[320px] heart-beating drop-shadow-[0_10px_20px_rgba(225,29,72,0.15)]">
+            <!-- Superior Vena Cava -->
+            <path d="M 120 40 L 120 120 L 155 120 L 155 40 Z" fill="#1D4ED8" stroke="#3B82F6" stroke-width="2" class="cursor-pointer hover:opacity-80" onclick="selectStructure('svc')"/>
+            <text x="137" y="30" fill="#93C5FD" font-size="11" text-anchor="middle" font-weight="bold">SVC</text>
+
+            <!-- Aortic Arch -->
+            <path d="M 170 110 C 170 30, 260 25, 270 110 L 245 110 C 240 60, 195 60, 195 110 Z" fill="#DC2626" stroke="#EF4444" stroke-width="2" class="cursor-pointer hover:opacity-80" onclick="selectStructure('aorta')"/>
+            <!-- 3 Brachiocephalic branches -->
+            <rect x="185" y="15" width="10" height="25" fill="#DC2626" stroke="#EF4444" stroke-width="1"/>
+            <rect x="205" y="10" width="10" height="30" fill="#DC2626" stroke="#EF4444" stroke-width="1"/>
+            <rect x="225" y="15" width="10" height="25" fill="#DC2626" stroke="#EF4444" stroke-width="1"/>
+            <text x="220" y="5" fill="#FCA5A5" font-size="11" text-anchor="middle" font-weight="bold">AORTA</text>
+
+            <!-- Pulmonary Trunk -->
+            <path d="M 190 125 C 200 80, 240 85, 290 85 L 290 105 C 245 105, 220 100, 215 130 Z" fill="#2563EB" stroke="#60A5FA" stroke-width="1.5" class="cursor-pointer hover:opacity-80" onclick="selectStructure('ptrunk')"/>
+            <text x="315" y="98" fill="#93C5FD" font-size="10" text-anchor="middle">Pulm Trunk</text>
+
+            <!-- Right Atrium -->
+            <path id="ra-path" d="M 90 120 C 70 160, 80 210, 130 220 L 150 170 C 130 160, 130 130, 150 120 Z" fill="#1E3A8A" stroke="#3B82F6" stroke-width="2" class="cursor-pointer transition-all hover:fill-blue-700" onclick="selectStructure('ra')"/>
+            <text x="110" y="175" fill="#BFDBFE" font-size="13" font-weight="bold" text-anchor="middle">RA</text>
+
+            <!-- Left Atrium -->
+            <path id="la-path" d="M 240 120 C 270 125, 290 150, 290 190 L 250 190 C 245 160, 240 140, 225 120 Z" fill="#991B1B" stroke="#EF4444" stroke-width="2" class="cursor-pointer transition-all hover:fill-red-700" onclick="selectStructure('la')"/>
+            <text x="265" y="160" fill="#FECACA" font-size="13" font-weight="bold" text-anchor="middle">LA</text>
+
+            <!-- Right Ventricle -->
+            <path id="rv-path" d="M 130 220 C 135 270, 170 310, 200 330 L 195 210 Z" fill="#1E40AF" stroke="#60A5FA" stroke-width="2.5" class="cursor-pointer transition-all hover:fill-blue-600" onclick="selectStructure('rv')"/>
+            <text x="165" y="270" fill="#DBEAFE" font-size="14" font-weight="bold" text-anchor="middle">RV</text>
+
+            <!-- Interventricular Septum -->
+            <path d="M 195 210 L 200 330 L 210 330 L 205 210 Z" fill="#475569" stroke="#94A3B8" stroke-width="1"/>
+
+            <!-- Left Ventricle (Thick Myocardium) -->
+            <path id="lv-path" d="M 205 210 L 210 330 C 250 315, 290 260, 280 200 L 235 200 Z" fill="#B91C1C" stroke="#F87171" stroke-width="3" class="cursor-pointer transition-all hover:fill-red-600" onclick="selectStructure('lv')"/>
+            <text x="245" y="270" fill="#FEE2E2" font-size="14" font-weight="bold" text-anchor="middle">LV</text>
+
+            <!-- Valve Markers -->
+            <!-- Tricuspid -->
+            <circle cx="140" cy="205" r="5" fill="#FBBF24" stroke="#78350F" stroke-width="1.5" class="cursor-pointer" onclick="selectStructure('tricuspid')"/>
+            <!-- Mitral -->
+            <circle cx="245" cy="195" r="5" fill="#FBBF24" stroke="#78350F" stroke-width="1.5" class="cursor-pointer" onclick="selectStructure('mitral')"/>
+            <!-- Aortic -->
+            <circle cx="215" cy="155" r="5" fill="#34D399" stroke="#064E3B" stroke-width="1.5" class="cursor-pointer" onclick="selectStructure('aortic_val')"/>
+            <!-- Pulmonic -->
+            <circle cx="185" cy="150" r="5" fill="#34D399" stroke="#064E3B" stroke-width="1.5" class="cursor-pointer" onclick="selectStructure('pulm_val')"/>
+          </svg>
+        </div>
+
+        <!-- Legend Pills -->
+        <div class="flex items-center justify-center gap-4 mt-3 text-xs">
+          <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-blue-600"></span> Deoxygenated Venous</div>
+          <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-red-600"></span> Oxygenated Arterial</div>
+          <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-amber-400"></span> AV Valves</div>
+          <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-emerald-400"></span> Semilunar</div>
+        </div>
+      </div>
+
+      <!-- Structure Info Dynamic Box -->
+      <div id="structure-info" class="mt-4 p-3.5 bg-slate-950 border border-slate-800 rounded-xl">
+        <div class="text-xs font-semibold text-rose-400 uppercase tracking-wider" id="struct-tag">CHAMBER FOCUS</div>
+        <div class="text-base font-bold text-white mt-0.5" id="struct-name">Left Ventricle (LV)</div>
+        <p class="text-xs text-slate-300 mt-1 leading-relaxed" id="struct-desc">
+          The high-pressure systemic powerhouse with 3x thicker muscular myocardium (10-15 mm). Generates 120 mmHg peak systolic pressure to overcome systemic vascular resistance and perfuse the entire body.
+        </p>
+        <div class="mt-2 pt-2 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
+          <span>Normal Pressure: <strong class="text-slate-200" id="struct-press">100-140 / 3-12 mmHg</strong></span>
+          <span>Role: <strong class="text-emerald-400" id="struct-role">Systemic Perfusion</strong></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right Column: The 5 Systemic Uses & Organ Delivery (7 Cols) -->
+    <section class="lg:col-span-7 space-y-4">
+
+      <!-- Navigation Tabs: Organ Perfusion Targets -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4">
+        <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+          Select Body Organ / Systemic Use
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-5 gap-2">
+          <button onclick="selectOrgan('brain')" id="tab-brain" class="organ-btn px-3 py-2 rounded-xl text-xs font-semibold border border-rose-500 bg-rose-500/20 text-white transition-all">
+            🧠 Brain (15%)
+          </button>
+          <button onclick="selectOrgan('kidneys')" id="tab-kidneys" class="organ-btn px-3 py-2 rounded-xl text-xs font-semibold border border-slate-800 bg-slate-950 text-slate-300 hover:border-slate-700 transition-all">
+            🫘 Kidneys (22%)
+          </button>
+          <button onclick="selectOrgan('liver')" id="tab-liver" class="organ-btn px-3 py-2 rounded-xl text-xs font-semibold border border-slate-800 bg-slate-950 text-slate-300 hover:border-slate-700 transition-all">
+            🫁 Lungs & Liver (25%)
+          </button>
+          <button onclick="selectOrgan('muscles')" id="tab-muscles" class="organ-btn px-3 py-2 rounded-xl text-xs font-semibold border border-slate-800 bg-slate-950 text-slate-300 hover:border-slate-700 transition-all">
+            💪 Muscles (20-85%)
+          </button>
+          <button onclick="selectOrgan('endocrine')" id="tab-endocrine" class="organ-btn px-3 py-2 rounded-xl text-xs font-semibold border border-slate-800 bg-slate-950 text-slate-300 hover:border-slate-700 transition-all">
+            ⚖️ ANP / Endocrine
+          </button>
+        </div>
+
+        <!-- Dynamic Organ Perfusion Showcase -->
+        <div id="organ-details" class="mt-4 p-4 bg-slate-950 rounded-xl border border-slate-800/80">
+          <div class="flex items-center justify-between">
+            <h3 class="text-base font-bold text-rose-400" id="organ-title">The Brain: High-Priority Uninterrupted Perfusion</h3>
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-500/10 text-rose-300 border border-rose-500/20" id="organ-flow">
+              ~750 mL/min (15% CO)
+            </span>
+          </div>
+
+          <p class="text-xs text-slate-300 mt-2 leading-relaxed" id="organ-summary">
+            The human brain accounts for just 2% of total body mass, yet demands 15% of the heart's total cardiac output and 20% of its resting oxygen delivery. Neurons operate without glycogen reserves; interruption of cardiac output causes loss of consciousness in 6-8 seconds and irreversible ischemic necrosis within 4-5 minutes.
+          </p>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mt-3 pt-3 border-t border-slate-800 text-xs">
+            <div class="bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
+              <span class="text-slate-400 block text-[11px]">Primary Conduit:</span>
+              <strong class="text-slate-200" id="organ-conduit">Carotid Arteries & Circle of Willis</strong>
+            </div>
+            <div class="bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
+              <span class="text-slate-400 block text-[11px]">Autoregulation Zone:</span>
+              <strong class="text-amber-300" id="organ-autoreg">MAP 60 - 160 mmHg</strong>
+            </div>
+            <div class="bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
+              <span class="text-slate-400 block text-[11px]">Critical Vulnerability:</span>
+              <strong class="text-red-400" id="organ-risk">Ischemic Stroke & Syncope</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cardiovascular Functions: The 5 Fundamental Pillars -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">
+          5 Fundamental Uses of the Heart Organ
+        </h3>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+          <div class="p-3 bg-slate-950 rounded-xl border border-slate-800/80 hover:border-slate-700 transition-all">
+            <div class="font-bold text-rose-400 flex items-center gap-1.5 mb-1">
+              <span>1.</span> Hydrostatic Pressure Engine
+            </div>
+            <p class="text-slate-300 leading-relaxed">
+              Maintains continuous Mean Arterial Pressure (MAP >65 mmHg) powering microvascular filtration through billions of capillary networks.
+            </p>
+          </div>
+
+          <div class="p-3 bg-slate-950 rounded-xl border border-slate-800/80 hover:border-slate-700 transition-all">
+            <div class="font-bold text-sky-400 flex items-center gap-1.5 mb-1">
+              <span>2.</span> Respiratory Gas Transporter
+            </div>
+            <p class="text-slate-300 leading-relaxed">
+              Propels 100% of body blood volume through pulmonary alveoli every 60s, carrying 1,000 mL O2/min to periphery and exhausting volatile CO2.
+            </p>
+          </div>
+
+          <div class="p-3 bg-slate-950 rounded-xl border border-slate-800/80 hover:border-slate-700 transition-all">
+            <div class="font-bold text-amber-400 flex items-center gap-1.5 mb-1">
+              <span>3.</span> Metabolic & Waste Highway
+            </div>
+            <p class="text-slate-300 leading-relaxed">
+              Distributes absorbed nutrients (glucose, fatty acids, amino acids) and continuously shunts metabolic toxins (urea, creatinine) to kidneys & liver.
+            </p>
+          </div>
+
+          <div class="p-3 bg-slate-950 rounded-xl border border-slate-800/80 hover:border-slate-700 transition-all">
+            <div class="font-bold text-purple-400 flex items-center gap-1.5 mb-1">
+              <span>4.</span> Endocrine Fluid Sensor
+            </div>
+            <p class="text-slate-300 leading-relaxed">
+              Atrial and ventricular myocytes sense volume stretch and release ANP & BNP to trigger renal natriuresis, diuresis, and systemic vasodilation.
+            </p>
+          </div>
+
+          <div class="p-3 bg-slate-950 rounded-xl border border-slate-800/80 hover:border-slate-700 transition-all sm:col-span-2">
+            <div class="font-bold text-emerald-400 flex items-center gap-1.5 mb-1">
+              <span>5.</span> Thermal & Immune Defense Distributor
+            </div>
+            <p class="text-slate-300 leading-relaxed">
+              Shunts heated core blood to cutaneous vessels for evaporative heat dissipation, and rapidly mobilizes leukocytes, platelets, and antibodies to injury sites within seconds.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Real-Time ECG & Conduction Vector Strip -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 font-bold text-lg">
+            ⚡
+          </div>
+          <div>
+            <div class="text-xs font-bold text-white">Electrical Hierarchy: SA Node &rarr; AV Node (0.12s) &rarr; Purkinje</div>
+            <div class="text-[11px] text-slate-400">P Wave (Atrial Depol) &bull; QRS Complex (Ventricular Ejection) &bull; T Wave (Repolarization)</div>
+          </div>
+        </div>
+
+        <svg viewBox="0 0 200 40" class="w-48 h-10">
+          <path d="M 0 20 L 40 20 L 45 15 L 50 20 L 70 20 L 75 28 L 80 2 L 85 36 L 90 20 L 110 20 L 125 10 L 140 20 L 200 20" fill="none" stroke="#F59E0B" stroke-width="2" class="ecg-line"/>
+        </svg>
+      </div>
+
+    </section>
+
+  </main>
+
+  <footer class="max-w-6xl mx-auto mt-6 text-center text-xs text-slate-400 pb-4">
+    Comprehensive Medical Physiology Reference &bull; Adapted from Guyton & Hall Medical Physiology (14th Ed.) & Braunwald's Heart Disease
+  </footer>
+
+  <!-- Interactive Logic -->
+  <script>
+    const structures = {
+      lv: {
+        tag: "LEFT VENTRICLE (LV)",
+        name: "Left Ventricle - High-Pressure Systemic Powerhouse",
+        desc: "Thickest muscular chamber (10-15 mm). Generates 120 mmHg peak systolic pressure to overcome systemic vascular resistance and pump oxygenated blood through the aorta to the entire human body.",
+        press: "100-140 / 3-12 mmHg",
+        role: "Systemic Circulation Outflow"
+      },
+      rv: {
+        tag: "RIGHT VENTRICLE (RV)",
+        name: "Right Ventricle - Low-Resistance Pulmonary Pump",
+        desc: "Crescent-shaped chamber with thinner wall (3-5 mm). Propels deoxygenated blood into the pulmonary trunk toward the lungs at low pressure, matching the low impedance of the pulmonary vascular bed.",
+        press: "15-30 / 2-8 mmHg",
+        role: "Pulmonary Circuit Outflow"
+      },
+      ra: {
+        tag: "RIGHT ATRIUM (RA)",
+        name: "Right Atrium - Central Venous Collection Chamber",
+        desc: "Receives deoxygenated venous return from Superior Vena Cava, Inferior Vena Cava, and Coronary Sinus. Houses the Sinoatrial (SA) Node pacemaker and Atrioventricular (AV) Node.",
+        press: "2-6 mmHg (Central Venous Pressure)",
+        role: "Venous Collector & Pacemaker"
+      },
+      la: {
+        tag: "LEFT ATRIUM (LA)",
+        name: "Left Atrium - High-Oxygen Inflow Reservoir",
+        desc: "Receives fully oxygenated blood (98% SaO2) from the lungs via 4 pulmonary veins. Delivers passive ventricular filling (80%) and the terminal 'atrial kick' (20%) prior to ventricular systole.",
+        press: "4-12 mmHg",
+        role: "Oxygenated Blood Reservoir"
+      },
+      aorta: {
+        tag: "ASCENDING AORTA",
+        name: "Ascending Aorta & Arch - Elastic Windkessel Conduit",
+        desc: "Largest artery in the body. Its elastic walls expand during ventricular systole to absorb peak pressure and recoil during diastole to maintain continuous peripheral forward blood flow.",
+        press: "120 / 80 mmHg (MAP ~93 mmHg)",
+        role: "Systemic Arterial Trunk"
+      },
+      svc: {
+        tag: "SUPERIOR VENA CAVA",
+        name: "Superior Vena Cava (SVC) - Upper Body Inflow",
+        desc: "Large valve-less vein formed by left and right brachiocephalic veins. Returns deoxygenated blood from head, neck, upper extremities, and chest directly into the upper right atrium.",
+        press: "2-6 mmHg",
+        role: "Upper Venous Drainage"
+      },
+      ptrunk: {
+        tag: "PULMONARY TRUNK",
+        name: "Pulmonary Trunk & Arteries - Respiratory Conduit",
+        desc: "The only arteries in the adult body carrying deoxygenated blood. Bifurcates into left and right pulmonary arteries to deliver venous blood to alveolar capillary beds for gas exchange.",
+        press: "25 / 10 mmHg (Mean ~14 mmHg)",
+        role: "Alveolar Gas Exchange"
+      },
+      mitral: {
+        tag: "MITRAL / BICUSPID VALVE",
+        name: "Mitral Valve - High-Stress Left AV Gate",
+        desc: "Two durable cusps anchored via chordae tendineae to papillary muscles. Snaps shut at the onset of ventricular systole producing M1 component of S1 ('LUB'). Prevents backflow into left atrium.",
+        press: "Withstands 120-140 mmHg systolic stress",
+        role: "Unidirectional Left Heart Flow"
+      },
+      tricuspid: {
+        tag: "TRICUSPID VALVE",
+        name: "Tricuspid Valve - Right Atrioventricular Gate",
+        desc: "Three cusps separating right atrium from right ventricle. Closes during right ventricular systole producing T1 component of the first heart sound.",
+        press: "Withstands 20-30 mmHg systolic stress",
+        role: "Unidirectional Right Heart Flow"
+      },
+      aortic_val: {
+        tag: "AORTIC SEMILUNAR VALVE",
+        name: "Aortic Valve - Gateway to Systemic Circuit",
+        desc: "Three semilunar cusps seated within the aortic root. Diastolic closure generates the crisp A2 component of S2 ('DUB') and directly perfuses the coronary arteries via the sinuses of Valsalva.",
+        press: "Normal orifice area 3.0 - 4.0 cm²",
+        role: "Diastolic Coronary Perfusion"
+      },
+      pulm_val: {
+        tag: "PULMONARY SEMILUNAR VALVE",
+        name: "Pulmonic Valve - Right Ventricular Exit",
+        desc: "Three pocket-like semilunar cusps opening into the pulmonary trunk. Closes during diastole to produce P2 component of second heart sound.",
+        press: "Opens when RV > 10-15 mmHg",
+        role: "Pulmonary Outflow Check-Valve"
+      }
+    };
+
+    function selectStructure(key) {
+      const data = structures[key];
+      if (!data) return;
+      document.getElementById('struct-tag').innerText = data.tag;
+      document.getElementById('struct-name').innerText = data.name;
+      document.getElementById('struct-desc').innerText = data.desc;
+      document.getElementById('struct-press').innerText = data.press;
+      document.getElementById('struct-role').innerText = data.role;
+    }
+
+    const organs = {
+      brain: {
+        title: "The Brain: High-Priority Uninterrupted Perfusion",
+        flow: "~750 mL/min (15% CO)",
+        summary: "The human brain accounts for just 2% of total body mass, yet demands 15% of the heart's total cardiac output and 20% of resting oxygen delivery. Neurons operate without glycogen reserves; interruption of cardiac output causes loss of consciousness in 6-8 seconds and irreversible ischemic necrosis within 4-5 minutes.",
+        conduit: "Carotid Arteries & Circle of Willis",
+        autoreg: "MAP 60 - 160 mmHg",
+        risk: "Ischemic Stroke & Syncope"
+      },
+      kidneys: {
+        title: "The Kidneys: Massive Flow for Plasma Filtration & Electrolytes",
+        flow: "~1,200 mL/min (20-25% CO)",
+        summary: "The kidneys receive the highest blood flow per gram of tissue (~400 mL/min/100g). This vast perfusion is not primarily for tissue oxygenation, but to drive hydrostatic pressure across glomeruli, filtering ~180 Liters of blood plasma daily to clear nitrogenous wastes and regulate blood volume.",
+        conduit: "Renal Arteries & Afferent Arterioles",
+        autoreg: "MAP 80 - 180 mmHg (Tubuloglomerular)",
+        risk: "Acute Tubular Necrosis & Cardiorenal Syndrome"
+      },
+      liver: {
+        title: "Lungs & Liver: Gas Exchange, Detoxification & Storage",
+        flow: "~1,300 mL/min Hepatosplanchnic (25% CO)",
+        summary: "The pulmonary circuit takes 100% of cardiac output for alveolar gas exchange. Downstream, the liver receives dual blood supply: 25% oxygenated flow from the Hepatic Artery and 75% nutrient-rich venous inflow from the Portal Vein (stomach, pancreas, intestines), metabolizing nutrients and synthesizing essential plasma proteins.",
+        conduit: "Pulmonary Trunk & Celiac Trunk / Portal Vein",
+        autoreg: "Hepatic Arterial Buffer Response (HABR)",
+        risk: "Nutmeg Liver (Congestive Hepatopathy)"
+      },
+      muscles: {
+        title: "Skeletal Muscles & Skin: Dynamic Exercise Hyperaemia",
+        flow: "1,000 mL/min (Rest) &rarr; up to 20,000 mL/min (Exercise)",
+        summary: "At rest, skeletal muscles receive ~20% of cardiac output. During intense muscular exertion, local metabolic vasodilation (adenosine, NO, H+, lactate) drops peripheral resistance, shunting over 80-85% of an expanded 20-25 L/min cardiac output directly to working myofibrils.",
+        conduit: "Muscular Conduit Arteries & Arterioles",
+        autoreg: "Metabolic Autoregulation & Functional Hyperaemia",
+        risk: "Lactic Acidosis & Rhabdomyolysis in shock"
+      },
+      endocrine: {
+        title: "Heart as an Endocrine Gland: ANP & BNP Secretion",
+        flow: "Systemic Endocrine Modulation",
+        summary: "The heart actively regulates whole-body fluid homeostasis. When atrial myocytes stretch due to hypervolemia, they secrete Atrial Natriuretic Peptide (ANP). Ventricular wall stress triggers B-type Natriuretic Peptide (BNP). Both hormones increase renal sodium excretion (natriuresis), induce diuresis, and promote vasodilation to alleviate circulatory overload.",
+        conduit: "Coronary Sinus into Systemic Bloodstream",
+        autoreg: "Myocardial Wall Stretch Receptors",
+        risk: "BNP elevation: Gold standard Heart Failure biomarker"
+      }
+    };
+
+    function selectOrgan(key) {
+      const data = organs[key];
+      if (!data) return;
+
+      document.querySelectorAll('.organ-btn').forEach(btn => {
+        btn.classList.remove('border-rose-500', 'bg-rose-500/20', 'text-white');
+        btn.classList.add('border-slate-800', 'bg-slate-950', 'text-slate-300');
+      });
+
+      const activeBtn = document.getElementById(`tab-${key}`);
+      if (activeBtn) {
+        activeBtn.classList.remove('border-slate-800', 'bg-slate-950', 'text-slate-300');
+        activeBtn.classList.add('border-rose-500', 'bg-rose-500/20', 'text-white');
+      }
+
+      document.getElementById('organ-title').innerText = data.title;
+      document.getElementById('organ-flow').innerText = data.flow;
+      document.getElementById('organ-summary').innerText = data.summary;
+      document.getElementById('organ-conduit').innerText = data.conduit;
+      document.getElementById('organ-autoreg').innerText = data.autoreg;
+      document.getElementById('organ-risk').innerText = data.risk;
+    }
+  </script>
+</body>
+</html>
