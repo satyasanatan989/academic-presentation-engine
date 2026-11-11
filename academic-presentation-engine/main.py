@@ -55,6 +55,11 @@ def main():
         default=None,
         help="Optional custom project ID"
     )
+    parser.add_argument(
+        "--synthesize-bg",
+        action="store_true",
+        help="Synthesize topic-tailored procedural backgrounds using GreenSock (GSAP)"
+    )
 
     args = parser.parse_args()
 
@@ -62,6 +67,16 @@ def main():
     if not project_id:
         slug = "".join(c if c.isalnum() else "_" for c in args.topic[:20]).strip("_").upper()
         project_id = f"PRJ-{slug}-001"
+
+    if args.synthesize_bg:
+        from integrations.gsap.gsap_synthesizer import GSAPBackgroundSynthesizer
+        print("\n[GSAP] Synthesizing procedural vector background assets for topic...")
+        gsap_syn = GSAPBackgroundSynthesizer()
+        bg_out = Path("outputs") / project_id / "backgrounds"
+        bg_out.mkdir(parents=True, exist_ok=True)
+        t_bg = gsap_syn.render_background(args.topic, slide_type="title", output_path=str(bg_out / "title_bg.png"))
+        c_bg = gsap_syn.render_background(args.topic, slide_type="content", output_path=str(bg_out / "content_bg.png"))
+        print(f"[GSAP] Generated: {t_bg} & {c_bg}")
 
     request = ResearchRequest(
         project_id=project_id,
