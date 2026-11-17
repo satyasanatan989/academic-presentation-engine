@@ -1,6 +1,7 @@
 package com.academic.presentationengine;
 
 import android.annotation.SuppressLint;
+import android.content.ClipData;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -33,6 +34,8 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "ScholarDeck";
+    private static final String GOOGLE_SLIDES_PACKAGE = "com.google.android.apps.docs.editors.slides";
+    private static final String POWERPOINT_PACKAGE = "com.microsoft.office.powerpoint";
     private WebView webView;
 
     public class WebAppInterface {
@@ -44,12 +47,17 @@ public class MainActivity extends AppCompatActivity {
 
         @JavascriptInterface
         public void saveAndOpenPptxBase64(String fileName, String base64Data) {
+            saveAndOpenPptxBase64WithTarget(fileName, base64Data, "slides");
+        }
+
+        @JavascriptInterface
+        public void saveAndOpenPptxBase64WithTarget(String fileName, String base64Data, String target) {
             runOnUiThread(() -> {
                 try {
-                    Log.d(TAG, "Saving PPTX Base64: " + fileName);
+                    Log.d(TAG, "Saving PPTX Base64: " + fileName + " | Target: " + target);
                     byte[] bytes = Base64.decode(base64Data, Base64.DEFAULT);
                     
-                    // 1. Save to App-Specific External Files Dir (100% Guaranteed Permission-Free)
+                    // 1. Save to App-Specific External Files Dir (100% Guaranteed Permission-Free on Android 11-16)
                     File appDownloads = mContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
                     if (appDownloads != null && !appDownloads.exists()) {
                         appDownloads.mkdirs();
@@ -61,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
                     fos.close();
                     Log.d(TAG, "Saved to App Storage: " + pptFile.getAbsolutePath() + " (" + bytes.length + " bytes)");
 
-                    // 2. Also export to Public Downloads via MediaStore on Android 10+
+                    // 2. Export to Public Downloads via MediaStore on Android 10+
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                         try {
                             ContentValues values = new ContentValues();
@@ -75,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
                                     os.write(bytes);
                                     os.flush();
                                     os.close();
-                                    Log.d(TAG, "Exported to Public Downloads via MediaStore: " + mediaUri);
+                                    Log.d(TAG, "Exported to Public Downloads: " + mediaUri);
                                 }
                             }
                         } catch (Exception ex) {
@@ -83,14 +91,44 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
 
-                    Toast.makeText(mContext, "Presentation Ready: " + fileName, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "Saved: " + fileName, Toast.LENGTH_SHORT).show();
 
-                    // 3. Immediately launch in Microsoft PowerPoint / Google Slides / WPS Office
-                    launchPptFile(pptFile);
+                    // 3. Launch with full URI permissions
+                    if ("slides".equalsIgnoreCase(target)) {
+                        launchInGoogleSlides(pptFile);
+                    } else if ("powerpoint".equalsIgnoreCase(target)) {
+                        launchInPowerPoint(pptFile);
+                    } else {
+                        launchChooser(pptFile);
+                    }
 
                 } catch (Exception e) {
                     Log.e(TAG, "Error saving PPT: " + e.getMessage(), e);
                     Toast.makeText(mContext, "Error saving PPT: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+
+        @JavascriptInterface
+        public void openInGoogleSlides(String fileName) {
+            runOnUiThread(() -> {
+                File file = getOrExtractPptFile(fileName);
+                if (file != null && file.exists()) {
+                    launchInGoogleSlides(file);
+                } else {
+                    Toast.makeText(mContext, "File not found: " + fileName, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        @JavascriptInterface
+        public void openInPowerPoint(String fileName) {
+            runOnUiThread(() -> {
+                File file = getOrExtractPptFile(fileName);
+                if (file != null && file.exists()) {
+                    launchInPowerPoint(file);
+                } else {
+                    Toast.makeText(mContext, "File not found: " + fileName, Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -103,72 +141,138 @@ public class MainActivity extends AppCompatActivity {
         @JavascriptInterface
         public void openPptxFile(String fileName) {
             runOnUiThread(() -> {
-                try {
-                    Log.d(TAG, "Opening PPTX: " + fileName);
-                    File appDownloads = mContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
-                    File pptFile = new File(appDownloads, fileName);
-
-                    // If file not in app storage, check public downloads
-                    if (!pptFile.exists()) {
-                        File pubFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), fileName);
-                        if (pubFile.exists()) {
-                            pptFile = pubFile;
-                        }
-                    }
-
-                    // If still not found, check APK assets/decks/
-                    if (!pptFile.exists() || pptFile.length() == 0) {
-                        try {
-                            InputStream is = mContext.getAssets().open("decks/" + fileName);
-                            pptFile = new File(appDownloads, fileName);
-                            FileOutputStream fos = new FileOutputStream(pptFile);
-                            byte[] buffer = new byte[8192];
-                            int read;
-                            while ((read = is.read(buffer)) != -1) {
-                                fos.write(buffer, 0, read);
-                            }
-                            fos.flush();
-                            fos.close();
-                            is.close();
-                            Log.d(TAG, "Extracted deck from assets: " + fileName + " (" + pptFile.length() + " bytes)");
-                        } catch (Exception assetEx) {
-                            Log.d(TAG, "Not in assets: " + assetEx.getMessage());
-                        }
-                    }
-
-                    if (pptFile.exists() && pptFile.length() > 0) {
-                        launchPptFile(pptFile);
-                    } else {
-                        Toast.makeText(mContext, "Presentation not found: " + fileName, Toast.LENGTH_LONG).show();
-                    }
-
-                } catch (Exception e) {
-                    Log.e(TAG, "Could not open PPT: " + e.getMessage(), e);
-                    Toast.makeText(mContext, "Could not open PPT: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                File file = getOrExtractPptFile(fileName);
+                if (file != null && file.exists()) {
+                    launchChooser(file);
+                } else {
+                    Toast.makeText(mContext, "File not found: " + fileName, Toast.LENGTH_SHORT).show();
                 }
             });
         }
 
-        private void launchPptFile(File file) {
+        private File getOrExtractPptFile(String fileName) {
+            try {
+                File appDownloads = mContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
+                File pptFile = new File(appDownloads, fileName);
+
+                if (!pptFile.exists() || pptFile.length() == 0) {
+                    File pubFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), fileName);
+                    if (pubFile.exists() && pubFile.length() > 0) {
+                        pptFile = pubFile;
+                    }
+                }
+
+                // If not found on storage, extract from APK assets/decks/
+                if (!pptFile.exists() || pptFile.length() == 0) {
+                    try {
+                        InputStream is = mContext.getAssets().open("decks/" + fileName);
+                        pptFile = new File(appDownloads, fileName);
+                        FileOutputStream fos = new FileOutputStream(pptFile);
+                        byte[] buffer = new byte[8192];
+                        int read;
+                        while ((read = is.read(buffer)) != -1) {
+                            fos.write(buffer, 0, read);
+                        }
+                        fos.flush();
+                        fos.close();
+                        is.close();
+                        Log.d(TAG, "Extracted deck from assets: " + fileName + " (" + pptFile.length() + " bytes)");
+                    } catch (Exception assetEx) {
+                        Log.d(TAG, "Deck not in assets: " + assetEx.getMessage());
+                    }
+                }
+
+                return pptFile;
+            } catch (Exception e) {
+                Log.e(TAG, "Error resolving file: " + e.getMessage(), e);
+                return null;
+            }
+        }
+
+        // Direct Google Slides Launcher with ClipData & Granted URI Permission
+        private void launchInGoogleSlides(File file) {
+            try {
+                Uri uri = FileProvider.getUriForFile(mContext, mContext.getPackageName() + ".provider", file);
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setDataAndType(uri, "application/vnd.openxmlformats-officedocument.presentationml.presentation");
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setClipData(ClipData.newRawUri("presentation", uri));
+
+                // Explicit grant to Google Slides
+                mContext.grantUriPermission(GOOGLE_SLIDES_PACKAGE, uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                mContext.grantUriPermission(GOOGLE_SLIDES_PACKAGE, uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+
+                intent.setPackage(GOOGLE_SLIDES_PACKAGE);
+
+                // Verify if Google Slides can handle this intent
+                PackageManager pm = mContext.getPackageManager();
+                List<ResolveInfo> activities = pm.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+                if (activities != null && !activities.isEmpty()) {
+                    mContext.startActivity(intent);
+                } else {
+                    // Fallback to chooser if Google Slides not directly callable
+                    launchChooser(file);
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "Google Slides launch failed: " + e.getMessage(), e);
+                launchChooser(file);
+            }
+        }
+
+        // Direct PowerPoint Launcher
+        private void launchInPowerPoint(File file) {
             try {
                 Uri uri = FileProvider.getUriForFile(mContext, mContext.getPackageName() + ".provider", file);
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setDataAndType(uri, "application/vnd.openxmlformats-officedocument.presentationml.presentation");
                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setClipData(ClipData.newRawUri("presentation", uri));
 
-                // Grant URI permission explicitly to any resolving app
+                mContext.grantUriPermission(POWERPOINT_PACKAGE, uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                intent.setPackage(POWERPOINT_PACKAGE);
+
+                PackageManager pm = mContext.getPackageManager();
+                List<ResolveInfo> activities = pm.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+                if (activities != null && !activities.isEmpty()) {
+                    mContext.startActivity(intent);
+                } else {
+                    launchChooser(file);
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "PowerPoint launch failed: " + e.getMessage(), e);
+                launchChooser(file);
+            }
+        }
+
+        // System Chooser with Guaranteed ClipData URI Grants
+        private void launchChooser(File file) {
+            try {
+                Uri uri = FileProvider.getUriForFile(mContext, mContext.getPackageName() + ".provider", file);
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setDataAndType(uri, "application/vnd.openxmlformats-officedocument.presentationml.presentation");
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setClipData(ClipData.newRawUri("presentation", uri));
+
+                // Grant URI permission explicitly to all resolving apps
                 List<ResolveInfo> resInfoList = mContext.getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
                 for (ResolveInfo resolveInfo : resInfoList) {
                     mContext.grantUriPermission(resolveInfo.activityInfo.packageName, uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    mContext.grantUriPermission(resolveInfo.activityInfo.packageName, uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                 }
 
-                Intent chooser = Intent.createChooser(intent, "Open Presentation With");
+                Intent chooser = Intent.createChooser(intent, "Open Slides With");
                 chooser.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                chooser.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                chooser.setClipData(ClipData.newRawUri("presentation", uri));
                 mContext.startActivity(chooser);
             } catch (Exception e) {
                 Log.e(TAG, "Launch chooser failed: " + e.getMessage(), e);
-                Toast.makeText(mContext, "No PowerPoint viewer found. Please install PowerPoint or Google Slides.", Toast.LENGTH_LONG).show();
+                Toast.makeText(mContext, "Please install Google Slides or PowerPoint.", Toast.LENGTH_LONG).show();
             }
         }
 
@@ -211,14 +315,14 @@ public class MainActivity extends AppCompatActivity {
         webView.setWebChromeClient(new WebChromeClient() {
             @Override
             public boolean onConsoleMessage(ConsoleMessage cm) {
-                Log.d(TAG + "-JS", cm.message() + " -- From line " + cm.lineNumber() + " of " + cm.sourceId());
+                Log.d(TAG + "-JS", cm.message() + " -- Line " + cm.lineNumber() + " of " + cm.sourceId());
                 return true;
             }
 
             @Override
             public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
                 new AlertDialog.Builder(MainActivity.this)
-                    .setTitle("ScholarDeck")
+                    .setTitle("Google Slides AI")
                     .setMessage(message)
                     .setPositiveButton(android.R.string.ok, (dialog, which) -> result.confirm())
                     .setCancelable(false)
