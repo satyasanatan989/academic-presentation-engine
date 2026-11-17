@@ -82,6 +82,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @JavascriptInterface
+        public void openPptxFile(String fileName) {
+            openPptx(fileName);
+        }
+
+        @JavascriptInterface
         public void showToast(String message) {
             runOnUiThread(() -> Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show());
         }
