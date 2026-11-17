@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Academic & Medical Suite</title>
+  <script src="gsap.min.js"></script>
+  <style>
+    :root {
+      --oxford-navy: #0F1D36;
+      --slate-bg: #090F1D;
+      --card-bg: #111A2E;
+      --card-alt: #16223B;
+      --gold: #D4A017;
+      --gold-light: #FCD34D;
+      --accent-red: #E11D48;
+      --accent-blue: #2563EB;
+      --accent-green: #10B981;
+      --text-white: #FFFFFF;
+      --text-muted: #94A3B8;
+      --border-color: #1E293B;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Times New Roman", serif;
+    }
+    body {
+      background-color: var(--slate-bg);
+      color: var(--text-white);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      padding-bottom: 70px;
+    }
+
+    /* Header Bar */
+    header {
+      background: linear-gradient(180deg, #132342 0%, #0F1D36 100%);
+      border-bottom: 2px solid var(--gold);
+      padding: 14px 16px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+    }
+    .header-title {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: var(--text-white);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .badge-offline {
+      font-size: 10px;
+      padding: 3px 8px;
+      background: rgba(16, 185, 129, 0.15);
+      color: #34D399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    /* Bottom Navigation */
+    nav.bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: #0B1424;
+      border-top: 1px solid #1E2D4A;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 200;
+      box-shadow: 0 -4px 16px rgba(0,0,0,0.5);
+    }
+    .nav-item {
+      flex: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+    .nav-item .icon {
+      font-size: 18px;
+    }
+    .nav-item.active {
+      color: var(--gold-light);
+      background: rgba(212, 160, 23, 0.08);
+      border-top: 2px solid var(--gold);
+    }
+
+    /* Content View Tabs */
+    .view-panel {
+      display: none;
+      padding: 16px;
+      animation: fadeIn 0.3s ease-out;
+    }
+    .view-panel.active {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 14px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    }
+    .card-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--gold-light);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Heart Animation & Interactive SVG */
+    @keyframes pulse-heart {
+      0%, 100% { transform: scale(1); }
+      15% { transform: scale(1.05); }
+      30% { transform: scale(0.98); }
+      45% { transform: scale(1.03); }
+      60% { transform: scale(1); }
+    }
+    .beating-heart {
+      animation: pulse-heart 1.2s infinite ease-in-out;
+      transform-origin: center center;
+    }
+
+    /* Organ Perfusion Buttons */
+    .organ-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .btn-organ {
+      background: var(--card-alt);
+      border: 1px solid #1E2D4A;
+      color: var(--text-white);
+      padding: 10px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-organ.active {
+      background: rgba(225, 29, 72, 0.2);
+      border-color: var(--accent-red);
+      color: #FECDD3;
+    }
+
+    /* Hemodynamic Stats Bar */
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      background: rgba(0,0,0,0.3);
+      padding: 10px;
+      border-radius: 10px;
+      margin-top: 10px;
+      text-align: center;
+    }
+    .stat-num {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--gold-light);
+    }
+    .stat-lbl {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    /* Accordion / List for Slides */
+    .slide-item {
+      background: var(--card-alt);
+      border: 1px solid #1E2D4A;
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-bottom: 8px;
+    }
+    .slide-item-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #E2E8F0;
+      display: flex;
+      justify-content: space-between;
+    }
+    .slide-item-badge {
+      font-size: 10px;
+      color: var(--gold);
+      font-weight: 600;
+    }
+    .slide-item-body {
+      font-size: 12px;
+      color: #94A3B8;
+      margin-top: 6px;
+      line-height: 1.4;
+    }
+
+    /* Canvas for GSAP Studio */
+    #gsapCanvas {
+      width: 100%;
+      height: 220px;
+      background: #060B14;
+      border-radius: 12px;
+      border: 1px solid #1E2D4A;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Sticky Header -->
+  <header>
+    <div class="header-title">
+      <span>🏛️</span>
+      <span>ACADEMIC SUITE</span>
+    </div>
+    <div class="badge-offline">
+      ● 100% Offline App
+    </div>
+  </header>
+
+  <!-- TAB 1: INTERACTIVE HEART ORGAN -->
+  <main id="tab-heart" class="view-panel active">
+    <div class="card">
+      <div class="card-title">🫀 Human Heart Organ Architecture</div>
+      <div class="card-desc">
+        Tap any chamber or valve below to inspect pressures, anatomical functions, and systemic perfusion delivery.
+      </div>
+
+      <!-- Live Heart SVG -->
+      <div style="text-align:center; padding: 10px 0;">
+        <svg viewBox="0 0 400 360" class="beating-heart" style="width: 220px; max-width: 100%; filter: drop-shadow(0 4px 12px rgba(225,29,72,0.3));">
+          <!-- Superior Vena Cava -->
+          <path d="M 120 40 L 120 120 L 155 120 L 155 40 Z" fill="#1D4ED8" stroke="#3B82F6" stroke-width="2" onclick="selectChamber('svc')"/>
+          <text x="137" y="30" fill="#93C5FD" font-size="12" text-anchor="middle" font-weight="bold">SVC</text>
+
+          <!-- Aorta -->
+          <path d="M 170 110 C 170 30, 260 25, 270 110 L 245 110 C 240 60, 195 60, 195 110 Z" fill="#DC2626" stroke="#EF4444" stroke-width="2" onclick="selectChamber('aorta')"/>
+          <text x="220" y="20" fill="#FCA5A5" font-size="12" text-anchor="middle" font-weight="bold">AORTA</text>
+
+          <!-- Right Atrium -->
+          <path d="M 90 120 C 70 160, 80 210, 130 220 L 150 170 C 130 160, 130 130, 150 120 Z" fill="#1E3A8A" stroke="#3B82F6" stroke-width="2" onclick="selectChamber('ra')"/>
+          <text x="110" y="175" fill="#BFDBFE" font-size="14" font-weight="bold" text-anchor="middle">RA</text>
+
+          <!-- Left Atrium -->
+          <path d="M 240 120 C 270 125, 290 150, 290 190 L 250 190 C 245 160, 240 140, 225 120 Z" fill="#991B1B" stroke="#EF4444" stroke-width="2" onclick="selectChamber('la')"/>
+          <text x="265" y="160" fill="#FECACA" font-size="14" font-weight="bold" text-anchor="middle">LA</text>
+
+          <!-- Right Ventricle -->
+          <path d="M 130 220 C 135 270, 170 310, 200 330 L 195 210 Z" fill="#1E40AF" stroke="#60A5FA" stroke-width="2.5" onclick="selectChamber('rv')"/>
+          <text x="165" y="270" fill="#DBEAFE" font-size="14" font-weight="bold" text-anchor="middle">RV</text>
+
+          <!-- Left Ventricle (Thick Myocardium) -->
+          <path d="M 205 210 L 210 330 C 250 315, 290 260, 280 200 L 235 200 Z" fill="#B91C1C" stroke="#F87171" stroke-width="3" onclick="selectChamber('lv')"/>
+          <text x="245" y="270" fill="#FEE2E2" font-size="14" font-weight="bold" text-anchor="middle">LV</text>
+        </svg>
+      </div>
+
+      <!-- Live Vitals Bar -->
+      <div class="stat-row">
+        <div>
+          <div class="stat-num" id="val-hr">72</div>
+          <div class="stat-lbl">HR (bpm)</div>
+        </div>
+        <div>
+          <div class="stat-num">70</div>
+          <div class="stat-lbl">SV (mL)</div>
+        </div>
+        <div>
+          <div class="stat-num">5.0</div>
+          <div class="stat-lbl">CO (L/min)</div>
+        </div>
+        <div>
+          <div class="stat-num">93</div>
+          <div class="stat-lbl">MAP (mmHg)</div>
+        </div>
+      </div>
+
+      <!-- Chamber Focus Box -->
+      <div id="chamberCard" style="background:#0B1424; border:1px solid #1E2D4A; border-radius:10px; padding:12px; margin-top:12px;">
+        <div style="font-size:11px; font-weight:700; color:#E11D48; text-transform:uppercase;" id="chTag">CHAMBER FOCUS</div>
+        <div style="font-size:14px; font-weight:700; color:#FFF; margin-top:2px;" id="chName">Left Ventricle (LV)</div>
+        <div style="font-size:12px; color:#CBD5E1; margin-top:4px;" id="chDesc">
+          Generates 120 mmHg peak systolic pressure to overcome systemic vascular resistance and perfuse the entire body.
+        </div>
+        <div style="font-size:11px; color:#D4A017; margin-top:6px; font-weight:600;" id="chPress">
+          Pressure: 100-140 / 3-12 mmHg | Role: Whole-Body Arterial Delivery
+        </div>
+      </div>
+    </div>
+
+    <!-- Systemic Organ Delivery Selector -->
+    <div class="card">
+      <div class="card-title">🩸 Systemic Organ Perfusion Targets</div>
+      <div class="card-desc">Select an organ system to see cardiac output distribution:</div>
+      <div class="organ-grid">
+        <button class="btn-organ active" onclick="selectOrgan('brain', this)">🧠 Brain (15% CO)</button>
+        <button class="btn-organ" onclick="selectOrgan('kidneys', this)">🫘 Kidneys (22% CO)</button>
+        <button class="btn-organ" onclick="selectOrgan('liver', this)">🫁 Lungs & Liver (25%)</button>
+        <button class="btn-organ" onclick="selectOrgan('muscles', this)">💪 Muscles (20-85%)</button>
+      </div>
+
+      <div id="organCard" style="background:#0B1424; border:1px solid #1E2D4A; border-radius:10px; padding:12px; margin-top:12px;">
+        <div style="font-size:13px; font-weight:700; color:#38BDF8;" id="orgTitle">The Brain: Uninterrupted Perfusion (~750 mL/min)</div>
+        <div style="font-size:12px; color:#CBD5E1; margin-top:4px;" id="orgDesc">
+          Consumes 20% of resting oxygen. Lacks glycogen reserves; circulatory arrest causes loss of consciousness in 6-8s and irreversible death in 4-5 minutes.
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- TAB 2: BOTANICAL & PHYTOCHEMICAL KEYNOTE (18 Slides) -->
+  <main id="tab-botany" class="view-panel">
+    <div class="card">
+      <div class="card-title">🌿 Botanical & Food Nutrition Keynote</div>
+      <div class="card-desc">
+        Complete 18-Slide curriculum on Cruciferous Vegetables, Fruits, Culinary Herbs, Spices & Bioavailability Surges.
+      </div>
+    </div>
+
+    <div class="slide-item">
+      <div class="slide-item-title">
+        <span>01. Glucosinolate-Myrosinase Axis</span>
+        <span class="slide-item-badge">CRUCIFEROUS</span>
+      </div>
+      <div class="slide-item-body">
+        Cell disruption hydrolyzes glucoraphanin via myrosinase into Sulforaphane. Mild steaming deactivates ESP; mustard seed restores myrosinase 4-fold.
+      </div>
+    </div>
+
+    <div class="slide-item">
+      <div class="slide-item-title">
+        <span>02. Nrf2-Keap1 Phase II Defense</span>
+        <span class="slide-item-badge">MECHANISM</span>
+      </div>
+      <div class="slide-item-body">
+        Sulforaphane electrophilically alkylates Keap1 Cys151. Nrf2 translocates to nucleus, binding ARE to transcribe HO-1, NQO1, and Glutathione.
+      </div>
+    </div>
+
+    <div class="slide-item">
+      <div class="slide-item-title">
+        <span>03. Tropical Proteases: Bromelain & Papain</span>
+        <span class="slide-item-badge">TROPICAL</span>
+      </div>
+      <div class="slide-item-body">
+        Ananas comosus stem bromelain depletes fibrinogen and downregulates PGE2. Carica papaya papain enhances protein hydrolysis and mucosal healing.
+      </div>
+    </div>
+
+    <div class="slide-item">
+      <div class="slide-item-title">
+        <span>04. Citrus Flavanones & Punicalagins</span>
+        <span class="slide-item-badge">SUBTROPICAL</span>
+      </div>
+      <div class="slide-item-body">
+        Hesperidin phosphorylates eNOS (Ser1177) driving vasodilation. Pomegranate punicalagins convert via colonic flora into Urolithin A (mitophagy).
+      </div>
+    </div>
+
+    <div class="slide-item">
+      <div class="slide-item-title">
+        <span>05. Anthocyanins & Blood-Brain Barrier</span>
+        <span class="slide-item-badge">BERRIES</span>
+      </div>
+      <div class="slide-item-body">
+        Cyanidin and Delphinidin cross the BBB via GLUT1 transporters, concentrating in the hippocampus to stimulate ERK-CREB and BDNF synthesis.
+      </div>
+    </div>
+
+    <div class="slide-item">
+      <div class="slide-item-title">
+        <span>06. Spices: Curcumin & The +2000% Surge</span>
+        <span class="slide-item-badge">PHARMACOKINETICS</span>
+      </div>
+      <div class="slide-item-body">
+        Curcumin alone has <1% absorption due to UGT glucuronidation. 20 mg Piperine (Piper nigrum) suppresses UGT1A1, expanding human AUC by 2000%!
+      </div>
+    </div>
+
+    <div class="slide-item">
+      <div class="slide-item-title">
+        <span>07. Master Pharmacology Matrix Table</span>
+        <span class="slide-item-badge">SUMMARY</span>
+      </div>
+      <div class="slide-item-body">
+        Integrated dossier correlating 7 botanical families with exact molecular targets, clinical bioavailability coefficients, and therapeutic endpoints.
+      </div>
+    </div>
+  </main>
+
+  <!-- TAB 3: HARYANA GK SCREENING DECK (65 Slides) -->
+  <main id="tab-haryana" class="view-panel">
+    <div class="card">
+      <div class="card-title">🏛️ Haryana GK Master Screening Syllabus</div>
+      <div class="card-desc">
+        65-Slide High-Yield Curriculum for HPSC FSO & Haryana Civil Services. Filtered across 12 high-frequency examination modules.
+      </div>
+    </div>
+
+    <div class="slide-item">
+      <div class="slide-item-title">
+        <span>Module 01: State Formation & Boundaries</span>
+        <span class="slide-item-badge">POLITY</span>
+      </div>
+      <div class="slide-item-body">
+        Created on 1 Nov 1966 (17th State, 18th Amendment) via Shah Commission (JC Shah, Philip, S. Dutt). Carved out with 7 original districts (GHAR-JK).
+      </div>
+    </div>
+
+    <div class="slide-item">
+      <div class="slide-item-title">
+        <span>Module 02: Physiography & Karoh Peak</span>
+        <span class="slide-item-badge">GEOGRAPHY</span>
+      </div>
+      <div class="slide-item-body">
+        Dr. Jasbir Singh's 8-fold relief. Shivalik Hills in NE (Karoh Peak 1514m in Morni); Aravalli in S/SW (Dhosi Hill 652m). CSSRI Karnal salinity reclamation.
+      </div>
+    </div>
+
+    <div class="slide-item">
+      <div class="slide-item-title">
+        <span>Module 04: Sultanpur & Kalesar National Parks</span>
+        <span class="slide-item-badge">ECOLOGY</span>
+      </div>
+      <div class="slide-item-body">
+        Sultanpur NP (Gurugram, Ramsar Site, Peter Jackson/Salim Ali) and Kalesar NP (Yamunanagar, Sal forests, Red Junglefowl). 8 Wildlife Sanctuaries.
+      </div>
+    </div>
+
+    <div class="slide-item">
+      <div class="slide-item-title">
+        <span>Module 06: Three Battles of Panipat</span>
+        <span class="slide-item-badge">HISTORY</span>
+      </div>
+      <div class="slide-item-body">
+        1st (1526: Babur vs. Ibrahim Lodi), 2nd (1556: Akbar/Bairam Khan vs. Hemu Vikramaditya), 3rd (1761: Ahmad Shah Abdali vs. Sadashivrao Bhau Marathas).
+      </div>
+    </div>
+
+    <div class="slide-item">
+      <div class="slide-item-title">
+        <span>Module 09: Dairy, Murrah Buffalo & NIFTEM</span>
+        <span class="slide-item-badge">FSO SPECIAL</span>
+      </div>
+      <div class="slide-item-body">
+        NDRI Karnal (1955), CIRB Hisar, LUVAS. Murrah Buffalo ('Black Gold'). NIFTEM Kundli (Institute of National Importance), Mega Food Parks (Rai, Barhi, Dabwali).
+      </div>
+    </div>
+
+    <div class="slide-item">
+      <div class="slide-item-title">
+        <span>Module 12: Top 30 High-Frequency Exam Traps</span>
+        <span class="slide-item-badge">EXAM TRAPS</span>
+      </div>
+      <div class="slide-item-body">
+        Highest rainfall: Chhachhrauli ('Cherrapunji of Haryana'). First Sahityakar: Chauranginath. High Court Chief Justice 1920: Sir Shadi Lal.
+      </div>
+    </div>
+  </main>
+
+  <!-- TAB 4: GSAP PROCEDURAL BACKGROUND STUDIO -->
+  <main id="tab-gsap" class="view-panel">
+    <div class="card">
+      <div class="card-title">🎨 GSAP Procedural Background Studio</div>
+      <div class="card-desc">
+        Renders mathematical vector curves and luminous procedural themes running locally on your phone's GPU using GreenSock v3.
+      </div>
+
+      <div style="margin: 12px 0;">
+        <canvas id="gsapCanvas"></canvas>
+      </div>
+
+      <div style="display:flex; gap:8px;">
+        <button class="btn-organ active" style="flex:1; text-align:center;" onclick="setGsapTheme('civil')">🏛️ Civil Service</button>
+        <button class="btn-organ" style="flex:1; text-align:center;" onclick="setGsapTheme('bio')">🌿 Botanical</button>
+        <button class="btn-organ" style="flex:1; text-align:center;" onclick="setGsapTheme('tech')">⚡ Cybernetic</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Bottom Navigation Bar -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" onclick="switchTab('heart', this)">
+      <span class="icon">🫀</span>
+      <span>Heart</span>
+    </button>
+    <button class="nav-item" onclick="switchTab('botany', this)">
+      <span class="icon">🌿</span>
+      <span>Nutrition</span>
+    </button>
+    <button class="nav-item" onclick="switchTab('haryana', this)">
+      <span class="icon">🏛️</span>
+      <span>Haryana GK</span>
+    </button>
+    <button class="nav-item" onclick="switchTab('gsap', this)">
+      <span class="icon">🎨</span>
+      <span>GSAP Studio</span>
+    </button>
+  </nav>
+
+  <!-- Interactive Logic -->
+  <script>
+    // Tab Switching
+    function switchTab(tabId, el) {
+      document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+      document.getElementById('tab-' + tabId).classList.add('active');
+      el.classList.add('active');
+      if (tabId === 'gsap') initGsapCanvas();
+    }
+
+    // Heart Chamber Data
+    const chambers = {
+      lv: {
+        tag: "LEFT VENTRICLE (LV)",
+        name: "Left Ventricle - High-Pressure Powerhouse",
+        desc: "Thickest muscular chamber (10-15 mm). Generates 120 mmHg peak systolic pressure to overcome systemic vascular resistance.",
+        press: "Pressure: 100-140 / 3-12 mmHg | Role: Systemic Outflow"
+      },
+      rv: {
+        tag: "RIGHT VENTRICLE (RV)",
+        name: "Right Ventricle - Low-Resistance Pump",
+        desc: "Crescent-shaped chamber (3-5 mm wall). Propels deoxygenated blood into the pulmonary trunk at low resistance.",
+        press: "Pressure: 15-30 / 2-8 mmHg | Role: Pulmonary Loop Outflow"
+      },
+      ra: {
+        tag: "RIGHT ATRIUM (RA)",
+        name: "Right Atrium - Central Venous Chamber",
+        desc: "Receives systemic venous return from SVC, IVC, and Coronary Sinus. Houses SA Node pacemaker.",
+        press: "Pressure: 2-6 mmHg (CVP) | Role: Venous Collection"
+      },
+      la: {
+        tag: "LEFT ATRIUM (LA)",
+        name: "Left Atrium - High-Oxygen Reservoir",
+        desc: "Receives oxygenated blood (98% SaO2) from 4 pulmonary veins. Delivers passive ventricular filling & atrial kick.",
+        press: "Pressure: 4-12 mmHg | Role: Oxygenated Inflow"
+      },
+      aorta: {
+        tag: "ASCENDING AORTA",
+        name: "Aorta - Elastic Windkessel Conduit",
+        desc: "Recoils during diastole to maintain continuous peripheral flow (MAP ~93 mmHg).",
+        press: "Pressure: 120 / 80 mmHg | Role: Systemic Trunk"
+      },
+      svc: {
+        tag: "SUPERIOR VENA CAVA",
+        name: "SVC - Upper Body Venous Drain",
+        desc: "Valve-less large vein draining head, neck, and upper chest directly into right atrium.",
+        press: "Pressure: 2-6 mmHg | Role: Upper Venous Drainage"
+      }
+    };
+
+    function selectChamber(key) {
+      const c = chambers[key];
+      if (!c) return;
+      document.getElementById('chTag').innerText = c.tag;
+      document.getElementById('chName').innerText = c.name;
+      document.getElementById('chDesc').innerText = c.desc;
+      document.getElementById('chPress').innerText = c.press;
+    }
+
+    // Organ Perfusion Data
+    const organs = {
+      brain: {
+        title: "The Brain: Uninterrupted Perfusion (~750 mL/min)",
+        desc: "Demands 15% of cardiac output and 20% of resting O2. Circulatory arrest triggers loss of consciousness in 6-8s and death in 4-5 min."
+      },
+      kidneys: {
+        title: "The Kidneys: Massive Flow for Plasma Filtration (~1,200 mL/min)",
+        desc: "Receives 20-25% of CO (~400 mL/min/100g). Powers Glomerular Filtration Rate (180 L/day) to clear nitrogenous wastes."
+      },
+      liver: {
+        title: "Lungs & Liver: Gas Exchange & Detoxification (~1,300 mL/min)",
+        desc: "100% of CO traverses lungs for gas exchange. Hepatosplanchnic bed receives 25% of CO for nutrient storage, detox, and albumin synthesis."
+      },
+      muscles: {
+        title: "Skeletal Muscle: Exercise Hyperaemia (Surges to 20,000 mL/min)",
+        desc: "At rest receives 20% of CO; during peak exertion, local vasodilation shunts >85% of expanded 25 L/min cardiac output to working fibers."
+      }
+    };
+
+    function selectOrgan(key, btn) {
+      document.querySelectorAll('.btn-organ').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const o = organs[key];
+      document.getElementById('orgTitle').innerText = o.title;
+      document.getElementById('orgDesc').innerText = o.desc;
+    }
+
+    // GSAP Procedural Waveforms Canvas
+    let canvas, ctx, animFrame;
+    let waveTheme = "civil";
+    let waveStep = 0;
+
+    function initGsapCanvas() {
+      canvas = document.getElementById('gsapCanvas');
+      if (!canvas) return;
+      ctx = canvas.getContext('2d');
+      canvas.width = canvas.parentElement.clientWidth;
+      canvas.height = 220;
+      if (!animFrame) renderGsap();
+    }
+
+    function setGsapTheme(t) {
+      waveTheme = t;
+    }
+
+    function renderGsap() {
+      if (!ctx) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      waveStep += 0.02;
+
+      let strokeCol = "#D4A017";
+      if (waveTheme === "bio") strokeCol = "#10B981";
+      if (waveTheme === "tech") strokeCol = "#00F5D4";
+
+      for (let k = 0; k < 6; k++) {
+        ctx.beginPath();
+        ctx.strokeStyle = strokeCol;
+        ctx.globalAlpha = 0.2 + (k * 0.12);
+        ctx.lineWidth = 1.5;
+
+        for (let x = 0; x < canvas.width; x += 10) {
+          let y = 110 + Math.sin(x * 0.015 + waveStep + k) * (25 + k * 8) + Math.cos(x * 0.008 + waveStep) * 15;
+          if (x === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+      }
+      animFrame = requestAnimationFrame(renderGsap);
+    }
+  </script>
+</body>
+</html>

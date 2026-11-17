@@ -40,3 +40,9 @@ academic-presentation-engine/storage/cache/
 Thumbs.db
 desktop.ini
 *.tmp
+
+# Android Build Outputs & Local Properties
+android-app/**/build/
+android-app/.gradle/
+android-app/local.properties
+.gradle/

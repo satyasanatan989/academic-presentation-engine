@@ -255,6 +255,12 @@ Inspect the raw generated deliverables in the repository:
 - 🖼️ **[Web Botanical High-Res Gallery (18 Slides)](samples/gallery_web_botanical/)** — Rendered 1080p PNG previews.
 - ⚙️ **[web_template_engine.py](academic-presentation-engine/templates/web_template_engine.py)** — Web template curator & slide compiler.
 
+### 5. Standalone Android APK Package (Option A: 100% Offline & Free)
+- 📱 **[academic_medical_suite.apk](samples/academic_medical_suite.apk)** (5.46 MB) — Full standalone Android application.
+  - **Zero API Dependency:** 100% offline; requires zero network connection, zero subscriptions, and zero external API keys.
+  - **Interactive Modules:** Interactive Heart Organ anatomy (touch-responsive chambers, live cardiac pulse, live ECG graph, systemic organ perfusion), Botanical Phytochemicals lecture, Haryana GK 65-slide screening curriculum, and the GSAP Procedural Background Studio.
+  - **Android Studio Project:** Complete source code available under [`android-app/`](android-app/).
+
 ---
 
 ## ⚡ Key Capabilities
