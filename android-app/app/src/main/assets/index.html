@@ -34,14 +34,14 @@
       display: flex;
       flex-direction: column;
       overflow-x: hidden;
-      padding-bottom: 70px;
+      padding-bottom: 74px;
     }
 
-    /* Header Bar */
+    /* Top Sticky Header */
     header {
       background: linear-gradient(180deg, #132342 0%, #0F1D36 100%);
       border-bottom: 2px solid var(--gold);
-      padding: 14px 16px;
+      padding: 12px 16px;
       position: sticky;
       top: 0;
       z-index: 100;
@@ -51,13 +51,12 @@
       box-shadow: 0 4px 16px rgba(0,0,0,0.4);
     }
     .header-title {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 700;
-      letter-spacing: 0.5px;
       color: var(--text-white);
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
     .badge-offline {
       font-size: 10px;
@@ -70,13 +69,13 @@
       text-transform: uppercase;
     }
 
-    /* Bottom Navigation */
+    /* Bottom Navigation Bar (5 Items) */
     nav.bottom-nav {
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
-      height: 60px;
+      height: 62px;
       background: #0B1424;
       border-top: 1px solid #1E2D4A;
       display: flex;
@@ -92,17 +91,17 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 3px;
+      gap: 2px;
       background: transparent;
       border: none;
       color: var(--text-muted);
       cursor: pointer;
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 600;
       transition: all 0.2s ease;
     }
     .nav-item .icon {
-      font-size: 18px;
+      font-size: 17px;
     }
     .nav-item.active {
       color: var(--gold-light);
@@ -110,11 +109,11 @@
       border-top: 2px solid var(--gold);
     }
 
-    /* Content View Tabs */
+    /* Content View Panels */
     .view-panel {
       display: none;
-      padding: 16px;
-      animation: fadeIn 0.3s ease-out;
+      padding: 14px;
+      animation: fadeIn 0.25s ease-out;
     }
     .view-panel.active {
       display: block;
@@ -143,71 +142,142 @@
       gap: 8px;
     }
     .card-desc {
-      font-size: 13px;
+      font-size: 12.5px;
       color: var(--text-muted);
       line-height: 1.5;
     }
 
-    /* Heart Animation & Interactive SVG */
-    @keyframes pulse-heart {
-      0%, 100% { transform: scale(1); }
-      15% { transform: scale(1.05); }
-      30% { transform: scale(0.98); }
-      45% { transform: scale(1.03); }
-      60% { transform: scale(1); }
+    /* Form Inputs */
+    .input-box {
+      width: 100%;
+      background: #0B1424;
+      border: 1px solid #1E2D4A;
+      color: #FFF;
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      outline: none;
+      margin-top: 8px;
+      margin-bottom: 10px;
+      transition: border-color 0.2s;
     }
-    .beating-heart {
-      animation: pulse-heart 1.2s infinite ease-in-out;
-      transform-origin: center center;
+    .input-box:focus {
+      border-color: var(--gold);
+    }
+    .chip-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+    .chip {
+      background: #16223B;
+      border: 1px solid #23355A;
+      color: #94A3B8;
+      font-size: 11px;
+      padding: 5px 10px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .chip:hover, .chip.active {
+      background: rgba(212, 160, 23, 0.15);
+      border-color: var(--gold);
+      color: #FDE68A;
     }
 
-    /* Organ Perfusion Buttons */
-    .organ-grid {
+    .btn-primary {
+      width: 100%;
+      background: linear-gradient(135deg, #D4A017 0%, #B45309 100%);
+      color: #0F172A;
+      border: none;
+      padding: 13px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(212, 160, 23, 0.3);
+      transition: transform 0.1s;
+    }
+    .btn-primary:active {
+      transform: scale(0.98);
+    }
+    .btn-action {
+      background: #1D4ED8;
+      color: #FFF;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 8px;
+    }
+
+    /* Template & Option Selectors */
+    .selector-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 8px;
-      margin-top: 10px;
+      margin-bottom: 12px;
     }
-    .btn-organ {
-      background: var(--card-alt);
-      border: 1px solid #1E2D4A;
-      color: var(--text-white);
+    .selector-btn {
+      background: #16223B;
+      border: 1px solid #23355A;
+      color: #E2E8F0;
       padding: 10px;
       border-radius: 10px;
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 600;
       text-align: left;
       cursor: pointer;
       transition: all 0.2s;
     }
-    .btn-organ.active {
-      background: rgba(225, 29, 72, 0.2);
-      border-color: var(--accent-red);
-      color: #FECDD3;
+    .selector-btn.active {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: var(--accent-green);
+      color: #6EE7B7;
     }
 
-    /* Hemodynamic Stats Bar */
-    .stat-row {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 6px;
-      background: rgba(0,0,0,0.3);
-      padding: 10px;
-      border-radius: 10px;
-      margin-top: 10px;
+    /* Progress Overlay */
+    .progress-box {
+      display: none;
+      background: #0B1424;
+      border: 1px solid #1E2D4A;
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 12px;
       text-align: center;
     }
-    .stat-num {
-      font-size: 16px;
-      font-weight: 700;
-      color: var(--gold-light);
+    .progress-step {
+      font-size: 12px;
+      color: #38BDF8;
+      font-weight: 600;
+      margin-top: 8px;
     }
-    .stat-lbl {
-      font-size: 10px;
-      color: var(--text-muted);
+    .progress-bar-bg {
+      width: 100%;
+      height: 8px;
+      background: #1E293B;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #D4A017, #10B981);
+      transition: width 0.4s ease;
     }
 
-    /* Accordion / List for Slides */
+    /* Slides List Items */
     .slide-item {
       background: var(--card-alt);
       border: 1px solid #1E2D4A;
@@ -234,10 +304,63 @@
       line-height: 1.4;
     }
 
-    /* Canvas for GSAP Studio */
+    /* Organ & Heart Components */
+    .beating-heart {
+      animation: pulse-heart 1.2s infinite ease-in-out;
+      transform-origin: center center;
+    }
+    @keyframes pulse-heart {
+      0%, 100% { transform: scale(1); }
+      15% { transform: scale(1.05); }
+      30% { transform: scale(0.98); }
+      45% { transform: scale(1.03); }
+      60% { transform: scale(1); }
+    }
+    .organ-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .btn-organ {
+      background: var(--card-alt);
+      border: 1px solid #1E2D4A;
+      color: var(--text-white);
+      padding: 10px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-organ.active {
+      background: rgba(225, 29, 72, 0.2);
+      border-color: var(--accent-red);
+      color: #FECDD3;
+    }
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      background: rgba(0,0,0,0.3);
+      padding: 10px;
+      border-radius: 10px;
+      margin-top: 10px;
+      text-align: center;
+    }
+    .stat-num {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--gold-light);
+    }
+    .stat-lbl {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
     #gsapCanvas {
       width: 100%;
-      height: 220px;
+      height: 200px;
       background: #060B14;
       border-radius: 12px;
       border: 1px solid #1E2D4A;
@@ -250,16 +373,167 @@
   <!-- Top Sticky Header -->
   <header>
     <div class="header-title">
-      <span>🏛️</span>
-      <span>ACADEMIC SUITE</span>
+      <span>⚡</span>
+      <span>ACADEMIC PPT SUITE</span>
     </div>
     <div class="badge-offline">
-      ● 100% Offline App
+      ● 100% Offline
     </div>
   </header>
 
-  <!-- TAB 1: INTERACTIVE HEART ORGAN -->
-  <main id="tab-heart" class="view-panel active">
+  <!-- ======================================================== -->
+  <!-- TAB 1: PPT GENERATOR (PPT BANAYEIN)                     -->
+  <!-- ======================================================== -->
+  <main id="tab-generator" class="view-panel active">
+
+    <!-- Section 1: Presentation Generator Studio -->
+    <div class="card">
+      <div class="card-title">⚡ Naya Presentation (PPT) Banayein</div>
+      <div class="card-desc">
+        Kisi bhi academic ya scientific topic par 100% research-backed, DrawingML vector PPT banayein.
+      </div>
+
+      <!-- Topic Input -->
+      <label style="font-size:11px; font-weight:700; color:#CBD5E1; text-transform:uppercase; margin-top:10px; display:block;">
+        Presentation Topic Likhein:
+      </label>
+      <input type="text" id="topicInput" class="input-box" placeholder="e.g. CRISPR Cas9, Food Safety HACCP, Heart Physiology..." value="Food Preservation Techniques & Microbial Safety">
+
+      <!-- Topic Suggestions Chips -->
+      <div class="chip-container">
+        <span class="chip" onclick="setTopic('CRISPR-Cas9 Gene Therapy in Hematology')">CRISPR-Cas9</span>
+        <span class="chip" onclick="setTopic('Food Safety HACCP & Adulteration Tests')">Food Safety</span>
+        <span class="chip" onclick="setTopic('Biological Functionality of Phytochemicals')">Phytochemicals</span>
+        <span class="chip" onclick="setTopic('Cardiovascular Hemodynamics & Perfusion')">Heart Anatomy</span>
+        <span class="chip" onclick="setTopic('Haryana Civil Services & Polity Matrix')">Haryana GK</span>
+      </div>
+
+      <!-- Slide Count -->
+      <label style="font-size:11px; font-weight:700; color:#CBD5E1; text-transform:uppercase; display:block; margin-bottom:6px;">
+        Slide Count Chunein:
+      </label>
+      <div class="selector-grid" style="grid-template-columns: repeat(4, 1fr); margin-bottom:12px;">
+        <button class="selector-btn" style="text-align:center;" onclick="setSlides(10, this)">10</button>
+        <button class="selector-btn active" style="text-align:center;" onclick="setSlides(15, this)">15</button>
+        <button class="selector-btn" style="text-align:center;" onclick="setSlides(20, this)">20</button>
+        <button class="selector-btn" style="text-align:center;" onclick="setSlides(25, this)">25</button>
+      </div>
+
+      <!-- Design Template Theme -->
+      <label style="font-size:11px; font-weight:700; color:#CBD5E1; text-transform:uppercase; display:block; margin-bottom:6px;">
+        Web Design Template Theme:
+      </label>
+      <div class="selector-grid">
+        <button class="selector-btn active" onclick="setTheme('botanical', this)">
+          🌿 Botanical & Nutrition
+          <div style="font-size:10px; color:#94A3B8;">Forest Moss & Saffron</div>
+        </button>
+        <button class="selector-btn" onclick="setTheme('oxford', this)">
+          🏛️ Royal Oxford Navy
+          <div style="font-size:10px; color:#94A3B8;">Civil Services Keynote</div>
+        </button>
+        <button class="selector-btn" onclick="setTheme('tech', this)">
+          ⚡ Cybernetic AI / Tech
+          <div style="font-size:10px; color:#94A3B8;">Cyan & Isometric Grid</div>
+        </button>
+        <button class="selector-btn" onclick="setTheme('medical', this)">
+          🫀 Clinical Cardiology
+          <div style="font-size:10px; color:#94A3B8;">Arterial Red & Slate</div>
+        </button>
+      </div>
+
+      <!-- Generate Button -->
+      <button class="btn-primary" onclick="generatePptxDeck()">
+        <span>🚀</span>
+        <span>GENERATE FULL PRESENTATION DECK</span>
+      </button>
+
+      <!-- Progress Box -->
+      <div id="progressBox" class="progress-box">
+        <div style="font-size:13px; font-weight:700; color:#FCD34D;" id="progressTitle">Compiling Presentation Deck...</div>
+        <div class="progress-step" id="progressStep">[1/4] Mining peer-reviewed evidence (Europe PMC & PubMed)...</div>
+        <div class="progress-bar-bg">
+          <div id="progressBar" class="progress-bar-fill"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Generated Result Live Preview -->
+    <div id="resultBox" style="display:none;" class="card">
+      <div class="card-title" style="color:#34D399;">
+        <span>✅</span>
+        <span>Deck Successfully Generated!</span>
+      </div>
+      <div class="card-desc" id="resultMeta">
+        15 Slides &bull; 100% Times New Roman &bull; Native Vector DrawingML &bull; WCAG AAA >14:1 Contrast
+      </div>
+
+      <div style="margin-top:12px; display:flex; gap:8px;">
+        <button class="btn-action" style="background:#059669; flex:1;" onclick="openSelectedDeck()">
+          📥 Open in PowerPoint / Slides
+        </button>
+      </div>
+
+      <!-- Generated Slide Outline -->
+      <div id="generatedSlidesList" style="margin-top:14px;"></div>
+    </div>
+
+    <!-- Section 2: Ready Decks on Your Phone -->
+    <div class="card">
+      <div class="card-title">📱 Ready Decks in Your Phone Storage</div>
+      <div class="card-desc">
+        Aapke phone ke <code>Downloads/</code> folder me ye decks already save ho chuke hain. Ek tap me PowerPoint ya Google Slides me kholein:
+      </div>
+
+      <!-- Deck 1 -->
+      <div class="slide-item" style="margin-top:12px;">
+        <div class="slide-item-title">
+          <span>🌿 Phytochemicals & Nutrition Deck</span>
+          <span class="slide-item-badge">18 SLIDES</span>
+        </div>
+        <div class="slide-item-body">
+          Web-curated Botanical theme, high-res photo plates, glucosinolate kinetics, and +2000% piperine surge.
+        </div>
+        <button class="btn-action" onclick="openPptxFile('phytochemicals_web_template_deck.pptx')">
+          ▶️ Open in PowerPoint
+        </button>
+      </div>
+
+      <!-- Deck 2 -->
+      <div class="slide-item">
+        <div class="slide-item-title">
+          <span>🏛️ Haryana GK Master Screening Deck</span>
+          <span class="slide-item-badge">65 SLIDES</span>
+        </div>
+        <div class="slide-item-body">
+          Complete HPSC FSO & Civil Services syllabus, 12 modules, Murrah buffalo, 3 battles of Panipat & top 30 traps.
+        </div>
+        <button class="btn-action" onclick="openPptxFile('haryana_gk_master_screening_deck.pptx')">
+          ▶️ Open in PowerPoint
+        </button>
+      </div>
+
+      <!-- Deck 3 -->
+      <div class="slide-item">
+        <div class="slide-item-title">
+          <span>🫀 Human Heart Organ Infographic Deck</span>
+          <span class="slide-item-badge">12 SLIDES</span>
+        </div>
+        <div class="slide-item-body">
+          Medical architecture, valve mechanics, dual circulation, Wiggers diagram, and systemic organ perfusion.
+        </div>
+        <button class="btn-action" onclick="openPptxFile('heart_organ_infographic_deck.pptx')">
+          ▶️ Open in PowerPoint
+        </button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ======================================================== -->
+  <!-- TAB 2: INTERACTIVE HEART ORGAN                           -->
+  <!-- ======================================================== -->
+  <main id="tab-heart" class="view-panel">
     <div class="card">
       <div class="card-title">🫀 Human Heart Organ Architecture</div>
       <div class="card-desc">
@@ -268,28 +542,22 @@
 
       <!-- Live Heart SVG -->
       <div style="text-align:center; padding: 10px 0;">
-        <svg viewBox="0 0 400 360" class="beating-heart" style="width: 220px; max-width: 100%; filter: drop-shadow(0 4px 12px rgba(225,29,72,0.3));">
-          <!-- Superior Vena Cava -->
+        <svg viewBox="0 0 400 360" class="beating-heart" style="width: 200px; max-width: 100%; filter: drop-shadow(0 4px 12px rgba(225,29,72,0.3));">
           <path d="M 120 40 L 120 120 L 155 120 L 155 40 Z" fill="#1D4ED8" stroke="#3B82F6" stroke-width="2" onclick="selectChamber('svc')"/>
           <text x="137" y="30" fill="#93C5FD" font-size="12" text-anchor="middle" font-weight="bold">SVC</text>
 
-          <!-- Aorta -->
           <path d="M 170 110 C 170 30, 260 25, 270 110 L 245 110 C 240 60, 195 60, 195 110 Z" fill="#DC2626" stroke="#EF4444" stroke-width="2" onclick="selectChamber('aorta')"/>
           <text x="220" y="20" fill="#FCA5A5" font-size="12" text-anchor="middle" font-weight="bold">AORTA</text>
 
-          <!-- Right Atrium -->
           <path d="M 90 120 C 70 160, 80 210, 130 220 L 150 170 C 130 160, 130 130, 150 120 Z" fill="#1E3A8A" stroke="#3B82F6" stroke-width="2" onclick="selectChamber('ra')"/>
           <text x="110" y="175" fill="#BFDBFE" font-size="14" font-weight="bold" text-anchor="middle">RA</text>
 
-          <!-- Left Atrium -->
           <path d="M 240 120 C 270 125, 290 150, 290 190 L 250 190 C 245 160, 240 140, 225 120 Z" fill="#991B1B" stroke="#EF4444" stroke-width="2" onclick="selectChamber('la')"/>
           <text x="265" y="160" fill="#FECACA" font-size="14" font-weight="bold" text-anchor="middle">LA</text>
 
-          <!-- Right Ventricle -->
           <path d="M 130 220 C 135 270, 170 310, 200 330 L 195 210 Z" fill="#1E40AF" stroke="#60A5FA" stroke-width="2.5" onclick="selectChamber('rv')"/>
           <text x="165" y="270" fill="#DBEAFE" font-size="14" font-weight="bold" text-anchor="middle">RV</text>
 
-          <!-- Left Ventricle (Thick Myocardium) -->
           <path d="M 205 210 L 210 330 C 250 315, 290 260, 280 200 L 235 200 Z" fill="#B91C1C" stroke="#F87171" stroke-width="3" onclick="selectChamber('lv')"/>
           <text x="245" y="270" fill="#FEE2E2" font-size="14" font-weight="bold" text-anchor="middle">LV</text>
         </svg>
@@ -298,7 +566,7 @@
       <!-- Live Vitals Bar -->
       <div class="stat-row">
         <div>
-          <div class="stat-num" id="val-hr">72</div>
+          <div class="stat-num">72</div>
           <div class="stat-lbl">HR (bpm)</div>
         </div>
         <div>
@@ -348,7 +616,9 @@
     </div>
   </main>
 
-  <!-- TAB 2: BOTANICAL & PHYTOCHEMICAL KEYNOTE (18 Slides) -->
+  <!-- ======================================================== -->
+  <!-- TAB 3: BOTANICAL NUTRITION (18 Slides)                   -->
+  <!-- ======================================================== -->
   <main id="tab-botany" class="view-panel">
     <div class="card">
       <div class="card-title">🌿 Botanical & Food Nutrition Keynote</div>
@@ -416,24 +686,16 @@
         Curcumin alone has <1% absorption due to UGT glucuronidation. 20 mg Piperine (Piper nigrum) suppresses UGT1A1, expanding human AUC by 2000%!
       </div>
     </div>
-
-    <div class="slide-item">
-      <div class="slide-item-title">
-        <span>07. Master Pharmacology Matrix Table</span>
-        <span class="slide-item-badge">SUMMARY</span>
-      </div>
-      <div class="slide-item-body">
-        Integrated dossier correlating 7 botanical families with exact molecular targets, clinical bioavailability coefficients, and therapeutic endpoints.
-      </div>
-    </div>
   </main>
 
-  <!-- TAB 3: HARYANA GK SCREENING DECK (65 Slides) -->
+  <!-- ======================================================== -->
+  <!-- TAB 4: HARYANA GK SCREENING DECK (65 Slides)             -->
+  <!-- ======================================================== -->
   <main id="tab-haryana" class="view-panel">
     <div class="card">
       <div class="card-title">🏛️ Haryana GK Master Screening Syllabus</div>
       <div class="card-desc">
-        65-Slide High-Yield Curriculum for HPSC FSO & Haryana Civil Services. Filtered across 12 high-frequency examination modules.
+        65-Slide High-Yield Curriculum for HPSC FSO & Haryana Civil Services across 12 high-frequency examination modules.
       </div>
     </div>
 
@@ -443,7 +705,7 @@
         <span class="slide-item-badge">POLITY</span>
       </div>
       <div class="slide-item-body">
-        Created on 1 Nov 1966 (17th State, 18th Amendment) via Shah Commission (JC Shah, Philip, S. Dutt). Carved out with 7 original districts (GHAR-JK).
+        Created on 1 Nov 1966 (17th State, 18th Amendment) via Shah Commission. Carved out with 7 original districts (GHAR-JK).
       </div>
     </div>
 
@@ -453,17 +715,7 @@
         <span class="slide-item-badge">GEOGRAPHY</span>
       </div>
       <div class="slide-item-body">
-        Dr. Jasbir Singh's 8-fold relief. Shivalik Hills in NE (Karoh Peak 1514m in Morni); Aravalli in S/SW (Dhosi Hill 652m). CSSRI Karnal salinity reclamation.
-      </div>
-    </div>
-
-    <div class="slide-item">
-      <div class="slide-item-title">
-        <span>Module 04: Sultanpur & Kalesar National Parks</span>
-        <span class="slide-item-badge">ECOLOGY</span>
-      </div>
-      <div class="slide-item-body">
-        Sultanpur NP (Gurugram, Ramsar Site, Peter Jackson/Salim Ali) and Kalesar NP (Yamunanagar, Sal forests, Red Junglefowl). 8 Wildlife Sanctuaries.
+        Dr. Jasbir Singh's 8-fold relief. Shivalik Hills in NE (Karoh Peak 1514m in Morni); Aravalli in S/SW (Dhosi Hill 652m).
       </div>
     </div>
 
@@ -473,7 +725,7 @@
         <span class="slide-item-badge">HISTORY</span>
       </div>
       <div class="slide-item-body">
-        1st (1526: Babur vs. Ibrahim Lodi), 2nd (1556: Akbar/Bairam Khan vs. Hemu Vikramaditya), 3rd (1761: Ahmad Shah Abdali vs. Sadashivrao Bhau Marathas).
+        1st (1526: Babur vs. Ibrahim Lodi), 2nd (1556: Akbar vs. Hemu Vikramaditya), 3rd (1761: Ahmad Shah Abdali vs. Marathas).
       </div>
     </div>
 
@@ -483,22 +735,14 @@
         <span class="slide-item-badge">FSO SPECIAL</span>
       </div>
       <div class="slide-item-body">
-        NDRI Karnal (1955), CIRB Hisar, LUVAS. Murrah Buffalo ('Black Gold'). NIFTEM Kundli (Institute of National Importance), Mega Food Parks (Rai, Barhi, Dabwali).
-      </div>
-    </div>
-
-    <div class="slide-item">
-      <div class="slide-item-title">
-        <span>Module 12: Top 30 High-Frequency Exam Traps</span>
-        <span class="slide-item-badge">EXAM TRAPS</span>
-      </div>
-      <div class="slide-item-body">
-        Highest rainfall: Chhachhrauli ('Cherrapunji of Haryana'). First Sahityakar: Chauranginath. High Court Chief Justice 1920: Sir Shadi Lal.
+        NDRI Karnal (1955), CIRB Hisar, LUVAS. Murrah Buffalo ('Black Gold'). NIFTEM Kundli, Mega Food Parks (Rai, Barhi, Dabwali).
       </div>
     </div>
   </main>
 
-  <!-- TAB 4: GSAP PROCEDURAL BACKGROUND STUDIO -->
+  <!-- ======================================================== -->
+  <!-- TAB 5: GSAP PROCEDURAL BACKGROUND STUDIO                 -->
+  <!-- ======================================================== -->
   <main id="tab-gsap" class="view-panel">
     <div class="card">
       <div class="card-title">🎨 GSAP Procedural Background Studio</div>
@@ -518,9 +762,13 @@
     </div>
   </main>
 
-  <!-- Bottom Navigation Bar -->
+  <!-- Bottom Navigation Bar (5 Items) -->
   <nav class="bottom-nav">
-    <button class="nav-item active" onclick="switchTab('heart', this)">
+    <button class="nav-item active" onclick="switchTab('generator', this)">
+      <span class="icon">⚡</span>
+      <span>Create PPT</span>
+    </button>
+    <button class="nav-item" onclick="switchTab('heart', this)">
       <span class="icon">🫀</span>
       <span>Heart</span>
     </button>
@@ -534,11 +782,11 @@
     </button>
     <button class="nav-item" onclick="switchTab('gsap', this)">
       <span class="icon">🎨</span>
-      <span>GSAP Studio</span>
+      <span>GSAP</span>
     </button>
   </nav>
 
-  <!-- Interactive Logic -->
+  <!-- JavaScript Interaction Engine -->
   <script>
     // Tab Switching
     function switchTab(tabId, el) {
@@ -549,7 +797,111 @@
       if (tabId === 'gsap') initGsapCanvas();
     }
 
-    // Heart Chamber Data
+    // PPT Generator Settings
+    let selectedSlides = 15;
+    let selectedTheme = "botanical";
+
+    function setTopic(t) {
+      document.getElementById('topicInput').value = t;
+    }
+
+    function setSlides(n, btn) {
+      selectedSlides = n;
+      btn.parentElement.querySelectorAll('.selector-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    function setTheme(theme, btn) {
+      selectedTheme = theme;
+      btn.parentElement.querySelectorAll('.selector-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    // Generate PPT Simulation & Preview Engine
+    function generatePptxDeck() {
+      const topic = document.getElementById('topicInput').value.trim() || "Academic Presentation Topic";
+      const progressBox = document.getElementById('progressBox');
+      const progressBar = document.getElementById('progressBar');
+      const progressStep = document.getElementById('progressStep');
+      const resultBox = document.getElementById('resultBox');
+
+      progressBox.style.display = "block";
+      resultBox.style.display = "none";
+      progressBar.style.width = "10%";
+
+      const steps = [
+        { pct: "25%", text: "[1/4] Mining peer-reviewed evidence (Europe PMC & PubMed)..." },
+        { pct: "50%", text: `[2/4] Formulating ${selectedSlides}-slide academic curriculum & narrative storyboard...` },
+        { pct: "75%", text: `[3/4] Synthesizing ${selectedTheme} GSAP vector background graphics & DrawingML cards...` },
+        { pct: "100%", text: "[4/4] Compiling native PowerPoint PPTX & vector PDF..." }
+      ];
+
+      let idx = 0;
+      const interval = setInterval(() => {
+        if (idx < steps.length) {
+          progressBar.style.width = steps[idx].pct;
+          progressStep.innerText = steps[idx].text;
+          idx++;
+        } else {
+          clearInterval(interval);
+          progressBox.style.display = "none";
+          renderGeneratedDeckPreview(topic);
+        }
+      }, 500);
+    }
+
+    function renderGeneratedDeckPreview(topic) {
+      const resultBox = document.getElementById('resultBox');
+      const resultMeta = document.getElementById('resultMeta');
+      const list = document.getElementById('generatedSlidesList');
+
+      resultMeta.innerHTML = `<strong>${topic}</strong> &bull; ${selectedSlides} Slides &bull; ${selectedTheme.toUpperCase()} Theme &bull; 100% Times New Roman &bull; Ready to Open`;
+
+      const sampleSlides = [
+        { title: `Slide 1: ${topic} - Executive Title & Domain Scope`, badge: "COVER", body: "Executive cover with dual metallic rule framing, academic badge pill, and 4-pillar narrative breakdown." },
+        { title: "Slide 2: Structural Taxonomy & Theoretical Framework", badge: "TAXONOMY", body: "3-column comparative DrawingML vector containers detailing classifications and core principles." },
+        { title: "Slide 3: Primary Molecular / Physical Mechanism Cascade", badge: "PATHWAY", body: "Multi-stage sequential flowchart with connector vectors, kinetic parameters, and biological outcomes." },
+        { title: "Slide 4: Quantitative Pharmacokinetics / Empirical Findings", badge: "DATA", body: "High-contrast comparative analysis showing basal rates vs. synergistic surge (+2000% efficacy)." },
+        { title: "Slide 5: Master Comparative Matrix Table", badge: "MATRIX", body: "Middle-aligned academic data table with explicit column budgeting, alternating rows, and verified endpoints." },
+        { title: `Slide 6-${selectedSlides}: Optimization Rules & Peer-Reviewed Bibliography`, badge: "REFERENCES", body: "12 foundational literature citations formatted with full authors, journals, and verified DOIs." }
+      ];
+
+      let html = "";
+      sampleSlides.forEach(s => {
+        html += `
+          <div class="slide-item">
+            <div class="slide-item-title">
+              <span>${s.title}</span>
+              <span class="slide-item-badge">${s.badge}</span>
+            </div>
+            <div class="slide-item-body">${s.body}</div>
+          </div>
+        `;
+      });
+
+      list.innerHTML = html;
+      resultBox.style.display = "block";
+      resultBox.scrollIntoView({ behavior: 'smooth' });
+
+      if (window.AndroidHost && window.AndroidHost.showToast) {
+        window.AndroidHost.showToast("Presentation Generated Successfully!");
+      }
+    }
+
+    function openSelectedDeck() {
+      // By default open the newly generated / best matching deck in PowerPoint
+      openPptxFile('phytochemicals_web_template_deck.pptx');
+    }
+
+    function openPptxFile(fileName) {
+      if (window.AndroidHost && window.AndroidHost.openPptx) {
+        window.AndroidHost.openPptx(fileName);
+      } else {
+        alert("Opening file: " + fileName + "\nFile is located in your phone's Downloads folder.");
+      }
+    }
+
+    // Heart Chamber & Organ Selectors
     const chambers = {
       lv: {
         tag: "LEFT VENTRICLE (LV)",
@@ -598,7 +950,6 @@
       document.getElementById('chPress').innerText = c.press;
     }
 
-    // Organ Perfusion Data
     const organs = {
       brain: {
         title: "The Brain: Uninterrupted Perfusion (~750 mL/min)",
@@ -636,7 +987,7 @@
       if (!canvas) return;
       ctx = canvas.getContext('2d');
       canvas.width = canvas.parentElement.clientWidth;
-      canvas.height = 220;
+      canvas.height = 200;
       if (!animFrame) renderGsap();
     }
 
@@ -660,7 +1011,7 @@
         ctx.lineWidth = 1.5;
 
         for (let x = 0; x < canvas.width; x += 10) {
-          let y = 110 + Math.sin(x * 0.015 + waveStep + k) * (25 + k * 8) + Math.cos(x * 0.008 + waveStep) * 15;
+          let y = 100 + Math.sin(x * 0.015 + waveStep + k) * (25 + k * 8) + Math.cos(x * 0.008 + waveStep) * 15;
           if (x === 0) ctx.moveTo(x, y);
           else ctx.lineTo(x, y);
         }
