@@ -5,17 +5,20 @@ Comprehensive 25-Slide Academic & Medical Presentation on:
 
 Flawless Geometric Alignment & Museum-Grade Botanical Art Integration:
 - Canvas: 13.333" x 7.5" (16:9 Widescreen)
-- Content Stage: Left 0.8" to 12.533" (Total width 11.733"), Top 1.90" to 6.70" (Height 4.80")
+- Content Stage: Left 0.8" to 12.533" (Total width 11.733"), Top 1.88" to 6.74" (Height 4.86")
 - Header: 0.8" to 12.533", Top 0" to 1.72", with dual metallic rule lines
 - Footer: Grounded capsule at Top 6.92", Height 0.40", with DOI citations and slide counters
 - Typography: Strict 100% Times New Roman across every title, subtitle, card, label, table, footnote, and counter
 - 11 Dedicated High-Resolution Visual Assets (6 Botanical Photographic Plates + 5 Scientific Vector Flowcharts)
-- Zero Text Collision, Zero Alignment Errors, Zero Overlapping Elements
+- Two-Tier Stacked Layout for Wide 4.2:1 Infographics (Slides 3, 4, 12, 17, 21): Top 2 cards + Bottom Panoramic Showcase
+- Archival Specimen Plaque Layout for 1.34:1 Botanical Plates (Slides 5, 7, 10, 15, 16, 20)
+- Zero Distortion, Zero Text Collision, Zero Alignment Errors
 """
 
 import sys
 import os
 from pathlib import Path
+from PIL import Image
 from pptx import Presentation
 from pptx.util import Inches, Pt
 from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
@@ -242,25 +245,25 @@ class Phytochemicals25DeckBuilder:
         p = tf.paragraphs[0]
         p.text = title
         p.font.name = self.FONT_FAMILY
-        p.font.size = Pt(12.5)
+        p.font.size = Pt(12.0)
         p.font.bold = True
         p.font.color.rgb = self.COLOR_TEXT_NAVY
 
-        start_y = top + Inches(0.48)
+        start_y = top + Inches(0.45)
         if subtitle:
-            s_box = slide.shapes.add_textbox(left + Inches(0.2), top + Inches(0.44), width - Inches(0.4), Inches(0.25))
+            s_box = slide.shapes.add_textbox(left + Inches(0.2), top + Inches(0.42), width - Inches(0.4), Inches(0.24))
             stf = s_box.text_frame
             stf.word_wrap = True
             stf.margin_left = stf.margin_top = stf.margin_right = stf.margin_bottom = 0
             sp = stf.paragraphs[0]
             sp.text = subtitle
             sp.font.name = self.FONT_FAMILY
-            sp.font.size = Pt(9.5)
+            sp.font.size = Pt(9.2)
             sp.font.bold = True
             sp.font.color.rgb = color
-            start_y = top + Inches(0.72)
+            start_y = top + Inches(0.68)
 
-        content_height = (top + height) - start_y - Inches(0.15)
+        content_height = (top + height) - start_y - Inches(0.12)
         c_box = slide.shapes.add_textbox(left + Inches(0.2), start_y, width - Inches(0.4), content_height)
         ctf = c_box.text_frame
         ctf.word_wrap = True
@@ -268,7 +271,7 @@ class Phytochemicals25DeckBuilder:
 
         return ctf
 
-    def append_bullet(self, tf, bold_prefix: str, text: str, font_size: float = 9.2, space_after: float = 4.0):
+    def append_bullet(self, tf, bold_prefix: str, text: str, font_size: float = 9.0, space_after: float = 3.5):
         if len(tf.paragraphs) == 1 and tf.paragraphs[0].text == "":
             p = tf.paragraphs[0]
         else:
@@ -289,31 +292,98 @@ class Phytochemicals25DeckBuilder:
         r2.font.bold = False
         r2.font.color.rgb = self.COLOR_TEXT_DARK
 
-    def add_image_panel(self, slide, left, top, width, height, image_name: str, caption: str = None, dark_mat: bool = True):
-        """Museum-Grade Framed Image Panel with perfect geometric alignment."""
+    def add_image_panel(self, slide, left, top, width, height, image_name: str, caption: str = None, dark_mat: bool = True, specimen_info: dict = None):
+        """Museum-Grade Framed Image Panel with exact mathematical aspect-ratio preservation."""
         img_path = ASSETS_DIR / image_name
         if not img_path.exists():
             print(f"[WARNING] Image missing: {img_path}")
             return None
 
-        # Surrounding Frame Container (Royal Navy Mat or Crisp Card)
+        # Container Frame (Royal Navy Mat or Crisp Card)
         frame = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, left, top, width, height)
         frame.fill.solid()
         frame.fill.fore_color.rgb = self.COLOR_HEADER_BG if dark_mat else self.COLOR_CARD_WHITE
         frame.line.color.rgb = self.COLOR_HEADER_GOLD if dark_mat else self.COLOR_BORDER_SLATE
         frame.line.width = Pt(1.5 if dark_mat else 1.0)
 
-        # Inner Picture Dimensions
-        pad_x = Inches(0.15)
-        pad_y = Inches(0.15)
-        cap_h = Inches(0.45) if caption else Inches(0)
-        img_w = width - (pad_x * 2)
-        img_h = height - (pad_y * 2) - cap_h
+        # Top Accent Rail for white cards
+        if not dark_mat:
+            rail = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, left + Inches(0.12), top, width - Inches(0.24), Pt(3.0))
+            rail.fill.solid()
+            rail.fill.fore_color.rgb = self.COLOR_EMERALD
+            rail.line.fill.background()
 
-        slide.shapes.add_picture(str(img_path), left + pad_x, top + pad_y, width=img_w, height=img_h)
+        # Read natural image dimensions
+        with Image.open(img_path) as im:
+            orig_w, orig_h = im.size
+        img_ar = orig_w / orig_h
 
-        if caption:
-            c_box = slide.shapes.add_textbox(left + pad_x, top + height - cap_h - Inches(0.05), img_w, cap_h)
+        pad_x = Inches(0.14)
+        pad_y = Inches(0.12)
+        plaque_h = Inches(1.12) if specimen_info else Inches(0)
+        cap_h = Inches(0.36) if (caption and not specimen_info) else Inches(0)
+
+        avail_w = width - (pad_x * 2)
+        avail_h = height - (pad_y * 2) - cap_h - plaque_h
+
+        box_ar = avail_w / avail_h
+        if img_ar > box_ar:
+            draw_w = avail_w
+            draw_h = avail_w / img_ar
+        else:
+            draw_h = avail_h
+            draw_w = avail_h * img_ar
+
+        offset_x = (avail_w - draw_w) / 2
+        offset_y = (avail_h - draw_h) / 2
+
+        # Draw Picture with 100% Exact Aspect Ratio
+        pic_y = top + pad_y + (0 if specimen_info else offset_y)
+        slide.shapes.add_picture(
+            str(img_path),
+            left + pad_x + offset_x,
+            pic_y,
+            width=draw_w,
+            height=draw_h
+        )
+
+        if specimen_info:
+            # Botanical Specimen Plaque at bottom
+            p_top = top + pad_y + draw_h + Inches(0.08)
+            p_h = (top + height) - p_top - Inches(0.10)
+            plaque = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, left + pad_x, p_top, avail_w, p_h)
+            plaque.fill.solid()
+            plaque.fill.fore_color.rgb = RGBColor(14, 46, 44)
+            plaque.line.color.rgb = self.COLOR_HEADER_GOLD
+            plaque.line.width = Pt(0.75)
+
+            ptf = plaque.text_frame
+            ptf.word_wrap = True
+            ptf.margin_top = Pt(3)
+            p0 = ptf.paragraphs[0]
+            p0.alignment = PP_ALIGN.CENTER
+            p0.text = specimen_info.get("title", "MUSEUM BOTANICAL SPECIMEN").upper()
+            p0.font.name = self.FONT_FAMILY
+            p0.font.size = Pt(8.8)
+            p0.font.bold = True
+            p0.font.color.rgb = self.COLOR_GOLD_BRIGHT
+
+            p1 = ptf.add_paragraph()
+            p1.alignment = PP_ALIGN.CENTER
+            p1.text = specimen_info.get("meta", "")
+            p1.font.name = self.FONT_FAMILY
+            p1.font.size = Pt(8.0)
+            p1.font.color.rgb = self.COLOR_TEXT_SUBTITLE
+
+            p2 = ptf.add_paragraph()
+            p2.alignment = PP_ALIGN.CENTER
+            p2.text = specimen_info.get("desc", "")
+            p2.font.name = self.FONT_FAMILY
+            p2.font.size = Pt(7.6)
+            p2.font.color.rgb = self.COLOR_TEXT_FOOTER
+
+        elif caption:
+            c_box = slide.shapes.add_textbox(left + pad_x, top + height - cap_h - Inches(0.04), avail_w, cap_h)
             ctf = c_box.text_frame
             ctf.word_wrap = True
             ctf.margin_left = ctf.margin_top = ctf.margin_right = ctf.margin_bottom = 0
@@ -321,7 +391,7 @@ class Phytochemicals25DeckBuilder:
             cp.alignment = PP_ALIGN.CENTER
             cp.text = caption
             cp.font.name = self.FONT_FAMILY
-            cp.font.size = Pt(9.5)
+            cp.font.size = Pt(9.0)
             cp.font.bold = True
             cp.font.color.rgb = self.COLOR_GOLD_BRIGHT if dark_mat else self.COLOR_TEXT_NAVY
 
@@ -376,7 +446,7 @@ class Phytochemicals25DeckBuilder:
         return table_shape
 
     # -------------------------------------------------------------------------
-    # 25 INDIVIDUAL SLIDE BUILDERS (WITH IMAGES & PERFECT ALIGNMENT)
+    # 25 INDIVIDUAL SLIDE BUILDERS (PERFECT SYMMETRIC GRIDS & INFOGRAPHICS)
     # -------------------------------------------------------------------------
     def build_slide_01_cover(self):
         slide = self.prs.slides.add_slide(self.blank_layout)
@@ -426,9 +496,9 @@ class Phytochemicals25DeckBuilder:
         p2.font.color.rgb = self.COLOR_TEXT_SUBTITLE
 
         # 4 Core Pillar Cards
-        card_w = Inches(2.78)
-        card_h = Inches(3.3)
-        gap = Inches(0.2)
+        card_w = Inches(2.783)
+        card_h = Inches(3.30)
+        gap = Inches(0.20)
         start_x = Inches(0.8)
         top_y = Inches(3.2)
 
@@ -519,11 +589,11 @@ class Phytochemicals25DeckBuilder:
             slide_num=2
         )
 
-        w = Inches(2.2)
-        h = Inches(4.75)
-        gap = Inches(0.18)
+        w = Inches(2.20)
+        h = Inches(4.80)
+        gap = Inches(0.183)
         start_x = Inches(0.8)
-        top_y = Inches(1.95)
+        top_y = Inches(1.90)
 
         taxa = [
             ("GLUCOSINOLATES", "Sulfur-Nitrogen Glycosides", self.COLOR_EMERALD, [
@@ -551,7 +621,7 @@ class Phytochemicals25DeckBuilder:
                 ("Core Role:", "Generates H2S gas; activates eNOS and inhibits HMG-CoA reductase.")
             ]),
             ("TERPENOIDS", "Isoprene Polymeric Chains", self.COLOR_TEAL, [
-                ("Structure:", "Formed from 5-carbon isoprene ($C_5H_8$) units via mevalonate pathway."),
+                ("Structure:", "Formed from 5-carbon isoprene (C5H8) units via mevalonate pathway."),
                 ("Subclasses:", "Monoterpenes (Limonene), Diterpenes (Carnosol), Triterpenes."),
                 ("Key Sources:", "Citrus peel, Rosemary, Oregano, Thyme."),
                 ("Target Action:", "Membrane lipid fluidization, antimicrobial, and anti-inflammatory.")
@@ -576,20 +646,33 @@ class Phytochemicals25DeckBuilder:
             slide_num=3
         )
 
-        top_y = Inches(1.95)
-        h_card = Inches(4.75)
-        w_text = Inches(6.6)
-        w_img = Inches(4.883)
+        # Top Tier: 2 Symmetric White Cards (Width 5.716" each, Total 11.733")
+        top_y = Inches(1.88)
+        h_top = Inches(1.92)
+        w_card = Inches(5.716)
+        gap = Inches(0.301)
 
-        ctf = self.create_card(slide, Inches(0.8), top_y, w_text, h_card, "STEPWISE HYDROLYSIS & THERMAL KINETICS", "Enzymatic Cleavage vs. The ESP Shunt", self.COLOR_EMERALD)
-        self.append_bullet(ctf, "1. Cellular Rupture:", "Chewing, mincing, or blending ruptures plant vacuoles, releasing compartmentalized Glucoraphanin.", font_size=10.0, space_after=5.0)
-        self.append_bullet(ctf, "2. Myrosinase Hydrolysis:", "Thioglucosidase (EC 3.2.1.147) cleaves the thioglucosidic bond, generating D-glucose and an unstable thiohydroximate-O-sulfonate intermediate.", font_size=10.0, space_after=5.0)
-        self.append_bullet(ctf, "3. Spontaneous Lossen Rearrangement:", "At neutral pH, the aglycone spontaneously rearranges into Sulforaphane (SFN - active electrophilic isothiocyanate, -N=C=S).", font_size=10.0, space_after=5.0)
-        self.append_bullet(ctf, "4. The ESP Shunt (Trap):", "Active Epithiospecifier Protein shunts intermediate conversion to Sulforaphane Nitrile, which has ZERO Nrf2 inductive activity!", font_size=10.0, space_after=5.0)
-        self.append_bullet(ctf, "5. The Mustard Seed Hack:", "Adding raw ground mustard seed (Brassica juncea) provides heat-stable exogenous myrosinase, restoring 100% SFN yield in cooked broccoli.", font_size=10.0, space_after=5.0)
+        ctf1 = self.create_card(slide, Inches(0.8), top_y, w_card, h_top, "STEPWISE HYDROLYSIS & KINETICS", "Cellular Rupture & Lossen Rearrangement", self.COLOR_EMERALD)
+        self.append_bullet(ctf1, "1. Vacuolar Release:", "Chewing or chopping ruptures plant vacuoles, liberating compartmentalized Glucoraphanin.", font_size=8.8, space_after=2.5)
+        self.append_bullet(ctf1, "2. Myrosinase Hydrolysis:", "Thioglucosidase (EC 3.2.1.147) cleaves glucose, forming an unstable thiohydroximate-O-sulfonate.", font_size=8.8, space_after=2.5)
+        self.append_bullet(ctf1, "3. Lossen Rearrangement:", "At neutral pH (6.0-7.5), aglycone spontaneously yields bioactive Sulforaphane (-N=C=S).", font_size=8.8, space_after=2.5)
 
-        # Right: High-Res Flowchart Vector Diagram
-        self.add_image_panel(slide, Inches(7.65), top_y, w_img, h_card, "flowchart_glucosinolate_myrosinase.png", "Figure 1: Myrosinase Enzymatic Cascade & Epithiospecifier Divergence", dark_mat=False)
+        ctf2 = self.create_card(slide, Inches(0.8) + w_card + gap, top_y, w_card, h_top, "THE ESP SHUNT & CULINARY RESCUE", "Preserving Catalytic Enzyme Potency", self.COLOR_CRIMSON)
+        self.append_bullet(ctf2, "4. The ESP Shunt (Trap):", "Epithiospecifier Protein (ESP) diverts intermediates into inert Sulforaphane Nitrile (0% Nrf2 activity).", font_size=8.8, space_after=2.5)
+        self.append_bullet(ctf2, "5. Thermal Sensitivity:", "Boiling (>60°C) denatures endogenous myrosinase, reducing active sulforaphane yield by >85%.", font_size=8.8, space_after=2.5)
+        self.append_bullet(ctf2, "6. The Mustard Seed Hack:", "Adding raw ground mustard (Brassica juncea) provides exogenous myrosinase, restoring 100% SFN yield.", font_size=8.8, space_after=2.5)
+
+        # Bottom Tier: Panoramic High-Res Flowchart Vector Showcase
+        self.add_image_panel(
+            slide,
+            Inches(0.8),
+            Inches(3.96),
+            Inches(11.733),
+            Inches(2.78),
+            "flowchart_glucosinolate_myrosinase.png",
+            caption="Figure 1: Myrosinase Enzymatic Cascade & Epithiospecifier Divergence (300 DPI Vector Flowchart)",
+            dark_mat=False
+        )
 
     def build_slide_04_nrf2_mechanism(self):
         slide = self.prs.slides.add_slide(self.blank_layout)
@@ -603,20 +686,32 @@ class Phytochemicals25DeckBuilder:
             slide_num=4
         )
 
-        top_y = Inches(1.95)
-        h_card = Inches(4.75)
-        w_text = Inches(6.6)
-        w_img = Inches(4.883)
+        top_y = Inches(1.88)
+        h_top = Inches(1.92)
+        w_card = Inches(5.716)
+        gap = Inches(0.301)
 
-        ctf = self.create_card(slide, Inches(0.8), top_y, w_text, h_card, "ELECTROPHILIC ATTACK & ARE PROMOTER BINDING", "Phase II Enzyme Induction Cascade", self.COLOR_COBALT)
-        self.append_bullet(ctf, "1. Basal Proteasomal Repression:", "In unstressed cells, Nrf2 is bound by Keap1 homodimer and targeted to Cul3-Rbx1 E3 ligase for rapid 26S proteasomal degradation (half-life ~20 min).", font_size=10.0, space_after=5.0)
-        self.append_bullet(ctf, "2. Cys151 Electrophilic Attack:", "Sulforaphane's electrophilic isothiocyanate carbon (-N=C=S) reacts covalently with reactive thiol groups on Keap1 Cys151, inducing conformational distortion.", font_size=10.0, space_after=5.0)
-        self.append_bullet(ctf, "3. Cul3 Dissociation & Translocation:", "Ubiquitination ceases; de novo synthesized Nrf2 bypasses degradation, accumulates in cytosol, and translocates into the nucleus.", font_size=10.0, space_after=5.0)
-        self.append_bullet(ctf, "4. ARE Promoter Activation:", "Nrf2 heterodimerizes with small Maf proteins, binding the Antioxidant Response Element (ARE: 5'-TGACNNNGC-3') to transcribe over 200 cytoprotective genes.", font_size=10.0, space_after=5.0)
-        self.append_bullet(ctf, "5. Target Enzymes:", "Robustly upregulates Heme Oxygenase-1 (HO-1), NQO1, and Glutathione S-Transferases (GST), extinguishing cellular electrophilic stress.", font_size=10.0, space_after=5.0)
+        ctf1 = self.create_card(slide, Inches(0.8), top_y, w_card, h_top, "BASAL REPRESSION & ELECTROPHILIC SENSING", "Cul3 Ubiquitination & Cys151 Modification", self.COLOR_COBALT)
+        self.append_bullet(ctf1, "1. Basal Proteasomal Lysis:", "Keap1 homodimer binds Nrf2, targeting it to Cul3-Rbx1 E3 ligase for rapid 26S proteasome degradation.", font_size=8.8, space_after=2.5)
+        self.append_bullet(ctf1, "2. Cys151 Electrophilic Attack:", "Sulforaphane's -N=C=S carbon covalently alkylates reactive Keap1 Cys151 thiol groups.", font_size=8.8, space_after=2.5)
+        self.append_bullet(ctf1, "3. Cul3 Dissociation:", "Conformational change prevents Nrf2 ubiquitination; de novo synthesized Nrf2 accumulates.", font_size=8.8, space_after=2.5)
 
-        # Right: High-Res Nrf2 Pathway Flowchart
-        self.add_image_panel(slide, Inches(7.65), top_y, w_img, h_card, "flowchart_nrf2_pathway.png", "Figure 2: Keap1 Cysteine Sensing & Nrf2 Translocation Vectors", dark_mat=False)
+        ctf2 = self.create_card(slide, Inches(0.8) + w_card + gap, top_y, w_card, h_top, "NUCLEAR IMPORT & ARE TRANSCRIPTION", "Upregulation of 200+ Cytoprotective Enzymes", self.COLOR_EMERALD)
+        self.append_bullet(ctf2, "4. Nuclear Import & sMaf:", "Free Nrf2 translocates across nuclear pore and heterodimerizes with small Maf proteins (sMaf).", font_size=8.8, space_after=2.5)
+        self.append_bullet(ctf2, "5. ARE Promoter Binding:", "Complex binds Antioxidant Response Elements (5'-TGACNNNGC-3') on genomic DNA.", font_size=8.8, space_after=2.5)
+        self.append_bullet(ctf2, "6. Target Gene Expression:", "Transcribes NQO1, Heme Oxygenase-1 (HO-1), and GSTs, raising cellular glutathione by >200%.", font_size=8.8, space_after=2.5)
+
+        # Bottom Tier: High-Res Nrf2 Molecular Vector Pathway
+        self.add_image_panel(
+            slide,
+            Inches(0.8),
+            Inches(3.96),
+            Inches(11.733),
+            Inches(2.78),
+            "flowchart_nrf2_pathway.png",
+            caption="Figure 2: Keap1 Cysteine Sensing & Nrf2 Nuclear Translocation Molecular Pathway (300 DPI)",
+            dark_mat=False
+        )
 
     def build_slide_05_epigenetics_hdac(self):
         slide = self.prs.slides.add_slide(self.blank_layout)
@@ -630,20 +725,25 @@ class Phytochemicals25DeckBuilder:
             slide_num=5
         )
 
-        top_y = Inches(1.95)
-        h_card = Inches(4.75)
-        w_text = Inches(6.6)
+        top_y = Inches(1.90)
+        h_card = Inches(4.80)
+        w_text = Inches(6.60)
         w_img = Inches(4.883)
 
-        ctf = self.create_card(slide, Inches(0.8), top_y, w_text, h_card, "CHROMATIN REMODELING & TUMOR SUPPRESSION", "Pan-HDAC & DNMT Competitive Inhibition", self.COLOR_PURPLE)
-        self.append_bullet(ctf, "1. Catalytic Zinc Chelation:", "Sulforaphane metabolites (SFN-cysteine and SFN-NAC) fit into the catalytic pocket of HDAC enzymes, chelating active-site zinc ions ($Zn^{2+}$).", font_size=10.0, space_after=5.0)
-        self.append_bullet(ctf, "2. Histone Hyperacetylation:", "Pan-HDAC inhibition across Class I and II enzymes causes global hyperacetylation of core histones H3 and H4, uncoiling condensed heterochromatin into transcriptionally active euchromatin.", font_size=10.0, space_after=5.0)
-        self.append_bullet(ctf, "3. Tumor Suppressor Reactivation:", "Re-opens hypermethylated and silenced promoter regions of p21/Waf1 and p16/INK4a, restoring $G_1/S$ cell cycle checkpoints.", font_size=10.0, space_after=5.0)
-        self.append_bullet(ctf, "4. DNMT Demethylation:", "Downregulates DNMT1 and DNMT3b, reducing hypermethylation of promoter CpG islands and re-activating silenced Nrf2 expression in aging tissues.", font_size=10.0, space_after=5.0)
-        self.append_bullet(ctf, "5. Dietary Botanical Matrix:", "High natural concentration in Brassica oleracea cultivars: broccoli, Brussels sprouts, kale, and purple cabbage.", font_size=10.0, space_after=5.0)
+        ctf = self.create_card(slide, Inches(0.8), top_y, w_text, h_card, "HISTONE ACETYLATION & CHROMATIN REMODELING", "Re-activating Silenced Tumor Suppressor Genes", self.COLOR_PURPLE)
+        self.append_bullet(ctf, "1. HDAC Overexpression Pathology:", "Aberrant overexpression of Class I and II Histone Deacetylases (HDACs) removes acetyl groups from histone lysine tails, condensing chromatin and silencing protective genes.", font_size=9.2, space_after=4.0)
+        self.append_bullet(ctf, "2. Competitive Pan-HDAC Inhibition:", "Sulforaphane metabolites fit directly into the catalytic zinc pocket of HDACs, acting as competitive inhibitors.", font_size=9.2, space_after=4.0)
+        self.append_bullet(ctf, "3. Hyperacetylation of Histones H3 and H4:", "HDAC inhibition promotes global accumulation of acetylated histones H3 and H4, creating open euchromatin architecture.", font_size=9.2, space_after=4.0)
+        self.append_bullet(ctf, "4. Re-expression of p21/Waf1 and Bax:", "Re-opens promoters of cell cycle arrest gene p21/Waf1 and pro-apoptotic Bax, triggering G2/M arrest in pre-neoplastic cells.", font_size=9.2, space_after=4.0)
+        self.append_bullet(ctf, "5. Reversal of DNA Hypermethylation (DNMT):", "Suppresses DNA Methyltransferase (DNMT1, DNMT3a/b), reversing promoter CpG hypermethylation on protective tumor suppressor genes.", font_size=9.2, space_after=4.0)
 
-        # Right: Museum-Grade Framed Cruciferous Vegetables Photographic Plate
-        self.add_image_panel(slide, Inches(7.65), top_y, w_img, h_card, "cruciferous_vegetables.jpg", "Plate I: High-Glucosinolate Cruciferous Matrices (Brassica oleracea)", dark_mat=True)
+        # Right: Museum-Grade Botanical Specimen Panel
+        specimen = {
+            "title": "MUSEUM SPECIMEN • BRASSICA OLERACEA",
+            "meta": "Family: Brassicaceae | Organ: Inflorescence, Foliage & Seeds",
+            "desc": "Primary Bioactive: Glucoraphanin & Sinigrin | Glucosinolate Yield: 1,200 - 2,400 mg/kg"
+        }
+        self.add_image_panel(slide, Inches(7.65), top_y, w_img, h_card, "cruciferous_vegetables.jpg", dark_mat=True, specimen_info=specimen)
 
     def build_slide_06_i3c_dim(self):
         slide = self.prs.slides.add_slide(self.blank_layout)
@@ -658,21 +758,21 @@ class Phytochemicals25DeckBuilder:
         )
 
         w = Inches(3.75)
-        h = Inches(4.75)
-        gap = Inches(0.24)
-        top_y = Inches(1.95)
+        h = Inches(4.80)
+        gap = Inches(0.241)
+        top_y = Inches(1.90)
         start_x = Inches(0.8)
 
         cards = [
             ("GASTRIC CONDENSATION CASCADE", "Formation of Bioactive DIM", self.COLOR_CRIMSON, [
                 ("Parent Precursor:", "Glucobrassicin in Brassica vegetables is cleaved by myrosinase into unstable Indole-3-Carbinol (I3C)."),
-                ("Gastric Acid Condensation:", "In the low pH environment of the stomach ($pH < 2.5$), I3C undergoes acid-catalyzed oligomerization."),
+                ("Gastric Acid Condensation:", "In the low pH environment of the stomach (pH < 2.5), I3C undergoes acid-catalyzed oligomerization."),
                 ("Primary Metabolite:", "Over 60% of I3C condenses into 3,3'-Diindolylmethane (DIM); remainder yields indolo[3,2-b]carbazole (ICZ)."),
                 ("Clinical Trap:", "Patients on Proton Pump Inhibitors (PPIs) have elevated gastric pH, which blocks I3C condensation into active DIM!")
             ]),
             ("CYP450 ENZYME REGULATION & 2:16 RATIO", "Protective vs. Genotoxic Estrogen", self.COLOR_EMERALD, [
                 ("CYP1A1 / CYP1A2 Induction:", "DIM potently induces cytochrome P450 1A1/1A2 through AhR-dependent signaling pathways."),
-                ("The 2-OHE1 Pathway (Protective):", "Drives 2-hydroxylation of estrone ($E_1$), generating 2-hydroxyestrone (2-OHE1), a non-genotoxic, weakly estrogenic catabolite."),
+                ("The 2-OHE1 Pathway (Protective):", "Drives 2-hydroxylation of estrone (E1), generating 2-hydroxyestrone (2-OHE1), a non-genotoxic catabolite."),
                 ("Suppression of 16alpha-OHE1 (Genotoxic):", "Suppresses CYP1B1, reducing formation of 16alpha-OHE1, a potent agonist linked to DNA adducts."),
                 ("Clinical Biomarker:", "Elevating urinary 2:16-OHE1 ratio (>2.0) correlates with significantly reduced risk of hormone-dependent neoplasms.")
             ]),
@@ -688,34 +788,39 @@ class Phytochemicals25DeckBuilder:
             cx = start_x + i * (w + gap)
             ctf = self.create_card(slide, cx, top_y, w, h, title, sub, accent_color=col)
             for bold_p, text in bullets:
-                self.append_bullet(ctf, bold_p, text, font_size=9.2, space_after=4.0)
+                self.append_bullet(ctf, bold_p, text, font_size=9.0, space_after=3.8)
 
     def build_slide_07_tropical_fruits(self):
         slide = self.prs.slides.add_slide(self.blank_layout)
         self._add_canvas_background(slide, 7)
         self._add_header_and_footer(
             slide,
-            tag="TROPICAL FRUIT MATRICES",
-            title="Tropical Fruits: Proteolytic Enzymes, Mangiferin & Carotenoid Profiles",
-            takeaway="Tropical fruits yield unique sulfhydryl endopeptidases, polyphenolic xanthones, and carotenoids supporting joint, digestive, and metabolic health.",
-            citation="Food Chemistry: Maurer, H. R., Cell. Mol. Life Sci.; Pavan, R., et al., Biotechnol. Res. Int.",
+            tag="TROPICAL PROTEOLYTIC MATRICES",
+            title="Tropical Fruits: Papain & Bromelain Proteolytic Complexes",
+            takeaway="Cysteine endopeptidases hydrolyze peptide bonds across broad pH ranges, breaking down circulating inflammatory immune complexes.",
+            citation="Phytotherapy Research: Pavan, R., et al., Biotechnol. Res. Int.; Maurer, H. R., Cell. Mol. Life Sci.",
             slide_num=7
         )
 
-        top_y = Inches(1.95)
-        h_card = Inches(4.75)
-        w_text = Inches(6.6)
+        top_y = Inches(1.90)
+        h_card = Inches(4.80)
+        w_text = Inches(6.60)
         w_img = Inches(4.883)
 
-        ctf = self.create_card(slide, Inches(0.8), top_y, w_text, h_card, "SPECIALIZED BIOCATALYSTS & XANTHONES", "Enzymatic & Carotenoid Profiles", self.COLOR_AMBER)
-        self.append_bullet(ctf, "1. Pineapple (Bromelain):", "Stem and fruit of Ananas comosus concentrate Bromelain, a sulfhydryl proteolytic enzyme complex stable across pH 3.0 to 8.5.", font_size=10.0, space_after=5.0)
-        self.append_bullet(ctf, "2. Papaya (Papain & Chymopapain):", "Carica papaya latex delivers broad-spectrum cysteine endopeptidases that hydrolyze basic amino acid bonds across pH 3.0-10.5.", font_size=10.0, space_after=5.0)
-        self.append_bullet(ctf, "3. Mango (Mangiferin):", "Mangifera indica contains Mangiferin, a C-glucosylxanthone with exceptional chemical stability against gastric acid degradation.", font_size=10.0, space_after=5.0)
-        self.append_bullet(ctf, "4. Guava (Lycopene & Ascorbic Acid):", "Psidium guajava delivers over 200 mg/100g Vitamin C and bioavailable all-trans lycopene without requiring oil cooking.", font_size=10.0, space_after=5.0)
-        self.append_bullet(ctf, "5. Passion Fruit (Piceatannol):", "Rich in Piceatannol, a hydroxylated resveratrol analogue with superior metabolic stability and insulin-sensitizing potency.", font_size=10.0, space_after=5.0)
+        ctf = self.create_card(slide, Inches(0.8), top_y, w_text, h_card, "SULFHYDRYL PROTEASES & CATALYTIC KINETICS", "Broad-Spectrum Protein Cleavage Dynamics", self.COLOR_AMBER)
+        self.append_bullet(ctf, "1. Bromelain Proteolytic Mixture:", "Crude aqueous extract from pineapple stems and fruit (Ananas comosus); complex mixture of sulfhydryl endopeptidases, peroxidases, and protease inhibitors.", font_size=9.2, space_after=4.0)
+        self.append_bullet(ctf, "2. Papain Catalytic Triad:", "Papaya protease (Carica papaya) utilizing a catalytic triad of Cysteine-25, Histidine-159, and Asparagine-175 for rapid peptide cleavage.", font_size=9.2, space_after=4.0)
+        self.append_bullet(ctf, "3. Fibrinolytic & Edema Resolution:", "Directly degrades intravascular and interstitial fibrin clots; converts plasminogen to plasmin, resolving soft tissue swelling and hematomas.", font_size=9.2, space_after=4.0)
+        self.append_bullet(ctf, "4. Cleavage of Cell Surface Adhesion Receptors:", "Selectively removes cell surface receptors CD44, CD48, and CD62L (L-selectin) on leukocytes, preventing leukocyte extravasation into inflamed sites.", font_size=9.2, space_after=4.0)
+        self.append_bullet(ctf, "5. Downregulation of Prostaglandin E2 (PGE2):", "Downregulates PGE2 synthesis via selective inhibition of cyclooxygenase-2 (COX-2) and thromboxane synthase, without damaging gastric mucosal barrier.", font_size=9.2, space_after=4.0)
 
-        # Right: Museum-Grade Framed Tropical Fruits Photographic Plate
-        self.add_image_panel(slide, Inches(7.65), top_y, w_img, h_card, "tropical_fruits.jpg", "Plate II: Proteolytic & Xanthone-Rich Tropical Matrices", dark_mat=True)
+        # Right: Museum Botanical Specimen Panel
+        specimen = {
+            "title": "MUSEUM SPECIMEN • ANANAS & CARICA",
+            "meta": "Families: Bromeliaceae & Caricaceae | Organ: Stem & Fruit Flesh",
+            "desc": "Primary Bioactive: Bromelain (33 kDa) & Papain | Proteolytic Activity: ≥2,400 GDU/g"
+        }
+        self.add_image_panel(slide, Inches(7.65), top_y, w_img, h_card, "tropical_fruits.jpg", dark_mat=True, specimen_info=specimen)
 
     def build_slide_08_bromelain_flowchart(self):
         slide = self.prs.slides.add_slide(self.blank_layout)
@@ -729,22 +834,23 @@ class Phytochemicals25DeckBuilder:
             slide_num=8
         )
 
-        w_card = Inches(5.7)
-        top_y = Inches(1.95)
-        h_card = Inches(4.75)
+        w_card = Inches(5.716)
+        top_y = Inches(1.90)
+        h_card = Inches(4.80)
+        gap = Inches(0.301)
 
         ctf1 = self.create_card(slide, Inches(0.8), top_y, w_card, h_card, "STEPWISE MECHANISTIC CASCADE", "Multimodal Anti-Inflammatory Vectors", self.COLOR_AMBER)
-        self.append_bullet(ctf1, "Stage 1: Systemic Absorption:", "Intact bromelain molecules (~33 kDa) cross the intestinal barrier via paracellular and pinocytic pathways; bind alpha-2-macroglobulin in plasma.", font_size=9.2)
-        self.append_bullet(ctf1, "Stage 2: Fibrinolysis Activation:", "Directly cleaves intravascular and interstitial fibrin deposits; converts plasminogen to active plasmin, eliminating inflammatory tissue edema.", font_size=9.2)
-        self.append_bullet(ctf1, "Stage 3: Downregulation of PGE2 & COX-2:", "Selectively inhibits prostaglandin E2 (PGE2) synthesis while preserving protective PGI2 (prostacyclin), avoiding the gastric mucosal damage of NSAIDs.", font_size=9.2)
-        self.append_bullet(ctf1, "Stage 4: Cytokine Attenuation:", "Decreases secretion of pro-inflammatory cytokines IL-1beta, IL-6, and TNF-alpha by activated macrophages.", font_size=9.2)
-        self.append_bullet(ctf1, "Stage 5: Clinical Endpoints:", "Accelerates surgical wound healing, reduces acute sports injury hematomas, and relieves osteoarthritic knee stiffness.", font_size=9.2)
+        self.append_bullet(ctf1, "Stage 1: Systemic Absorption:", "Intact bromelain molecules (~33 kDa) cross the intestinal barrier via paracellular and pinocytic pathways; bind alpha-2-macroglobulin in plasma.", font_size=9.2, space_after=4.0)
+        self.append_bullet(ctf1, "Stage 2: Fibrinolysis Activation:", "Directly cleaves intravascular and interstitial fibrin deposits; converts plasminogen to active plasmin, eliminating inflammatory tissue edema.", font_size=9.2, space_after=4.0)
+        self.append_bullet(ctf1, "Stage 3: Downregulation of PGE2 & COX-2:", "Selectively inhibits prostaglandin E2 (PGE2) synthesis while preserving protective PGI2 (prostacyclin), avoiding the gastric mucosal damage of NSAIDs.", font_size=9.2, space_after=4.0)
+        self.append_bullet(ctf1, "Stage 4: Cytokine Attenuation:", "Decreases secretion of pro-inflammatory cytokines IL-1beta, IL-6, and TNF-alpha by activated macrophages.", font_size=9.2, space_after=4.0)
+        self.append_bullet(ctf1, "Stage 5: Clinical Endpoints:", "Accelerates surgical wound healing, reduces acute sports injury hematomas, and relieves osteoarthritic knee stiffness.", font_size=9.2, space_after=4.0)
 
-        ctf2 = self.create_card(slide, Inches(6.8), top_y, w_card, h_card, "CLINICAL TRANSLATION & DOSAGE PARAMETERS", "Evidence-Based Application", self.COLOR_CRIMSON)
-        self.append_bullet(ctf2, "Digestive vs Systemic Timing:", "• With Meals: Acts strictly as a digestive enzyme in the gut lumen to hydrolyze dietary proteins.\n• Between Meals (Empty Stomach): Absorbed systemically into the bloodstream to execute anti-inflammatory fibrinolysis.", font_size=9.2)
-        self.append_bullet(ctf2, "Standardized Potency Units:", "Measured in Gelatin Digesting Units (GDU) or Milk Clotting Units (MCU). Therapeutic potency requires >=2,400 GDU/gram.", font_size=9.2)
-        self.append_bullet(ctf2, "Target Clinical Dosage:", "500 - 1,000 mg daily (in divided doses taken 1 hour before or 2 hours after meals).", font_size=9.2)
-        self.append_bullet(ctf2, "Safety Profile:", "Exceptional tolerability; caution advised in patients on anticoagulant therapy (warfarin, apixaban) due to intrinsic antiplatelet activity.", font_size=9.2)
+        ctf2 = self.create_card(slide, Inches(0.8) + w_card + gap, top_y, w_card, h_card, "CLINICAL TRANSLATION & DOSAGE PARAMETERS", "Evidence-Based Application", self.COLOR_CRIMSON)
+        self.append_bullet(ctf2, "Digestive vs Systemic Timing:", "• With Meals: Acts strictly as a digestive enzyme in the gut lumen to hydrolyze dietary proteins.\n• Between Meals (Empty Stomach): Absorbed systemically into the bloodstream to execute anti-inflammatory fibrinolysis.", font_size=9.2, space_after=4.0)
+        self.append_bullet(ctf2, "Standardized Potency Units:", "Measured in Gelatin Digesting Units (GDU) or Milk Clotting Units (MCU). Therapeutic potency requires >=2,400 GDU/gram.", font_size=9.2, space_after=4.0)
+        self.append_bullet(ctf2, "Target Clinical Dosage:", "500 - 1,000 mg daily (in divided doses taken 1 hour before or 2 hours after meals).", font_size=9.2, space_after=4.0)
+        self.append_bullet(ctf2, "Safety Profile:", "Exceptional tolerability; caution advised in patients on anticoagulant therapy (warfarin, apixaban) due to intrinsic antiplatelet activity.", font_size=9.2, space_after=4.0)
 
     def build_slide_09_mangiferin_metabolism(self):
         slide = self.prs.slides.add_slide(self.blank_layout)
@@ -759,9 +865,9 @@ class Phytochemicals25DeckBuilder:
         )
 
         w = Inches(3.75)
-        h = Inches(4.75)
-        gap = Inches(0.24)
-        top_y = Inches(1.95)
+        h = Inches(4.80)
+        gap = Inches(0.241)
+        top_y = Inches(1.90)
         start_x = Inches(0.8)
 
         cards = [
@@ -789,7 +895,7 @@ class Phytochemicals25DeckBuilder:
             cx = start_x + i * (w + gap)
             ctf = self.create_card(slide, cx, top_y, w, h, title, sub, accent_color=col)
             for bold_p, text in bullets:
-                self.append_bullet(ctf, bold_p, text, font_size=9.2, space_after=4.0)
+                self.append_bullet(ctf, bold_p, text, font_size=9.0, space_after=3.8)
 
     def build_slide_10_citrus_pmfs(self):
         slide = self.prs.slides.add_slide(self.blank_layout)
@@ -803,37 +909,42 @@ class Phytochemicals25DeckBuilder:
             slide_num=10
         )
 
-        top_y = Inches(1.95)
-        h_card = Inches(4.75)
-        w_text = Inches(6.6)
+        top_y = Inches(1.90)
+        h_card = Inches(4.80)
+        w_text = Inches(6.60)
         w_img = Inches(4.883)
 
         ctf = self.create_card(slide, Inches(0.8), top_y, w_text, h_card, "METHOXYLATED FLAVONES & GLYCOSIDES", "Lipophilic Membrane Permeation", self.COLOR_AMBER)
-        self.append_bullet(ctf, "1. Nobiletin (Hexa-Methoxyflavone):", "5,6,7,8,3',4'-hexamethoxyflavone in orange peel; all six positions are O-methylated, conferring extreme lipophilicity and resistance to glucuronidation.", font_size=10.0, space_after=5.0)
-        self.append_bullet(ctf, "2. Circadian Clock Activation:", "Directly binds ROR-alpha/gamma nuclear receptors, enhancing circadian rhythm amplitude, lipid clearing, and tauopathy neuroprotection.", font_size=10.0, space_after=5.0)
-        self.append_bullet(ctf, "3. Tangeretin (Penta-Methoxyflavone):", "Suppresses microsomal triglyceride transfer protein (MTP), preventing hepatic assembly and secretion of atherogenic ApoB particles.", font_size=10.0, space_after=5.0)
-        self.append_bullet(ctf, "4. Hesperidin & Microvascular Tone:", "Deglycosylated by gut microbiota into active Hesperetin; reinforces capillary resistance and elevates Flow-Mediated Dilation (FMD).", font_size=10.0, space_after=5.0)
-        self.append_bullet(ctf, "5. Naringenin CYP3A4 Interaction:", "Grapefruit bioactive potently inhibits intestinal CYP3A4 and P-gp, mandating a 4-hour temporal separation from pharmaceuticals.", font_size=10.0, space_after=5.0)
+        self.append_bullet(ctf, "1. Nobiletin (Hexa-Methoxyflavone):", "5,6,7,8,3',4'-hexamethoxyflavone in orange peel; all six positions are O-methylated, conferring extreme lipophilicity and resistance to glucuronidation.", font_size=9.2, space_after=4.0)
+        self.append_bullet(ctf, "2. Circadian Clock Activation:", "Directly binds ROR-alpha/gamma nuclear receptors, enhancing circadian rhythm amplitude, lipid clearing, and tauopathy neuroprotection.", font_size=9.2, space_after=4.0)
+        self.append_bullet(ctf, "3. Tangeretin (Penta-Methoxyflavone):", "Suppresses microsomal triglyceride transfer protein (MTP), preventing hepatic assembly and secretion of atherogenic ApoB particles.", font_size=9.2, space_after=4.0)
+        self.append_bullet(ctf, "4. Hesperidin & Microvascular Tone:", "Deglycosylated by gut microbiota into active Hesperetin; reinforces capillary resistance and elevates Flow-Mediated Dilation (FMD).", font_size=9.2, space_after=4.0)
+        self.append_bullet(ctf, "5. Naringenin CYP3A4 Interaction:", "Grapefruit bioactive potently inhibits intestinal CYP3A4 and P-gp, mandating a 4-hour temporal separation from pharmaceuticals.", font_size=9.2, space_after=4.0)
 
-        # Right: Museum-Grade Framed Subtropical Citrus Photographic Plate
-        self.add_image_panel(slide, Inches(7.65), top_y, w_img, h_card, "subtropical_fruits.jpg", "Plate III: Bioflavonoid & PMF-Rich Subtropical Citrus Matrices", dark_mat=True)
+        # Right: Museum Botanical Specimen Panel
+        specimen = {
+            "title": "MUSEUM SPECIMEN • CITRUS SINENSIS",
+            "meta": "Family: Rutaceae | Organ: Exocarp (Flavedo Peel & Zest)",
+            "desc": "Primary Bioactive: Nobiletin & Tangeretin (PMFs) | Polymethoxyflavone Content: 450 mg/100g"
+        }
+        self.add_image_panel(slide, Inches(7.65), top_y, w_img, h_card, "subtropical_fruits.jpg", dark_mat=True, specimen_info=specimen)
 
     def build_slide_11_enos_activation(self):
         slide = self.prs.slides.add_slide(self.blank_layout)
         self._add_canvas_background(slide, 11)
         self._add_header_and_footer(
             slide,
-            tag="VASCULAR ENDOTHELIUM",
-            title="Endothelial Nitric Oxide (eNOS) Activation by Citrus Flavonoids",
-            takeaway="Hesperetin and Nobiletin stimulate Akt-mediated Ser1177 phosphorylation of eNOS, driving vascular relaxation and blood pressure normalization.",
-            citation="Cardiovascular Physiology: Rizza, S., et al., J. Clin. Endocrinol. Metab.; Valls, R. M., et al., Eur. J. Nutr.",
+            tag="ENDOTHELIAL HEMODYNAMICS",
+            title="eNOS Phosphorylation & Nitric Oxide Production via Citrus Flavonoids",
+            takeaway="Citrus flavonoids activate endothelial Nitric Oxide Synthase (eNOS) via Ser1177 phosphorylation, expanding systemic vasodilation.",
+            citation="Vascular Biology: Yamamoto, M., et al., J. Vasc. Res.; Rizza, S., et al., J. Clin. Endocrinol. Metab.",
             slide_num=11
         )
 
         w = Inches(3.75)
-        h = Inches(4.75)
-        gap = Inches(0.24)
-        top_y = Inches(1.95)
+        h = Inches(4.80)
+        gap = Inches(0.241)
+        top_y = Inches(1.90)
         start_x = Inches(0.8)
 
         cards = [
@@ -841,18 +952,18 @@ class Phytochemicals25DeckBuilder:
                 ("Upstream Kinase Cascade:", "Citrus bioflavonoids activate the intracellular Phosphoinositide 3-Kinase (PI3K) / Akt kinase signaling axis."),
                 ("Ser1177 Phosphorylation:", "Akt directly phosphorylates endothelial Nitric Oxide Synthase (eNOS) at Serine 1177, shifting enzyme into high-activity state."),
                 ("Dephosphorylation at Thr495:", "Simultaneously dephosphorylates inhibitory Threonine 495, removing constitutive basal enzyme suppression."),
-                ("Substrate Utilization:", "Enhances eNOS affinity for L-arginine, boosting catalytic conversion to L-citrulline and Nitric Oxide ($NO^\bullet$).")
+                ("Substrate Utilization:", "Enhances eNOS affinity for L-arginine, boosting catalytic conversion to L-citrulline and Nitric Oxide (NO).")
             ]),
             ("cGMP & SMOOTH MUSCLE RELAXATION", "The Vasodilation Mechanics", self.COLOR_EMERALD, [
-                ("Gas Diffusion:", "Endothelial $NO^\bullet$ gas diffuses across internal elastic lamina into adjacent vascular smooth muscle cells."),
+                ("Gas Diffusion:", "Endothelial NO gas diffuses across internal elastic lamina into adjacent vascular smooth muscle cells."),
                 ("Guanylyl Cyclase Binding:", "Binds prosthetic heme of Soluble Guanylyl Cyclase (sGC), accelerating enzymatic turnover by 400-fold."),
                 ("cGMP Generation:", "Converts GTP to cyclic Guanosine Monophosphate (cGMP), activating cGMP-dependent Protein Kinase G (PKG)."),
-                ("Calcium Sequestering:", "PKG opens potassium channels and expels cytosolic $Ca^{2+}$, inducing profound smooth muscle relaxation and vasodilation.")
+                ("Calcium Sequestering:", "PKG opens potassium channels and expels cytosolic Ca2+, inducing profound smooth muscle relaxation and vasodilation.")
             ]),
-            ("PREVENTION OF eNOS UNCOUPLING", "Preserving Tetrahydrobiopterin ($BH_4$)", self.COLOR_AMBER, [
-                ("The Uncoupling Hazard:", "Under severe oxidative stress, peroxynitrite oxidizes tetrahydrobiopterin ($BH_4$) to inactive $BH_2$, uncoupling eNOS into a superoxide generator!"),
-                ("Flavonoid Scavenging:", "Citrus flavonoids directly quench intracellular superoxide ($O_2^{\bullet-}$), preventing destructive formation of peroxynitrite ($ONOO^-$)."),
-                ("Restoring $BH_4$ Levels:", "Upregulates GTP cyclohydrolase I (GTPCH-1), the rate-limiting enzyme in de novo $BH_4$ biosynthesis."),
+            ("PREVENTION OF eNOS UNCOUPLING", "Preserving Tetrahydrobiopterin (BH4)", self.COLOR_AMBER, [
+                ("The Uncoupling Hazard:", "Under severe oxidative stress, peroxynitrite oxidizes tetrahydrobiopterin (BH4) to inactive BH2, uncoupling eNOS into a superoxide generator!"),
+                ("Flavonoid Scavenging:", "Citrus flavonoids directly quench intracellular superoxide (O2-), preventing destructive formation of peroxynitrite (ONOO-)."),
+                ("Restoring BH4 Levels:", "Upregulates GTP cyclohydrolase I (GTPCH-1), the rate-limiting enzyme in de novo BH4 biosynthesis."),
                 ("Clinical Outcome:", "Restores physiological endothelial Flow-Mediated Dilation (FMD) and lowers systolic blood pressure by 4-6 mmHg in clinical trials.")
             ])
         ]
@@ -861,7 +972,7 @@ class Phytochemicals25DeckBuilder:
             cx = start_x + i * (w + gap)
             ctf = self.create_card(slide, cx, top_y, w, h, title, sub, accent_color=col)
             for bold_p, text in bullets:
-                self.append_bullet(ctf, bold_p, text, font_size=9.2, space_after=4.0)
+                self.append_bullet(ctf, bold_p, text, font_size=9.0, space_after=3.8)
 
     def build_slide_12_punicalagin_urolithin(self):
         slide = self.prs.slides.add_slide(self.blank_layout)
@@ -875,108 +986,69 @@ class Phytochemicals25DeckBuilder:
             slide_num=12
         )
 
-        top_y = Inches(1.95)
-        h_card = Inches(4.75)
-        w_text = Inches(6.6)
-        w_img = Inches(4.883)
+        top_y = Inches(1.88)
+        h_top = Inches(1.92)
+        w_card = Inches(5.716)
+        gap = Inches(0.301)
 
-        ctf = self.create_card(slide, Inches(0.8), top_y, w_text, h_card, "MICROBIOME BIOTRANSFORMATION & MITOPHAGY", "From Giant Punicalagin to Cellular Rejuvenation", self.COLOR_CRIMSON)
-        self.append_bullet(ctf, "1. Punicalagin Ingestion:", "Pomegranate arils and peel contain massive ellagitannins (MW 1,084 Da) that cannot cross the small intestinal brush border intact.", font_size=10.0, space_after=5.0)
-        self.append_bullet(ctf, "2. Colon Commensal Metabolism:", "Passes into the colon where specialized bacteria (Gordonibacter urolithinfaciens) hydrolyze and dehydroxylate ellagic acid into Urolithin A.", font_size=10.0, space_after=5.0)
-        self.append_bullet(ctf, "3. Metabotype A Prevalence:", "Only ~40% of the human population naturally harbors the bacterial consortium required to efficiently produce Urolithin A.", font_size=10.0, space_after=5.0)
-        self.append_bullet(ctf, "4. PINK1-Parkin Recruitment:", "Urolithin A stabilizes PINK1 on damaged depolarized mitochondria, recruiting Parkin E3 ligase to polyubiquitinate outer membrane proteins.", font_size=10.0, space_after=5.0)
-        self.append_bullet(ctf, "5. Autophagosomal Clearance:", "Recruits LC3-II autophagosomes for lysosomal degradation; human clinical trials confirm +12% muscle endurance without exercise.", font_size=10.0, space_after=5.0)
+        ctf1 = self.create_card(slide, Inches(0.8), top_y, w_card, h_top, "ELLAGITANNIN HYDROLYSIS & BIOGENESIS", "Pomegranate Punicalagin to Urolithin A", self.COLOR_CRIMSON)
+        self.append_bullet(ctf1, "1. Punicalagin Precursor:", "Pomegranate contains massive ellagitannins (MW 1,084 Da) that hydrolyze in the gut to Ellagic Acid.", font_size=8.8, space_after=2.5)
+        self.append_bullet(ctf1, "2. Microbial Conversion:", "Colonic Gordonibacter urolithinfaciens removes lactone rings, yielding lipophilic bioavailable Urolithin A.", font_size=8.8, space_after=2.5)
+        self.append_bullet(ctf1, "3. Metabotype Distribution:", "Only ~40% of humans naturally possess the commensal flora required for high Urolithin A conversion.", font_size=8.8, space_after=2.5)
 
-        # Right: High-Res Urolithin A Mitophagy Flowchart Diagram
-        self.add_image_panel(slide, Inches(7.65), top_y, w_img, h_card, "flowchart_urolithin_mitophagy.png", "Figure 3: Urolithin A Biogenesis & PINK1-Parkin Mitophagy Pathway", dark_mat=False)
+        ctf2 = self.create_card(slide, Inches(0.8) + w_card + gap, top_y, w_card, h_top, "PINK1-PARKIN AXIS & CLINICAL TRIALS", "Purging Dysfunctional Mitochondria", self.COLOR_EMERALD)
+        self.append_bullet(ctf2, "4. Organelle Sensing:", "Urolithin A stabilizes PINK1 kinase on depolarized mitochondria, recruiting Parkin E3 ligase.", font_size=8.8, space_after=2.5)
+        self.append_bullet(ctf2, "5. Autophagosomal Clearance:", "Polyubiquitinated damaged mitochondria are engulfed by LC3-II autophagosomes and lysed.", font_size=8.8, space_after=2.5)
+        self.append_bullet(ctf2, "6. Human Trial Endpoints:", "Double-blind clinical trials confirm +12% increase in muscle endurance with zero change in exercise.", font_size=8.8, space_after=2.5)
+
+        # Bottom Tier: High-Res Urolithin A Mitophagy Pathway Vector
+        self.add_image_panel(
+            slide,
+            Inches(0.8),
+            Inches(3.96),
+            Inches(11.733),
+            Inches(2.78),
+            "flowchart_urolithin_mitophagy.png",
+            caption="Figure 3: Pomegranate Ellagitannin Biotransformation & PINK1-Parkin Mitophagy Pathway (300 DPI)",
+            dark_mat=False
+        )
 
     def build_slide_13_temperate_fruits(self):
         slide = self.prs.slides.add_slide(self.blank_layout)
         self._add_canvas_background(slide, 13)
         self._add_header_and_footer(
             slide,
-            tag="TEMPERATE PHYTOCHEMISTRY",
-            title="Temperate Fruits: Rosaceae & Vitaceae Secondary Metabolite Profiles",
-            takeaway="Temperate fruits contain specialized dihydrochalcones, proanthocyanidins, and stilbenes targeting intestinal SGLT transporters and vascular compliance.",
-            citation="Botanical Review: Hyson, D. A., Adv. Nutr.; Manach, C., et al., Am. J. Clin. Nutr.",
+            tag="TEMPERATE ROSACEAE BIOACTIVES",
+            title="Temperate Fruits: Apples, Pears, Cherries, and Rosaceae Bioactives",
+            takeaway="Phloridzin, chlorogenic acid, and anthocyanins modulate sodium-glucose cotransporters, uric acid, and vascular elasticity.",
+            citation="Fruit Phytochemistry: Ehrenkranz, J. R., et al., Diabetes Metab. Res. Rev.; Kelley, D. S., et al., Nutrients.",
             slide_num=13
         )
 
-        w = Inches(2.78)
-        h = Inches(4.75)
-        gap = Inches(0.2)
-        start_x = Inches(0.8)
-        top_y = Inches(1.95)
-
-        fruits = [
-            ("APPLES (PHLORIDZIN & QUERCETIN)", "Dihydrochalcone & Flavonol Duo", self.COLOR_EMERALD, [
-                ("Phloridzin Mechanism:", "Selective natural inhibitor of SGLT1 and SGLT2 transporters."),
-                ("Glycemic Moderation:", "Slows postprandial glucose absorption across intestinal brush border."),
-                ("Apple Peel Quercetin:", "Concentrated in skin as quercetin-3-galactoside; boosts eNOS."),
-                ("Oligomeric Procyanidins:", "Inhibits pancreatic lipase and supports Akkermansia muciniphila bloom.")
-            ]),
-            ("GRAPES (RESVERATROL & TANNINGS)", "Stilbene Sirtuin Activator", self.COLOR_PURPLE, [
-                ("Botanical Origin:", "Skin of red grapes (Vitis vinifera) synthesizes trans-resveratrol."),
-                ("SIRT1 Activation:", "Allosterically activates NAD+-dependent deacetylase Sirtuin-1 (SIRT1)."),
-                ("PGC-1alpha Deacetylation:", "SIRT1 deacetylates PGC-1alpha, driving mitochondrial biogenesis."),
-                ("Endothelial Fibrinolysis:", "Stimulates tissue-type plasminogen activator (t-PA) synthesis.")
-            ]),
-            ("TART CHERRIES (ANTHOCYANINS)", "Anti-Hyperuricemic Analgesic", self.COLOR_CRIMSON, [
-                ("Cyanidin-3-Glucoside:", "Abundant anthocyanin in Montmorency sour cherries."),
-                ("COX-1 & COX-2 Inhibition:", "Exhibits in vitro cyclooxygenase inhibition comparable to ibuprofen."),
-                ("Uric Acid Transport:", "Inhibits URAT1 renal transporter, accelerating urinary uric acid excretion."),
-                ("Exercise Recovery:", "Significantly reduces delayed onset muscle soreness (DOMS) in runners.")
-            ]),
-            ("PEARS & PLUMS (CHLOROGENIC ACID)", "Hydroxycinnamic Acid Matrix", self.COLOR_AMBER, [
-                ("5-Caffeoylquinic Acid:", "Primary hydroxycinnamic acid ester in European and Asian pear cultivars."),
-                ("Hepatic G6Pase Inhibition:", "Suppresses glucose-6-phosphatase, regulating fasting glucose output."),
-                ("Plum Proanthocyanidins:", "Dense polymeric flavan-3-ols with superior hydroxyl radical scavenging."),
-                ("Bone Health:", "Dried plum polyphenols suppress osteoclastogenesis via NFATc1 signaling.")
-            ])
-        ]
-
-        for i, (title, sub, col, bullets) in enumerate(fruits):
-            cx = start_x + i * (w + gap)
-            ctf = self.create_card(slide, cx, top_y, w, h, title, sub, accent_color=col)
-            for bold_p, text in bullets:
-                self.append_bullet(ctf, bold_p, text, font_size=9.0, space_after=3.5)
-
-    def build_slide_14_quercetin_mast_cells(self):
-        slide = self.prs.slides.add_slide(self.blank_layout)
-        self._add_canvas_background(slide, 14)
-        self._add_header_and_footer(
-            slide,
-            tag="IMMUNE MODULATION",
-            title="Quercetin: Mast Cell Membrane Stabilization & Anti-Allergic Signaling",
-            takeaway="Quercetin prevents calcium influx into sensitized mast cells, halting histamine degranulation and leukotriene biosynthesis.",
-            citation="Immunology Research: Weng, Z., et al., PLoS ONE; Mlcek, J., et al., Molecules, 2016.",
-            slide_num=14
-        )
-
         w = Inches(3.75)
-        h = Inches(4.75)
-        gap = Inches(0.24)
-        top_y = Inches(1.95)
+        h = Inches(4.80)
+        gap = Inches(0.241)
+        top_y = Inches(1.90)
         start_x = Inches(0.8)
 
         cards = [
-            ("MAST CELL CALCIUM INFLUX BLOCKADE", "Membrane Stabilization Dynamics", self.COLOR_COBALT, [
-                ("FceRI Crosslinking:", "When allergens cross-link IgE bound to high-affinity FceRI receptors, it triggers intracellular Lyn/Syk kinase cascade."),
-                ("Phospholipase C-gamma Blockade:", "Quercetin directly inhibits phosphorylation of Lyn and Syk, preventing downstream activation of PLC-gamma."),
-                ("IP3 & Calcium Mobilization:", "Blocks generation of IP3, completely arresting calcium release from the endoplasmic reticulum."),
-                ("Degranulation Arrest:", "Without the cytosolic $Ca^{2+}$ spike, secretory granules cannot fuse with the plasma membrane, halting histamine dump!")
+            ("PHLORIDZIN & SGLT INHIBITION", "Renal & Intestinal Glucose Blockade", self.COLOR_EMERALD, [
+                ("Historical SGLT Discovery:", "Phloridzin (dihydrochalcone glucoside from apple peel) served as the structural template for modern pharmaceutical gliflozins!"),
+                ("Dual SGLT1/SGLT2 Block:", "Competitively binds sodium-glucose cotransporters SGLT1 in intestinal enterocytes and SGLT2 in renal proximal tubules."),
+                ("Blunting Postprandial Spikes:", "Slows intestinal glucose absorption kinetics, blunting postprandial glucose excursions by up to 25%."),
+                ("Cardiorenal Protection:", "Promotes mild osmotic glucosuria, reducing renal glomerular hyperfiltration pressure.")
             ]),
-            ("LEUKOTRIENE & CYTOKINE SUPPRESSION", "Downstream Inflammatory Mediator Shutdown", self.COLOR_EMERALD, [
-                ("5-Lipoxygenase (5-LOX) Inhibition:", "Directly inhibits 5-lipoxygenase, suppressing bronchoconstrictive leukotrienes ($LTA_4$, $LTB_4$, $LTC_4$)."),
-                ("COX-2 Downregulation:", "Suppresses inducible Cyclooxygenase-2, eliminating pro-inflammatory Prostaglandin D2 ($PGD_2$)."),
-                ("IL-6 and TNF-alpha:", "Inhibits nuclear translocation of NF-kappaB p65, blocking transcription of inflammatory interleukins in mast cells."),
-                ("Ascorbic Acid Synergy:", "Co-administration with Vitamin C prevents quercetin autoxidation, multiplying its biological half-life.")
+            ("CHLOROGENIC ACID & METABOLISM", "Hepatic Glucose-6-Phosphatase", self.COLOR_AMBER, [
+                ("Structure:", "Ester of caffeic acid and (-)-quinic acid; predominant polyphenol in apples, pears, and stone fruits."),
+                ("G6Pase Translocase Inhibition:", "Inhibits hepatic glucose-6-phosphate translocase, reducing basal hepatic glucose output."),
+                ("Adiponectin Secretion:", "Upregulates gene expression and plasma secretion of insulin-sensitizing adipokine Adiponectin."),
+                ("Anti-Hypertensive Tone:", "Chlorogenic acid metabolites (ferulic acid) enhance vascular bioavailability of nitric oxide.")
             ]),
-            ("VASCULAR CELL ADHESION MOLECULES", "Endothelial Extravasation Attenuation", self.COLOR_PURPLE, [
-                ("ICAM-1 & VCAM-1 Suppression:", "Quercetin blocks TNF-alpha-induced expression of VCAM-1 and ICAM-1 on endothelial cells."),
-                ("Leukocyte Rolling Block:", "Prevents rolling, tethering, and transmigration of circulating eosinophils and neutrophils into inflamed mucosa."),
-                ("Allergic Rhinitis Efficacy:", "Double-blind clinical trials demonstrate marked reduction in sneezing, rhinorrhea, and ocular pruritus within 2 weeks."),
-                ("Formulation Optimization:", "Standard quercetin aglycone has low absorption (<2%); phospholipid-bound Quercetin Phytosome increases bioavailability by 20-fold!")
+            ("TART CHERRY ANTHOCYANINS", "Uric Acid & Exercise Recovery", self.COLOR_PURPLE, [
+                ("Cyanidin-3-Glucoside Potency:", "Montmorency tart cherries contain high concentrations of cyanidin glycosides with potent anti-inflammatory properties."),
+                ("Xanthine Oxidase Suppression:", "Competitively inhibits Xanthine Oxidase, the rate-limiting enzyme in uric acid synthesis."),
+                ("Serum Urate Clearing:", "Randomized trials show significant reductions in serum uric acid (-36%) and inflammatory flare frequency."),
+                ("Accelerated Muscle Recovery:", "Attenuates eccentric exercise-induced Delayed Onset Muscle Soreness (DOMS) and accelerates isometric force recovery.")
             ])
         ]
 
@@ -984,88 +1056,155 @@ class Phytochemicals25DeckBuilder:
             cx = start_x + i * (w + gap)
             ctf = self.create_card(slide, cx, top_y, w, h, title, sub, accent_color=col)
             for bold_p, text in bullets:
-                self.append_bullet(ctf, bold_p, text, font_size=9.2, space_after=4.0)
+                self.append_bullet(ctf, bold_p, text, font_size=9.0, space_after=3.8)
+
+    def build_slide_14_quercetin_mast_cells(self):
+        slide = self.prs.slides.add_slide(self.blank_layout)
+        self._add_canvas_background(slide, 14)
+        self._add_header_and_footer(
+            slide,
+            tag="IMMUNOMODULATION",
+            title="Quercetin: Mast Cell Stabilization & Calcium Influx Blockade",
+            takeaway="Quercetin inhibits IgE-mediated calcium influx, preventing the degranulation of histamine, leukotrienes, and pro-inflammatory cytokines.",
+            citation="Immunology Source: Weng, Z., et al., PLoS ONE; Mlcek, J., et al., Molecules, 2016.",
+            slide_num=14
+        )
+
+        w = Inches(3.75)
+        h = Inches(4.80)
+        gap = Inches(0.241)
+        top_y = Inches(1.90)
+        start_x = Inches(0.8)
+
+        cards = [
+            ("MAST CELL MEMBRANE STABILIZATION", "Blocking IgE Degranulation", self.COLOR_COBALT, [
+                ("FceRI Receptor Crosslinking:", "Allergen exposure crosslinks IgE bound to high-affinity FceRI receptors on mast cells and basophils."),
+                ("Inositol Phosphate Inhibition:", "Quercetin suppresses Phospholipase C gamma (PLCgamma), blocking synthesis of IP3 and DAG."),
+                ("Intracellular Calcium Lock:", "Inhibits IP3-receptor-mediated release of intracellular calcium from endoplasmic reticulum stores."),
+                ("Degranulation Arrest:", "Blocks exocytosis of pre-formed secretory granules, halting the explosive release of histamine, tryptase, and chymase.")
+            ]),
+            ("DE NOVO LIPID MEDIATOR SUPPRESSION", "COX-2 and 5-Lipoxygenase Dual Block", self.COLOR_EMERALD, [
+                ("Dual Eicosanoid Inhibition:", "Simultaneously suppresses both Cyclooxygenase-2 (COX-2) and 5-Lipoxygenase (5-LOX) enzymatic cascades."),
+                ("Leukotriene C4/D4/E4 Block:", "Prevents synthesis of cysteinyl leukotrienes, the potent mediators of bronchial constriction and microvascular leakage."),
+                ("Prostaglandin D2 (PGD2):", "Downregulates mast-cell-derived PGD2, alleviating nasal congestion, conjunctival erythema, and pruritus."),
+                ("Superiority Over Drugs:", "Unlike synthetic anti-histamines that only block H1 receptors, quercetin prevents release of all inflammatory mediators at the source!")
+            ]),
+            ("CYTOKINE ATTENUATION & SYNERGIES", "NF-kappaB Suppression & Vitamin C", self.COLOR_AMBER, [
+                ("NF-kappaB Transcriptional Arrest:", "Inhibits IkappaB kinase (IKK), trapping NF-kappaB in cytoplasm and halting late-phase cytokine transcription (IL-6, IL-8, TNF-alpha)."),
+                ("Ascorbic Acid Synergy:", "Co-administration with Vitamin C reduces oxidized quercetin radicals back to bioactive flavonols, recycling potency!"),
+                ("Zinc Ionophore Capability:", "Quercetin acts as a zinc ionophore, transporting Zn2+ across membranes to inhibit viral RNA polymerase."),
+                ("Clinical Trials:", "Randomized clinical trials demonstrate marked reduction in allergic rhinitis symptoms and upper respiratory tract infections.")
+            ])
+        ]
+
+        for i, (title, sub, col, bullets) in enumerate(cards):
+            cx = start_x + i * (w + gap)
+            ctf = self.create_card(slide, cx, top_y, w, h, title, sub, accent_color=col)
+            for bold_p, text in bullets:
+                self.append_bullet(ctf, bold_p, text, font_size=9.0, space_after=3.8)
 
     def build_slide_15_berry_anthocyanins_bbb(self):
         slide = self.prs.slides.add_slide(self.blank_layout)
         self._add_canvas_background(slide, 15)
         self._add_header_and_footer(
             slide,
-            tag="NEUROPROTECTIVE AXIS",
-            title="Temperate Berries: Anthocyanin Transit Across Blood-Brain Barrier (BBB)",
-            takeaway="Berry anthocyanins cross the endothelial BBB via GLUT1/OATP transporters, activating the CREB-BDNF neuroplasticity pathway.",
-            citation="Neurobiology Source: Youdim, K. A., et al., Free Radic. Biol. Med.; Devore, E. E., et al., Ann. Neurol.",
+            tag="NEUROPHARMACOLOGY",
+            title="Berry Anthocyanins & The Blood-Brain Barrier: Microglia & BDNF",
+            takeaway="Anthocyanin glycosides cross the blood-brain barrier via GLUT1 and OATP transporters, accumulating in hippocampal neurogenic zones.",
+            citation="Neuroscience Research: Devore, E. E., et al., Ann. Neurol.; Krikorian, R., et al., J. Agric. Food Chem.",
             slide_num=15
         )
 
-        top_y = Inches(1.95)
-        h_card = Inches(4.75)
-        w_text = Inches(6.6)
+        top_y = Inches(1.90)
+        h_card = Inches(4.80)
+        w_text = Inches(6.60)
         w_img = Inches(4.883)
 
-        ctf = self.create_card(slide, Inches(0.8), top_y, w_text, h_card, "ENDOTHELIAL BBB TRANSIT & CREB-BDNF AXIS", "Reversing Neuroinflammation in Aging", self.COLOR_PURPLE)
-        self.append_bullet(ctf, "1. Intact Glucoside Permeation:", "Cyanidin-3-glucoside and Delphinidin-3-glucoside traverse cerebral microvascular endothelial cells intact without prior deglycosylation.", font_size=10.0, space_after=5.0)
-        self.append_bullet(ctf, "2. GLUT1 & OATP Transporters:", "Anthocyanins exploit Glucose Transporter-1 (GLUT1) and Organic Anion Transporting Polypeptide (OATP1A2) to cross the tight endothelial barrier.", font_size=10.0, space_after=5.0)
-        self.append_bullet(ctf, "3. CREB Phosphorylation & BDNF:", "Activates ERK1/2 and Akt, triggering phosphorylation of CREB at Ser133 to drive transcription of Brain-Derived Neurotrophic Factor (BDNF).", font_size=10.0, space_after=5.0)
-        self.append_bullet(ctf, "4. Synaptic Plasticity & LTP:", "Upregulates postsynaptic density-95 (PSD-95) and Synaptophysin, enhancing hippocampal Long-Term Potentiation (LTP) and memory recall.", font_size=10.0, space_after=5.0)
-        self.append_bullet(ctf, "5. The Nurses' Health Study:", "Prospective cohort of 16,010 women demonstrated that regular high intake of blueberries and strawberries delayed cognitive aging by up to 2.5 years.", font_size=10.0, space_after=5.0)
+        ctf = self.create_card(slide, Inches(0.8), top_y, w_text, h_card, "BLOOD-BRAIN BARRIER TRANSPORT & NEUROGENESIS", "Hippocampal Synaptic Plasticity & Microglial Quenching", self.COLOR_PURPLE)
+        self.append_bullet(ctf, "1. Transporter-Mediated BBB Crossing:", "Anthocyanins (Cyanidin-3-galactoside, Malvidin-3-glucoside) are active substrates for GLUT1 and Organic Anion Transporting Polypeptides (OATPs) on brain capillary endothelial cells.", font_size=9.2, space_after=4.0)
+        self.append_bullet(ctf, "2. Hippocampal Localization:", "Autoradiographic studies confirm preferential accumulation of intact anthocyanins in the hippocampus, striatum, and cerebral cortex.", font_size=9.2, space_after=4.0)
+        self.append_bullet(ctf, "3. BDNF & Synaptic Neurogenesis:", "Stimulates phosphorylation of CREB (cAMP response element-binding protein), upregulating Brain-Derived Neurotrophic Factor (BDNF) and dendritic arborization.", font_size=9.2, space_after=4.0)
+        self.append_bullet(ctf, "4. Suppression of Microglial Neuroinflammation:", "Inhibits TLR4/MyD88 inflammatory signaling in microglia, halting neurotoxic release of nitric oxide (iNOS), TNF-alpha, and IL-1beta.", font_size=9.2, space_after=4.0)
+        self.append_bullet(ctf, "5. Landmark Human Cohort Validations:", "Harvard Nurses' Health Study (n=16,010) demonstrated that high blueberry/strawberry intake delayed cognitive aging by up to 2.5 years.", font_size=9.2, space_after=4.0)
 
-        # Right: Museum-Grade Framed Temperate Berries Photographic Plate
-        self.add_image_panel(slide, Inches(7.65), top_y, w_img, h_card, "temperate_berries.jpg", "Plate IV: Anthocyanin-Rich Temperate Berry Matrices (Vaccinium)", dark_mat=True)
+        # Right: Museum Botanical Specimen Panel
+        specimen = {
+            "title": "MUSEUM SPECIMEN • VACCINIUM & RUBUS",
+            "meta": "Family: Ericaceae & Rosaceae | Organ: Ripe Berry Epicarps",
+            "desc": "Primary Bioactive: Cyanidin-3-Glucoside & Malvidin | Total Anthocyanins: 380 - 650 mg/100g"
+        }
+        self.add_image_panel(slide, Inches(7.65), top_y, w_img, h_card, "temperate_berries.jpg", dark_mat=True, specimen_info=specimen)
 
     def build_slide_16_curcuminoids_pharmacology(self):
         slide = self.prs.slides.add_slide(self.blank_layout)
         self._add_canvas_background(slide, 16)
         self._add_header_and_footer(
             slide,
-            tag="ZINGIBERACEAE RHIZOMES",
-            title="Zingiberaceae Pharmacology: Curcuminoids & Multi-Target Molecular Actions",
-            takeaway="Curcumin is a pleiotropic polyphenol that directly inhibits NF-kappaB p65 nuclear translocation, downregulating hundreds of pro-inflammatory genes.",
-            citation="Pharmacological Reviews: Aggarwal, B. B., et al., Ann. N.Y. Acad. Sci.; Kunnumakkara, A. B., et al., Br. J. Pharmacol.",
+            tag="ZINGIBERACEAE PHARMACOLOGY",
+            title="Curcuminoids: Pleiotropic Signaling & NF-kappaB p65 Repression",
+            takeaway="Curcumin acts as an electrophilic Michael acceptor, directly binding IkappaB kinase (IKK) to extinguish systemic inflammatory transcription.",
+            citation="Molecular Pharmacology: Aggarwal, B. B., et al., Biochem. Pharmacol.; Kunnumakkara, A. B., et al., Br. J. Pharmacol.",
             slide_num=16
         )
 
-        top_y = Inches(1.95)
-        h_card = Inches(4.75)
-        w_text = Inches(6.6)
+        top_y = Inches(1.90)
+        h_card = Inches(4.80)
+        w_text = Inches(6.60)
         w_img = Inches(4.883)
 
-        ctf = self.create_card(slide, Inches(0.8), top_y, w_text, h_card, "THE CURCUMINOID TRIAD & IKK INHIBITION", "Multi-Target Eicosanoid & Cytokine Blockade", self.COLOR_AMBER)
-        self.append_bullet(ctf, "1. Curcuminoid Triad:", "Rhizome of Curcuma longa contains Curcumin (77%), Demethoxycurcumin (17%), and Bisdemethoxycurcumin (3%), each with differing stability and kinetics.", font_size=10.0, space_after=5.0)
-        self.append_bullet(ctf, "2. Direct IKKbeta Blockade:", "Curcumin directly binds and inhibits IkappaB kinase (IKKbeta), preventing phosphorylation and degradation of IkappaBalpha.", font_size=10.0, space_after=5.0)
-        self.append_bullet(ctf, "3. NF-kappaB Cytoplasmic Trapping:", "Without IkappaB degradation, the NF-kappaB p50/p65 heterodimer remains sequestered in the cytoplasm, halting inflammatory gene transcription.", font_size=10.0, space_after=5.0)
-        self.append_bullet(ctf, "4. Dual COX-2 & 5-LOX Inhibition:", "Simultaneously blocks Cyclooxygenase-2 and 5-Lipoxygenase enzymes without causing gastric mucosal ulceration.", font_size=10.0, space_after=5.0)
-        self.append_bullet(ctf, "5. Joint Chondroprotection:", "Prevents IL-1beta-induced chondrocyte apoptosis and matrix metalloproteinase (MMP-9) cartilage erosion in osteoarthritic joints.", font_size=10.0, space_after=5.0)
+        ctf = self.create_card(slide, Inches(0.8), top_y, w_text, h_card, "MICHAEL ACCEPTOR DYNAMICS & MULTI-TARGET ACTIONS", "Pleiotropic Inhibition of Inflammatory Cascades", self.COLOR_AMBER)
+        self.append_bullet(ctf, "1. Chemical Structure & Tautomerism:", "Curcuma longa contains three core curcuminoids: Curcumin (~77%), Demethoxycurcumin (~17%), and Bisdemethoxycurcumin (~3%); exists in keto-enol tautomeric equilibrium.", font_size=9.2, space_after=4.0)
+        self.append_bullet(ctf, "2. Direct IKKbeta Inhibition:", "The alpha,beta-unsaturated beta-diketone moiety acts as an electrophilic Michael acceptor, reacting with cysteine-179 on IKKbeta, completely blocking IkappaBalpha phosphorylation.", font_size=9.2, space_after=4.0)
+        self.append_bullet(ctf, "3. NF-kappaB Nuclear Arrest:", "Traps p50-p65 NF-kappaB heterodimers in cytoplasm, halting transcription of over 100 downstream inflammatory genes (COX-2, iNOS, MMP-9, IL-6).", font_size=9.2, space_after=4.0)
+        self.append_bullet(ctf, "4. Suppression of STAT3 Signaling:", "Inhibits Janus kinase (JAK) phosphorylation, preventing downstream STAT3 dimerization and oncogenic survival signaling.", font_size=9.2, space_after=4.0)
+        self.append_bullet(ctf, "5. Clinical Knee Osteoarthritis Equivalence:", "Multiple RCTs demonstrate that 1,500 mg/day curcumin matches 1,200 mg/day ibuprofen in pain reduction (WOMAC score) with superior gastrointestinal safety.", font_size=9.2, space_after=4.0)
 
-        # Right: Museum-Grade Framed Healing Spices Photographic Plate
-        self.add_image_panel(slide, Inches(7.65), top_y, w_img, h_card, "healing_spices.jpg", "Plate V: Polyphenolic & Pungent Zingiberaceae Rhizomes (Curcuma & Zingiber)", dark_mat=True)
+        # Right: Museum Botanical Specimen Panel
+        specimen = {
+            "title": "MUSEUM SPECIMEN • CURCUMA LONGA L.",
+            "meta": "Family: Zingiberaceae | Organ: Subterranean Rhizomes",
+            "desc": "Primary Bioactive: Curcuminoids (77% Curcumin) | Curcuminoid Concentration: 3 - 5%"
+        }
+        self.add_image_panel(slide, Inches(7.65), top_y, w_img, h_card, "healing_spices.jpg", dark_mat=True, specimen_info=specimen)
 
     def build_slide_17_piperine_surge(self):
         slide = self.prs.slides.add_slide(self.blank_layout)
         self._add_canvas_background(slide, 17)
         self._add_header_and_footer(
             slide,
-            tag="PHARMACOKINETIC SYNERGY",
-            title="The Curcumin Bioavailability Solution: The 2000% Piperine Clinical Surge",
-            takeaway="Co-administration of 20 mg black pepper Piperine inhibits hepatic glucuronidation, increasing human serum curcumin AUC by +2000%.",
+            tag="PHARMACOKINETIC BIO-ENHANCEMENT",
+            title="Piperine Surge: Overcoming Curcumin Glucuronidation by +2000%",
+            takeaway="Piperine non-competitively inhibits hepatic and intestinal glucuronidation and P-glycoprotein efflux, extending curcumin bioavailability by 20-fold.",
             citation="Clinical Pharmacokinetics: Shoba, G., et al., Planta Med., 1998; Anand, P., et al., Mol. Pharmaceutics.",
             slide_num=17
         )
 
-        top_y = Inches(1.95)
-        h_card = Inches(4.75)
-        w_text = Inches(6.6)
-        w_img = Inches(4.883)
+        top_y = Inches(1.88)
+        h_top = Inches(1.92)
+        w_card = Inches(5.716)
+        gap = Inches(0.301)
 
-        ctf = self.create_card(slide, Inches(0.8), top_y, w_text, h_card, "OVERCOMING HEPATIC GLUCURONIDATION", "Pharmacokinetic Mechanism of the +2000% Surge", self.COLOR_CRIMSON)
-        self.append_bullet(ctf, "1. The Absorption Bottleneck:", "Pure crystalline curcumin has virtually zero water solubility (<0.1 mg/mL) and suffers massive intestinal and hepatic first-pass glucuronidation.", font_size=10.0, space_after=5.0)
-        self.append_bullet(ctf, "2. Rapid UGT Clearance:", "UDP-glucuronosyltransferases (UGT1A1/UGT1A8) rapidly conjugate free curcumin into inert curcumin-glucuronide, while P-gp pumps it back into the gut lumen.", font_size=10.0, space_after=5.0)
-        self.append_bullet(ctf, "3. Piperine Bio-Enhancement:", "Piperine (alkaloid from Piper nigrum) acts as a potent non-competitive inhibitor of hepatic UGT enzymes and enterocyte P-glycoprotein efflux pumps.", font_size=10.0, space_after=5.0)
-        self.append_bullet(ctf, "4. The Landmark Human Trial:", "Co-administration of 20 mg piperine with 2,000 mg curcumin increased human serum AUC by 2,000% (20-fold bioavailability surge).", font_size=10.0, space_after=5.0)
-        self.append_bullet(ctf, "5. Half-Life Extension:", "Extends the elimination half-life from undetectable to over 8 hours of sustained therapeutic systemic blood concentrations.", font_size=10.0, space_after=5.0)
+        ctf1 = self.create_card(slide, Inches(0.8), top_y, w_card, h_top, "HEPATIC GLUCURONIDATION & FIRST-PASS COLLAPSE", "Why Isolated Curcumin Fails Systemic Trials", self.COLOR_CRIMSON)
+        self.append_bullet(ctf1, "1. Zero Native Solubility:", "Crystalline curcumin has near-zero water solubility (<0.1 mg/mL) and suffers massive intestinal clearance.", font_size=8.8, space_after=2.5)
+        self.append_bullet(ctf1, "2. Rapid UGT Glucuronidation:", "Hepatic UGT1A1/1A8 rapidly conjugates >99% of free curcumin into inert curcumin-glucuronide.", font_size=8.8, space_after=2.5)
+        self.append_bullet(ctf1, "3. P-gp Luminal Efflux:", "Enterocyte ABCB1 efflux pumps rapidly expel free curcumin back into the intestinal lumen.", font_size=8.8, space_after=2.5)
 
-        # Right: High-Res Curcumin + Piperine Pharmacokinetics Flowchart Diagram
-        self.add_image_panel(slide, Inches(7.65), top_y, w_img, h_card, "flowchart_curcumin_piperine.png", "Figure 4: Curcumin Glucuronidation Blockade by Piperine", dark_mat=False)
+        ctf2 = self.create_card(slide, Inches(0.8) + w_card + gap, top_y, w_card, h_top, "PIPERINE ENZYME BLOCKADE (+2000% SURGE)", "Achieving Therapeutic Circulating Concentrations", self.COLOR_EMERALD)
+        self.append_bullet(ctf2, "4. Non-Competitive Inhibition:", "Piperine (Piper nigrum alkaloid) potently inhibits UGT enzymes and pauses enterocyte P-gp pumps.", font_size=8.8, space_after=2.5)
+        self.append_bullet(ctf2, "5. Landmark Human Trial:", "Co-administration of 20 mg piperine with 2,000 mg curcumin surged serum AUC by +2,000% (20-fold).", font_size=8.8, space_after=2.5)
+        self.append_bullet(ctf2, "6. Extended Half-Life:", "Maintains sustained therapeutic systemic concentrations for >8 hours, unlocking whole-body targets.", font_size=8.8, space_after=2.5)
+
+        # Bottom Tier: High-Res Curcumin + Piperine Pharmacokinetics Flowchart Diagram
+        self.add_image_panel(
+            slide,
+            Inches(0.8),
+            Inches(3.96),
+            Inches(11.733),
+            Inches(2.78),
+            "flowchart_curcumin_piperine.png",
+            caption="Figure 4: Comparative Pharmacokinetics: Curcumin First-Pass Clearance vs. Piperine Co-Administration Surge (300 DPI)",
+            dark_mat=False
+        )
 
     def build_slide_18_gingerols_motility(self):
         slide = self.prs.slides.add_slide(self.blank_layout)
@@ -1080,9 +1219,9 @@ class Phytochemicals25DeckBuilder:
         )
 
         w = Inches(3.75)
-        h = Inches(4.75)
-        gap = Inches(0.24)
-        top_y = Inches(1.95)
+        h = Inches(4.80)
+        gap = Inches(0.241)
+        top_y = Inches(1.90)
         start_x = Inches(0.8)
 
         cards = [
@@ -1093,16 +1232,16 @@ class Phytochemicals25DeckBuilder:
                 ("Clinical Applications:", "Clinically proven to reduce chemotherapy-induced nausea (CINV), motion sickness, and morning sickness.")
             ]),
             ("GASTRIC EMPTYING & PROKINETICS", "Cholinergic Receptor Stimulation", self.COLOR_EMERALD, [
-                ("Antral Contraction Velocity:", "Stimulates muscarinic $M_3$ receptors on gastric antral smooth muscle, increasing contraction force."),
+                ("Antral Contraction Velocity:", "Stimulates muscarinic M3 receptors on gastric antral smooth muscle, increasing contraction force."),
                 ("Pyloric Relaxation:", "Accelerates trans-pyloric transit of chyme into the duodenum, reducing gastric retention time by up to 35%."),
                 ("Functional Dyspepsia Relief:", "Double-blind clinical trials demonstrate marked improvement in early satiety and postprandial fullness."),
                 ("Thermal Shift to Shogaols:", "Drying or heating fresh ginger dehydrates 6-Gingerol into 6-Shogaol, doubling its analgesic potency!")
             ]),
-            ("TRPV1 DESENSITIZATION & ANALGESIA", "Sensory Nociceptor Modulation", self.COLOR_AMBER, [
-                ("Capsaicin Receptor Binding:", "Gingerols bind Transient Receptor Potential Vanilloid 1 (TRPV1) channels on peripheral C-fibers."),
-                ("Channel Desensitization:", "Initial activation is followed by profound functional desensitization and calcium exhaustion in pain fibers."),
-                ("Substance P Depletion:", "Depletes substance P and CGRP from primary sensory nerve terminals, attenuating neurogenic inflammation."),
-                ("Clinical Pain Efficacy:", "Equal in clinical efficacy to 250 mg Mefenamic acid or Sumatriptan in multiple randomized clinical trials.")
+            ("ANTI-INFLAMMATORY TRANSIENT RECEPTORS", "TRPV1 Desensitization & Joint Relief", self.COLOR_AMBER, [
+                ("TRPV1 Agonist Activity:", "Gingerols bind Transient Receptor Potential Vanilloid-1 (TRPV1) channels on nociceptive C-fibers."),
+                ("Nociceptive Desensitization:", "Initial activation is followed by prolonged refractory desensitization, blocking substance P release."),
+                ("Dual COX/LOX Suppression:", "Inhibits both cyclooxygenase and lipoxygenase pathways, reducing synovial fluid inflammatory eicosanoids."),
+                ("Clinical Trials in Gonarthrosis:", "Patients with knee osteoarthritis receiving standardized ginger extract showed statistically significant pain reduction.")
             ])
         ]
 
@@ -1110,7 +1249,7 @@ class Phytochemicals25DeckBuilder:
             cx = start_x + i * (w + gap)
             ctf = self.create_card(slide, cx, top_y, w, h, title, sub, accent_color=col)
             for bold_p, text in bullets:
-                self.append_bullet(ctf, bold_p, text, font_size=9.2, space_after=4.0)
+                self.append_bullet(ctf, bold_p, text, font_size=9.0, space_after=3.8)
 
     def build_slide_19_allium_cascade(self):
         slide = self.prs.slides.add_slide(self.blank_layout)
@@ -1118,36 +1257,36 @@ class Phytochemicals25DeckBuilder:
         self._add_header_and_footer(
             slide,
             tag="ALLIUM CASCADE",
-            title="Allium Organosulfur Chemistry: The Allicin Synthesis & Hydrogen Sulfide Signaling",
-            takeaway="Mechanical crushing of garlic activates alliinase, producing volatile allicin which decomposes into cardioprotective polysulfides generating H2S gas.",
-            citation="Cardiovascular Pharmacology: Benavides, G. A., et al., PNAS; Ried, K., et al., Eur. J. Clin. Nutr.",
+            title="Allium Organosulfur Chemistry: Alliinase Shear & H2S Gasotransmission",
+            takeaway="Mechanical shear activates alliinase to produce volatile allicin, which donates hydrogen sulfide (H2S) gas to dilate arterial vascular beds.",
+            citation="Gasotransmitter Biology: Benavides, G. A., et al., PNAS; Ried, K., et al., J. Hypertens., 2016.",
             slide_num=19
         )
 
         w = Inches(3.75)
-        h = Inches(4.75)
-        gap = Inches(0.24)
-        top_y = Inches(1.95)
+        h = Inches(4.80)
+        gap = Inches(0.241)
+        top_y = Inches(1.90)
         start_x = Inches(0.8)
 
         cards = [
-            ("ALLIIN TO ALLICIN ENZYMATIC SYNTHESIS", "Compartmentalized Defense Chemistry", self.COLOR_EMERALD, [
-                ("Intact Clove State:", "Alliin resides in mesophyll cytoplasm; Alliinase enzyme is sequestered inside vascular vacuoles."),
-                ("Mechanical Cleavage:", "Crushing or mincing ruptures compartments; pyridoxal phosphate (PLP)-dependent alliinase hydrolyzes alliin."),
-                ("Intermediate Condensation:", "Alliinase produces allylsulfenic acid, which spontaneously condenses into diallyl thiosulfinate (Allicin) in seconds."),
-                ("The 10-Minute Resting Rule:", "Garlic must rest at room temperature for 10 minutes post-crushing to allow complete allicin formation before heat exposure!")
+            ("MECHANICAL SHEAR & ALLICIN SYNTHESIS", "The Alliinase Enzymatic Cascade", self.COLOR_EMERALD, [
+                ("Cellular Separation:", "In intact garlic cloves (Allium sativum), the substrate Alliin resides in storage cells while Alliinase enzyme is confined to bundle sheath cells."),
+                ("Enzymatic Shear Reaction:", "Crushing or chopping shears plant cell walls, allowing alliinase (EC 4.4.1.4) to hydrolyze alliin into allylsulfenic acid."),
+                ("Spontaneous Condensation:", "Two molecules of allylsulfenic acid rapidly condense to generate Allicin (diallyl thiosulfinate)."),
+                ("The 10-Minute Culinary Rule:", "Cooking immediately destroys alliinase! Allow crushed garlic to rest for 10 minutes at room temperature before heat exposure to maximize allicin yield.")
             ]),
-            ("DECOMPOSITION TO POLYSULFIDES & AJOENE", "Oil-Soluble & Water-Soluble Transformation", self.COLOR_AMBER, [
-                ("Thermal Instability:", "Allicin is highly volatile; in cooking, it rapidly decomposes into lipophilic di- and trisulfides."),
-                ("DADS and DATS:", "Yields Diallyl Disulfide (DADS) and Diallyl Trisulfide (DATS), powerful Phase II enzyme and Nrf2 inducers."),
-                ("Ajoene Condensation:", "In oil or alcohol media, allicin rearranges into E- and Z-Ajoene, a potent inhibitor of platelet aggregation."),
-                ("Aged Garlic Extract (SAC):", "Long-term aqueous extraction yields stable, non-irritating S-Allylcysteine (SAC), the standard for blood pressure trials.")
+            ("HYDROGEN SULFIDE (H2S) DONATION", "Vasoactive Gasotransmission Pathway", self.COLOR_COBALT, [
+                ("Polysulfide Cleavage:", "Allicin rapidly decomposes into diallyl sulfide (DAS), diallyl disulfide (DADS), and diallyl trisulfide (DATS)."),
+                ("Erythrocyte H2S Release:", "Red blood cells react with garlic polysulfides, utilizing reduced glutathione to release Hydrogen Sulfide (H2S) gas."),
+                ("K-ATP Channel Activation:", "H2S gas diffuses into vascular smooth muscle, activating ATP-sensitive potassium (K-ATP) channels."),
+                ("Hyperpolarization & Vasodilation:", "Induces smooth muscle hyperpolarization and arterial vasodilation, lowering systemic peripheral vascular resistance.")
             ]),
-            ("HYDROGEN SULFIDE ($H_2S$) & VASODILATION", "Endogenous Gaseous Signaling Molecule", self.COLOR_COBALT, [
-                ("Erythrocyte Interaction:", "Polysulfides (DATS/DADS) react with intracellular reduced glutathione (GSH) in red blood cells, liberating $H_2S$ gas."),
-                ("$K_{ATP}$ Channel Opening:", "$H_2S$ activates ATP-sensitive potassium channels ($K_{ATP}$) on vascular smooth muscle, causing membrane hyperpolarization."),
-                ("HMG-CoA Reductase Inhibition:", "Organosulfur metabolites competitively inhibit hepatic HMG-CoA reductase, downregulating endogenous cholesterol synthesis."),
-                ("Clinical Meta-Analyses:", "Aged garlic extract (600-1,200 mg daily) reliably reduces systolic blood pressure by 8-10 mmHg and diastolic by 5-6 mmHg.")
+            ("CARDIOVASCULAR & LIPID REGULATION", "HMG-CoA & Platelet Aggregation Blockade", self.COLOR_CRIMSON, [
+                ("HMG-CoA Reductase Inhibition:", "Garlic organosulfur compounds inactivate 3-hydroxy-3-methylglutaryl-coenzyme A reductase via thiol-disulfide exchange."),
+                ("Platelet Anti-Aggregation:", "Blocks thromboxane B2 (TXB2) formation and inhibits fibrinogen binding to GPIIb/IIIa receptors on platelets."),
+                ("Aged Garlic Extract (SAC):", "Fermentation transforms unstable allicin into water-soluble S-Allylcysteine (SAC), achieving high oral bioavailability."),
+                ("Human Clinical Trials:", "Meta-analyses of 12 clinical trials confirm aged garlic extract reduces systolic BP by 8.8 mmHg and diastolic BP by 6.1 mmHg.")
             ])
         ]
 
@@ -1155,7 +1294,7 @@ class Phytochemicals25DeckBuilder:
             cx = start_x + i * (w + gap)
             ctf = self.create_card(slide, cx, top_y, w, h, title, sub, accent_color=col)
             for bold_p, text in bullets:
-                self.append_bullet(ctf, bold_p, text, font_size=9.2, space_after=4.0)
+                self.append_bullet(ctf, bold_p, text, font_size=9.0, space_after=3.8)
 
     def build_slide_20_lamiaceae_antioxidants(self):
         slide = self.prs.slides.add_slide(self.blank_layout)
@@ -1163,26 +1302,31 @@ class Phytochemicals25DeckBuilder:
         self._add_header_and_footer(
             slide,
             tag="LAMIACEAE HERB MATRICES",
-            title="Lamiaceae Herbs: Rosmarinic Acid, Carnosic Acid & Thymoquinone",
-            takeaway="Culinary mint-family herbs contain potent lipophilic diterpenes and caffeic acid dimers that arrest lipid peroxidation and inhibit neuroinflammation.",
-            citation="Phytochemistry Reviews: Ngo, Y. T. H., et al., J. Agric. Food Chem.; Darakhshan, S., et al., Pharmacol. Res.",
+            title="Lamiaceae Herb Matrices: Carnosic Acid, Rosmarinic Acid & Lipid Protection",
+            takeaway="Abietane diterpenes and hydroxycinnamic acids act as chain-breaking antioxidants that protect membrane lipids against peroxidation.",
+            citation="Lipid Biochemistry: Birtic, S., et al., Phytochemistry; Ngo, Y. L., et al., Food Chem. Toxicol.",
             slide_num=20
         )
 
-        top_y = Inches(1.95)
-        h_card = Inches(4.75)
-        w_text = Inches(6.6)
+        top_y = Inches(1.90)
+        h_card = Inches(4.80)
+        w_text = Inches(6.60)
         w_img = Inches(4.883)
 
-        ctf = self.create_card(slide, Inches(0.8), top_y, w_text, h_card, "VOLATILE DITERPENES & PHENOLIC DIMERS", "Membrane Lipid Shield & Pro-Electrophilic Activation", self.COLOR_EMERALD)
-        self.append_bullet(ctf, "1. Rosmarinic Acid (Rosemary & Oregano):", "Caffeic acid ester with high bioavailability; directly inhibits C3b convertase, attenuating complement-mediated tissue inflammation.", font_size=10.0, space_after=5.0)
-        self.append_bullet(ctf, "2. Membrane Lipid Peroxidation Shield:", "Inserts directly into cell lipid bilayers, scavenging peroxyl radicals ($LOO^\bullet$) to arrest chain-reaction lipid membrane destruction.", font_size=10.0, space_after=5.0)
-        self.append_bullet(ctf, "3. Carnosic Acid (Pro-Drug Antioxidant):", "Abietane diterpene activated specifically at inflammatory sites, oxidizing into carnosol to quench free radicals without cytotoxicity.", font_size=10.0, space_after=5.0)
-        self.append_bullet(ctf, "4. Thymoquinone (Nigella sativa):", "Black seed oil monoterpene quinone; potent PPAR-gamma agonist that elevates Superoxide Dismutase (SOD) and Glutathione (GSH).", font_size=10.0, space_after=5.0)
-        self.append_bullet(ctf, "5. Metabolic & Respiratory Protection:", "Relaxes tracheal smooth muscle and clinically lowers HbA1c, fasting glucose, and hs-CRP in metabolic syndrome.", font_size=10.0, space_after=5.0)
+        ctf = self.create_card(slide, Inches(0.8), top_y, w_text, h_card, "CHAIN-BREAKING PEROXYL SCAVENGING & DITERPENES", "Lipophilic Protection of Cellular Membranes", self.COLOR_EMERALD)
+        self.append_bullet(ctf, "1. Carnosic Acid & Carnosol Shield:", "Lipophilic abietane diterpenes in rosemary (Salvia rosmarinus) and sage (Salvia officinalis) that partition directly into cellular phospholipid bilayers.", font_size=9.2, space_after=4.0)
+        self.append_bullet(ctf, "2. Quenching Lipid Peroxyl Radicals (LOO•):", "Donates phenolic hydrogen atoms to chain-propagating lipid peroxyl radicals, terminating auto-catalytic lipid peroxidation.", font_size=9.2, space_after=4.0)
+        self.append_bullet(ctf, "3. Auto-Oxidative Cascading Potency:", "When carnosic acid scavenges a free radical, it converts into carnosol, which retains potent antioxidant activity, creating an extended scavenging cascade!", font_size=9.2, space_after=4.0)
+        self.append_bullet(ctf, "4. Rosmarinic Acid & Complement Blockade:", "Water-soluble caffeic acid ester that inhibits complement activation (C3b and C5a) and downregulates lipoxygenase metabolites.", font_size=9.2, space_after=4.0)
+        self.append_bullet(ctf, "5. Inhibition of Advanced Glycation End-Products (AGEs):", "Traps reactive dicarbonyl intermediates (methylglyoxal), inhibiting the formation of cross-linked AGEs in vascular collagen.", font_size=9.2, space_after=4.0)
 
-        # Right: Museum-Grade Framed Culinary Herbs Photographic Plate
-        self.add_image_panel(slide, Inches(7.65), top_y, w_img, h_card, "culinary_herbs.jpg", "Plate VI: Antioxidant-Rich Lamiaceae Matrices (Rosemary, Oregano, Thyme)", dark_mat=True)
+        # Right: Museum Botanical Specimen Panel
+        specimen = {
+            "title": "MUSEUM SPECIMEN • SALVIA ROSMARINUS",
+            "meta": "Family: Lamiaceae | Organ: Aromatic Foliage & Flowering Tops",
+            "desc": "Primary Bioactive: Carnosic Acid, Carnosol & Rosmarinic Acid | Diterpene Yield: 1.5 - 2.8%"
+        }
+        self.add_image_panel(slide, Inches(7.65), top_y, w_img, h_card, "culinary_herbs.jpg", dark_mat=True, specimen_info=specimen)
 
     def build_slide_21_synergies(self):
         slide = self.prs.slides.add_slide(self.blank_layout)
@@ -1190,26 +1334,38 @@ class Phytochemicals25DeckBuilder:
         self._add_header_and_footer(
             slide,
             tag="FOOD MATRIX SYNERGIES",
-            title="Whole-Food Matrix Synergies: Multi-Component Bioavailability Enhancement",
-            takeaway="Whole foods contain natural biochemical cofactors that exponentially improve absorption, enzymatic reactivation, and chemical stability.",
-            citation="Nutritional Synergy: Liu, R. H., Am. J. Clin. Nutr.; Jacobs, D. R., et al., Public Health Nutr.",
+            title="Whole-Food Matrix Synergies: Bioavailability Stacking & Pharmacokinetics",
+            takeaway="Co-ingesting whole botanical matrices overcomes single-agent metabolic barriers, efflux pumps, and gastric degradation far more effectively than isolated pills.",
+            citation="Nutritional Synergy: Jacobs, D. R., et al., Am. J. Clin. Nutr.; Liu, R. H., J. Nutr., 2004.",
             slide_num=21
         )
 
-        top_y = Inches(1.95)
-        h_card = Inches(4.75)
-        w_text = Inches(6.6)
-        w_img = Inches(4.883)
+        top_y = Inches(1.88)
+        h_top = Inches(1.92)
+        w_card = Inches(5.716)
+        gap = Inches(0.301)
 
-        ctf = self.create_card(slide, Inches(0.8), top_y, w_text, h_card, "WHOLE-FOOD BIOAVAILABILITY COFACTORS", "Mechanisms of Natural Nutrient Pairings", self.COLOR_COBALT)
-        self.append_bullet(ctf, "1. Lipid Micellization (Fat + Carotenoids/Curcumin):", "Dietary lipids stimulate bile salt secretion and pancreatic lipase, incorporating lipophilic bioactives into mixed micelles for 4-to-6x enterocyte uptake.", font_size=10.0, space_after=5.0)
-        self.append_bullet(ctf, "2. Thermal Enzyme Rescue (Cooked Broccoli + Mustard):", "Raw ground brown mustard seed provides heat-stable plant myrosinase, restoring 100% sulforaphane yield in boiled cruciferous vegetables.", font_size=10.0, space_after=5.0)
-        self.append_bullet(ctf, "3. Redox Stabilization (Green Tea + Citrus Ascorbic Acid):", "Citric and ascorbic acids lower luminal intestinal pH, preventing alkaline degradation and boosting bioaccessible EGCG recovery 6-fold.", font_size=10.0, space_after=5.0)
-        self.append_bullet(ctf, "4. Non-Heme Iron Chelation (Greens + Vitamin C):", "Ascorbic acid reduces insoluble ferric iron ($Fe^{3+}$) to soluble ferrous ($Fe^{2+}$) iron, multiplying fractional enterocyte absorption by >300%.", font_size=10.0, space_after=5.0)
-        self.append_bullet(ctf, "5. Clinical Proof of Synergy:", "Epidemiological studies confirm that whole-diet botanical matrices consistently outperform isolated single-molecule supplements.", font_size=10.0, space_after=5.0)
+        ctf1 = self.create_card(slide, Inches(0.8), top_y, w_card, h_top, "PHARMACOKINETIC MULTIPLEXING", "Overcoming Intestinal & Hepatic Clearance", self.COLOR_COBALT)
+        self.append_bullet(ctf1, "1. Efflux Pump Saturation:", "Food pairing saturates enterocyte P-glycoprotein and ABC transporters, keeping bioactives in blood.", font_size=8.8, space_after=2.5)
+        self.append_bullet(ctf1, "2. Gastric pH Stabilization:", "Ascorbic and citric acids in citrus juice lower intestinal pH, stabilizing catechin rings against oxidation.", font_size=8.8, space_after=2.5)
+        self.append_bullet(ctf1, "3. Lipid Micellar Incorporation:", "Dietary triglycerides (extra virgin olive oil) solubilize lipophilic lycopene into mixed micelles (+45%).", font_size=8.8, space_after=2.5)
 
-        # Right: High-Res Food Matrix Synergistic Pairings Infographic
-        self.add_image_panel(slide, Inches(7.65), top_y, w_img, h_card, "infographic_synergistic_pairings.png", "Figure 5: Whole-Food Pharmacokinetic Synergy Pairings", dark_mat=False)
+        ctf2 = self.create_card(slide, Inches(0.8) + w_card + gap, top_y, w_card, h_top, "PHARMACODYNAMIC CONVERGENCE", "Dual-Target Biochemical Amplification", self.COLOR_EMERALD)
+        self.append_bullet(ctf2, "4. Multi-Target Crosstalk:", "Sulforaphane Nrf2 induction combined with curcumin NF-kappaB inhibition produces synergistic protection.", font_size=8.8, space_after=2.5)
+        self.append_bullet(ctf2, "5. Co-Factor Restoration:", "Mustard seed restores myrosinase to heat-denatured broccoli, reviving 100% active sulforaphane.", font_size=8.8, space_after=2.5)
+        self.append_bullet(ctf2, "6. Superiority Over Monotherapies:", "Complex whole-food pairings prevent pharmacodynamic tolerance and eliminate drug-like toxicities.", font_size=8.8, space_after=2.5)
+
+        # Bottom Tier: High-Res Food Matrix Synergy Infographic
+        self.add_image_panel(
+            slide,
+            Inches(0.8),
+            Inches(3.96),
+            Inches(11.733),
+            Inches(2.78),
+            "infographic_synergistic_pairings.png",
+            caption="Figure 5: Whole-Food Culinary Pharmacokinetic Synergies: Proven Bioavailability Stacking Pairings (300 DPI)",
+            dark_mat=False
+        )
 
     def build_slide_22_clinical_dosages(self):
         slide = self.prs.slides.add_slide(self.blank_layout)
@@ -1235,7 +1391,7 @@ class Phytochemicals25DeckBuilder:
             ["Aged Garlic Extract (SAC)", "Allium sativum fermented", "600 - 1,200 mg (2.4 mg S-Allylcysteine)", "Reduction of central systolic blood pressure (-8.8 mmHg), arterial stiffness", "Hypertension Clinical Trials"]
         ]
 
-        self.create_table(slide, Inches(0.8), Inches(1.95), Inches(11.733), Inches(4.75), headers, col_widths, rows_data)
+        self.create_table(slide, Inches(0.8), Inches(1.90), Inches(11.733), Inches(4.80), headers, col_widths, rows_data)
 
     def build_slide_23_culinary_pharmacokinetics(self):
         slide = self.prs.slides.add_slide(self.blank_layout)
@@ -1250,9 +1406,9 @@ class Phytochemicals25DeckBuilder:
         )
 
         w = Inches(3.75)
-        h = Inches(4.75)
-        gap = Inches(0.24)
-        top_y = Inches(1.95)
+        h = Inches(4.80)
+        gap = Inches(0.241)
+        top_y = Inches(1.90)
         start_x = Inches(0.8)
 
         cards = [
@@ -1264,14 +1420,14 @@ class Phytochemicals25DeckBuilder:
             ]),
             ("OIL MATRIX & THERMAL DISSOLUTION", "Unlocking Lipophilic Carotenoids", self.COLOR_AMBER, [
                 ("Cell Wall Breakdown:", "Plant carotenoids are trapped in chromoplasts; gentle thermal cooking ruptures pectin and cellulose walls."),
-                ("Trans-to-Cis Isomerization:", "Heat promotes isomerization of all-trans-lycopene into cis-isomers with dramatically higher intestinal micellization."),
-                ("EVOO Phenolic Transfer:", "Cooking in Extra Virgin Olive Oil transfers oil polyphenols to vegetables while fat-soluble carotenoids dissolve in oil."),
-                ("Culinary Rule:", "Cook tomatoes, carrots, and pumpkin in healthy fats; eat berries and citrus raw or freeze-dried.")
+                ("Trans-to-Cis Isomerization:", "Heat promotes isomerization of all-trans-lycopene into cis-isomers, which possess superior micellar incorporation."),
+                ("Lipid Matrix Requirement:", "Co-ingesting carotenoid vegetables with extra virgin olive oil or avocado surges intestinal absorption by up to 400%!"),
+                ("Avoid Deep Frying:", "High-temperature frying (>180°C) oxidizes carotenoid polyene backbones into inactive, cytotoxic epoxides.")
             ]),
-            ("CHOPPING, RESTING & PRE-TREATMENT RULES", "Enzyme Activation Protocols", self.COLOR_COBALT, [
-                ("The Brassica 40-Minute Rule:", "Chop or shred crucifers and allow to sit raw for 30 - 40 minutes before cooking to maximize SFN formation!"),
-                ("The Allium 10-Minute Rest:", "Crush fresh garlic and let rest on the cutting board for 10 minutes before heating to preserve alliinase activity."),
-                ("Freezing Rupture Benefit:", "Freezing berries forms ice crystals that shear cell walls, yielding higher extractable anthocyanin bioavailability."),
+            ("MECHANICAL SHEAR & RAW BOTANICALS", "Enzymatic Activation Protocols", self.COLOR_COBALT, [
+                ("The 10-Minute Garlic Rule:", "Crush garlic and rest for 10 minutes at ambient temperature to allow alliinase to synthesize allicin before heat exposure."),
+                ("Mustard Seed Addition:", "Sprinkle raw ground brown mustard seed onto steamed broccoli to supply active exogenous myrosinase."),
+                ("Freezing Citrus Peels:", "Freezing oranges ruptures flavedo oil glands, enhancing extraction of polymethoxyflavones into teas and food."),
                 ("Whole Citrus Zest Integration:", "Grate organic citrus flavedo zest into dishes; outer peel contains 10-fold higher PMFs than inner juice.")
             ])
         ]
@@ -1280,7 +1436,7 @@ class Phytochemicals25DeckBuilder:
             cx = start_x + i * (w + gap)
             ctf = self.create_card(slide, cx, top_y, w, h, title, sub, accent_color=col)
             for bold_p, text in bullets:
-                self.append_bullet(ctf, bold_p, text, font_size=9.2, space_after=4.0)
+                self.append_bullet(ctf, bold_p, text, font_size=9.0, space_after=3.8)
 
     def build_slide_24_multi_target_summary(self):
         slide = self.prs.slides.add_slide(self.blank_layout)
@@ -1294,11 +1450,11 @@ class Phytochemicals25DeckBuilder:
             slide_num=24
         )
 
-        w = Inches(2.2)
-        h = Inches(4.75)
-        gap = Inches(0.18)
+        w = Inches(2.20)
+        h = Inches(4.80)
+        gap = Inches(0.183)
         start_x = Inches(0.8)
-        top_y = Inches(1.95)
+        top_y = Inches(1.90)
 
         systems = [
             ("1. ANTIOXIDANT / NRF2", "Cellular Redox Defense", self.COLOR_EMERALD, [
@@ -1328,7 +1484,7 @@ class Phytochemicals25DeckBuilder:
             ("5. VASCULAR & MITOPHAGY", "eNOS & Mitochondrial Health", self.COLOR_COBALT, [
                 ("Key Bioactives:", "Hesperidin, Urolithin A, Anthocyanins, Garlic Polysulfides."),
                 ("Molecular Mechanism:", "Phosphorylates eNOS Ser1177; triggers PINK1-Parkin mitophagy."),
-                ("Target Effectors:", "Elevates Nitric Oxide ($NO^\bullet$); clears depolarized mitochondria."),
+                ("Target Effectors:", "Elevates Nitric Oxide (NO); clears depolarized mitochondria."),
                 ("Clinical Outcome:", "Reduces systemic vascular resistance and restores muscle energy.")
             ])
         ]
@@ -1351,9 +1507,10 @@ class Phytochemicals25DeckBuilder:
             slide_num=25
         )
 
-        w = Inches(5.7)
-        h = Inches(4.75)
-        top_y = Inches(1.95)
+        w = Inches(5.716)
+        h = Inches(4.80)
+        gap = Inches(0.301)
+        top_y = Inches(1.90)
 
         ctf1 = self.create_card(slide, Inches(0.8), top_y, w, h, "PRIMARY PAPERS (PART I: CELLULAR & ENZYMATIC)", "Peer-Reviewed References", self.COLOR_HEADER_GOLD)
         self.append_bullet(ctf1, "1. Fahey, J. W., et al. (1997):", "'Broccoli sprouts: An exceptionally rich source of inducers of enzymes that protect against chemical carcinogens.' PNAS, 94(19): 10367-10372. DOI: 10.1073/pnas.94.19.10367.", font_size=8.5, space_after=3.0)
@@ -1363,7 +1520,7 @@ class Phytochemicals25DeckBuilder:
         self.append_bullet(ctf1, "5. Ryu, D., et al. (2016):", "'Urolithin A induces mitophagy and prolongs lifespan in C. elegans and increases muscle function in rodents.' Nat. Med., 22(8): 879-888. DOI: 10.1038/nm.4132.", font_size=8.5, space_after=3.0)
         self.append_bullet(ctf1, "6. Andreux, P. A., et al. (2019):", "'The mitophagy activator urolithin A is safe and induces a molecular signature of improved mitochondrial and cellular health in humans.' Nat. Metab., 1: 595-603. DOI: 10.1038/s42255-019-0073-4.", font_size=8.5, space_after=3.0)
 
-        ctf2 = self.create_card(slide, Inches(6.8), top_y, w, h, "PRIMARY PAPERS (PART II: CLINICAL PHARMACOLOGY)", "Human Trial Validations", self.COLOR_EMERALD)
+        ctf2 = self.create_card(slide, Inches(0.8) + w + gap, top_y, w, h, "PRIMARY PAPERS (PART II: CLINICAL PHARMACOLOGY)", "Human Trial Validations", self.COLOR_EMERALD)
         self.append_bullet(ctf2, "7. Shoba, G., et al. (1998):", "'Influence of piperine on the pharmacokinetics of curcumin in animals and human volunteers.' Planta Med., 64(4): 353-356. DOI: 10.1055/s-2006-957450.", font_size=8.5, space_after=3.0)
         self.append_bullet(ctf2, "8. Aggarwal, B. B., et al. (2006):", "'Curcumin: the Indian solid gold.' Adv. Exp. Med. Biol., 595: 1-75. DOI: 10.1007/978-0-387-46401-5_1.", font_size=8.5, space_after=3.0)
         self.append_bullet(ctf2, "9. Benavides, G. A., et al. (2007):", "'Hydrogen sulfide mediates the vasoactivity of garlic.' PNAS, 104(46): 17977-17982. DOI: 10.1073/pnas.0705710104.", font_size=8.5, space_after=3.0)
@@ -1418,7 +1575,7 @@ def main():
     pptx_path = samples_dir / "phytochemicals_25slides_master_deck.pptx"
 
     print("=================================================================")
-    print("PHYTOCHEMICALS 25-SLIDE MASTER KEYNOTE DECK GENERATOR")
+    print("PHYTOCHEMICALS 25-SLIDE KEYNOTE PRESENTATION ENGINE")
     print("=================================================================")
     builder = Phytochemicals25DeckBuilder()
     builder.build_all(pptx_path)
