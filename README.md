@@ -249,17 +249,12 @@ Inspect the raw generated deliverables in the repository:
 - 🖼️ **[Heart Infographic Gallery (12 Slides)](samples/gallery_heart_infographic/)** — Rendered 1080p PNG previews.
 - 🌐 **[interactive_heart_infographic.html](outputs/heart_infographic/interactive_heart_infographic.html)** — Standalone responsive interactive vector SVG/HTML medical infographic.
 
-### 4. Web-Curated Botanical & Nutrition Workshop Presentation (18 Slides)
-- 🌿 **[phytochemicals_web_template_deck.pptx](samples/phytochemicals_web_template_deck.pptx)** — 18-Slide presentation built with the web-curated Botanical & Nutrition Workshop design system (Forest Moss `#123524`, Botanical Sage `#3E7B54`, Warm Saffron `#D97706`, Calico Cream Canvas `#FAF8F5`). Includes high-res photographic plates, biochemical pathways, bioavailability surges, and pharmacology matrix.
-- 📄 **[phytochemicals_web_template_deck.pdf](samples/phytochemicals_web_template_deck.pdf)** — Crisp 18-page 300 DPI vector PDF exported via Microsoft PowerPoint COM.
-- 🖼️ **[Web Botanical High-Res Gallery (18 Slides)](samples/gallery_web_botanical/)** — Rendered 1080p PNG previews.
-- ⚙️ **[web_template_engine.py](academic-presentation-engine/templates/web_template_engine.py)** — Web template curator & slide compiler.
-
-### 5. Standalone Android APK Package (Option A: 100% Offline & Free)
-- 📱 **[academic_medical_suite.apk](samples/academic_medical_suite.apk)** (5.46 MB) — Full standalone Android application.
-  - **Zero API Dependency:** 100% offline; requires zero network connection, zero subscriptions, and zero external API keys.
-  - **Interactive Modules:** Interactive Heart Organ anatomy (touch-responsive chambers, live cardiac pulse, live ECG graph, systemic organ perfusion), Botanical Phytochemicals lecture, Haryana GK 65-slide screening curriculum, and the GSAP Procedural Background Studio.
-  - **Android Studio Project:** Complete source code available under [`android-app/`](android-app/).
+### 4. 25-Slide Master Keynote: Biological Functionality of Phytochemicals
+- 🌿 **[phytochemicals_25slides_master_deck.pptx](samples/phytochemicals_25slides_master_deck.pptx)** — Authoritative 25-Slide presentation built with web-curated Botanical Clinical Luxury template design (Luminous Slate `#F8FAFC`, Deep Botanical Emerald Navy `#081C1B`, Champagne Gold `#D4A017`, and Chlorophyll Mint `#10B981`).
+- 📄 **[phytochemicals_25slides_master_deck.pdf](samples/phytochemicals_25slides_master_deck.pdf)** — Crisp 25-page 300 DPI vector PDF exported via Microsoft PowerPoint COM.
+- 🖼️ **[25-Slide Master Gallery](samples/gallery_phytochemicals_25/)** — Rendered 1080p PNG previews of all 25 slides.
+- 🌐 **[interactive_25slides_viewer.html](outputs/phytochemicals_25/interactive_25slides_viewer.html)** — Interactive browser slide deck explorer.
+- ⚙️ **[generate_phytochemicals_25slides_deck.py](academic-presentation-engine/generate_phytochemicals_25slides_deck.py)** — Python slide generator script.
 
 ---
 

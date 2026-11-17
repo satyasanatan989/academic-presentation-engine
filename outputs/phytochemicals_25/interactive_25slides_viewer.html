@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phytochemicals Master Deck - 25 Slides Keynote Explorer</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans p-4 md:p-6 min-h-screen flex flex-col justify-between">
+
+  <!-- Header -->
+  <header class="max-w-6xl mx-auto w-full mb-4 bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4">
+    <div>
+      <div class="inline-flex items-center gap-2 px-3 py-1 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold rounded-full uppercase tracking-wider mb-1">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+        Botanical Clinical Luxury • 25-Slide Keynote
+      </div>
+      <h1 class="text-xl md:text-2xl font-bold tracking-tight text-white">
+        Biological Functionality of Cruciferous Vegetables, Fruits, Herbs & Spices
+      </h1>
+      <p class="text-xs text-slate-400 mt-0.5">
+        Harvard Medical & Nature Reviews Standard &bull; 100% Times New Roman &bull; High-Contrast Native Vector DrawingML Cards
+      </p>
+    </div>
+
+    <!-- Slide Index Controller -->
+    <div class="flex items-center gap-2 bg-slate-950 px-3 py-2 rounded-xl border border-slate-800">
+      <button onclick="prevSlide()" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-bold transition-all disabled:opacity-30" id="btn-prev">
+        &#8592; Prev
+      </button>
+      <span class="text-xs font-bold px-2 text-emerald-400" id="slide-indicator">01 / 25</span>
+      <button onclick="nextSlide()" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-bold transition-all disabled:opacity-30" id="btn-next">
+        Next &#8594;
+      </button>
+    </div>
+  </header>
+
+  <!-- Slide Display Viewport -->
+  <main class="max-w-6xl mx-auto w-full flex-1 flex flex-col items-center">
+    <div class="w-full bg-slate-900 rounded-2xl p-2 md:p-3 border border-slate-800 shadow-2xl relative">
+      <div class="aspect-video w-full rounded-xl overflow-hidden bg-slate-950 flex items-center justify-center border border-slate-800/80">
+        <img id="active-slide-img" src="gallery_phytochemicals_25/Slide_01.PNG" alt="Active Presentation Slide" class="w-full h-full object-contain">
+      </div>
+
+      <!-- Slide Meta Card -->
+      <div class="mt-3 p-3 bg-slate-950 rounded-xl border border-slate-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+        <div>
+          <span class="text-emerald-400 font-bold uppercase tracking-wider" id="slide-topic">MODULE 01 &bull; EXECUTIVE KEYNOTE</span>
+          <h3 class="text-sm font-bold text-white mt-0.5" id="slide-title">4-Pillar Core Botanical Framework</h3>
+        </div>
+        <div class="text-slate-400 max-w-lg text-right" id="slide-takeaway">
+          Enzymatic cascades, cellular translocation, epigenetic signatures, and clinical bioavailability surges.
+        </div>
+      </div>
+    </div>
+
+    <!-- Thumbnail Strip -->
+    <div class="max-w-6xl w-full mt-4 flex items-center gap-2 overflow-x-auto pb-2 scrollbar-thin">
+      <div id="thumb-container" class="flex gap-2"></div>
+    </div>
+  </main>
+
+  <footer class="max-w-6xl mx-auto w-full mt-4 pt-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
+    <span>Academic Research Presentation Engine (ARPE)</span>
+    <span>Exported to <strong>PPTX</strong> &amp; <strong>Vector PDF</strong> in <code class="text-slate-300">samples/</code></span>
+  </footer>
+
+  <script>
+    const slidesData = [
+      { id: 1, title: "Cover & 4-Pillar Botanical Framework", topic: "MODULE 01 • EXECUTIVE KEYNOTE", takeaway: "Complete overview of Brassicaceae, Tropical, Temperate, and Culinary spices." },
+      { id: 2, title: "Phytochemical Structural Taxonomy", topic: "MODULE 02 • TAXONOMY", takeaway: "5 Chemical classes: Glucosinolates, Polyphenols, Carotenoids, Organosulfur, Terpenoids." },
+      { id: 3, title: "Glucosinolate-Myrosinase Enzyme Cascade", topic: "MODULE 03 • BRASSICACEAE", takeaway: "Hydrolysis to active Sulforaphane vs. inactive ESP nitriles + Mustard seed hack." },
+      { id: 4, title: "Keap1-Nrf2-ARE Cellular Mechanism", topic: "MODULE 04 • DETOXIFICATION", takeaway: "C151 sensor cysteine modification, nuclear translocation, and Phase II induction." },
+      { id: 5, title: "Epigenetics: HDAC & DNMT Inhibition", topic: "MODULE 05 • EPIGENETICS", takeaway: "Pan-HDAC inhibition, histone H3/H4 hyperacetylation, and p21/Waf1 re-expression." },
+      { id: 6, title: "I3C & DIM Estrogen Hydroxylation Shift", topic: "MODULE 06 • HORMONE METABOLISM", takeaway: "Gastric acid condensation of I3C to DIM; elevates protective 2:16-OHE1 ratio." },
+      { id: 7, title: "Tropical Fruits & Proteolytic Enzymes", topic: "MODULE 07 • TROPICAL BIOACTIVES", takeaway: "Bromelain, Papain, Mangiferin, and Passion fruit piceatannol properties." },
+      { id: 8, title: "Bromelain & Papain Anti-Inflammatory Flow", topic: "MODULE 08 • PROTEASE FLOWCHART", takeaway: "Cleavage of fibrin deposits, selective PGE2/COX-2 suppression, clinical dosages." },
+      { id: 9, title: "Mangiferin & Glycemic Homeostasis", topic: "MODULE 09 • METABOLISM", takeaway: "AMPK Thr172 phosphorylation, GLUT4 translocation, hepatic gluconeogenesis block." },
+      { id: 10, title: "Subtropical Citrus Flavonoids & PMFs", topic: "MODULE 10 • CITRUS BIOACTIVES", takeaway: "Nobiletin, Tangeretin, Hesperidin, and Naringenin pharmacodynamics." },
+      { id: 11, title: "eNOS Activation & Vascular Nitric Oxide", topic: "MODULE 11 • ENDOTHELIUM", takeaway: "Akt-mediated Ser1177 phosphorylation of eNOS, cGMP elevation, vasodilation." },
+      { id: 12, title: "Punicalagin to Urolithin A Mitophagy", topic: "MODULE 12 • MICROBIOME-MITOCHONDRIA", takeaway: "Gut bacterial conversion of ellagitannins to Urolithin A; PINK1-Parkin mitophagy." },
+      { id: 13, title: "Temperate Fruits: Rosaceae & Vitaceae", topic: "MODULE 13 • TEMPERATE SPECIES", takeaway: "Phloridzin SGLT1/2 inhibition, Resveratrol SIRT1 activation, Tart cherry anthocyanins." },
+      { id: 14, title: "Quercetin: Mast Cell Stabilization", topic: "MODULE 14 • ALLERGY & IMMUNITY", takeaway: "Inhibition of calcium influx, histamine arrest, leukotriene and IL-6 shutdown." },
+      { id: 15, title: "Berry Anthocyanins & Blood-Brain Barrier", topic: "MODULE 15 • NEUROPROTECTION", takeaway: "Crossing BBB via GLUT1/OATP; CREB-BDNF upregulation and microglial quenching." },
+      { id: 16, title: "Zingiberaceae Pharmacology: Curcuminoids", topic: "MODULE 16 • CULINARY SPICES", takeaway: "Curcumin triad chemical structures, direct IKK/NF-kappaB p65 shutdown." },
+      { id: 17, title: "Curcumin Bioavailability & Piperine Surge", topic: "MODULE 17 • PHARMACOKINETICS", takeaway: "Piperine inhibits UGT glucuronidation and P-gp, generating a +2000% AUC surge." },
+      { id: 18, title: "Gingerols: Prokinetics & 5-HT3 Blockade", topic: "MODULE 18 • GI NEUROBIOLOGY", takeaway: "Serotonin 5-HT3 antagonism in CTZ, acceleration of gastric emptying by 35%." },
+      { id: 19, title: "Allium Organosulfur & Allicin Synthesis", topic: "MODULE 19 • ALLIUM CASCADE", takeaway: "Alliinase cleavage, allicin decomposition to polysulfides, H2S gaseous signaling." },
+      { id: 20, title: "Lamiaceae Herbs: Rosmarinic & Carnosic", topic: "MODULE 20 • MINT FAMILY", takeaway: "Rosmarinic acid lipid shield; carnosic acid pro-electrophilic antioxidant activation." },
+      { id: 21, title: "Food Matrix Synergies (4-Card Matrix)", topic: "MODULE 21 • SYNERGIES", takeaway: "Lipid micellization, thermal enzyme rescue, green tea citrus redox stabilization." },
+      { id: 22, title: "Evidence-Based Human Clinical Dosage", topic: "MODULE 22 • CLINICAL DOSAGE", takeaway: "Standardized clinical human dosages for SFN, Curcumin, Urolithin A, and Garlic." },
+      { id: 23, title: "Culinary Pharmacokinetics & Cooking", topic: "MODULE 23 • CULINARY RULES", takeaway: "Steaming vs boiling kinetics, tomato oil trans-cis isomerization, resting rules." },
+      { id: 24, title: "Multi-Target Molecular Mechanism Matrix", topic: "MODULE 24 • SYSTEMS BIOLOGY", takeaway: "Cross-system synthesis: Nrf2, NF-kappaB, Epigenetics, AMPK, eNOS, Mitophagy." },
+      { id: 25, title: "Authoritative Academic Bibliography", topic: "MODULE 25 • SCIENTIFIC LEDGER", takeaway: "12 primary peer-reviewed citations across Nature, PNAS, and clinical trials." }
+    ];
+
+    let currentSlide = 1;
+
+    function renderSlide() {
+      const idx = currentSlide;
+      const pad = idx < 10 ? `0${idx}` : `${idx}`;
+      document.getElementById('active-slide-img').src = `gallery_phytochemicals_25/Slide_${pad}.PNG`;
+      document.getElementById('slide-indicator').innerText = `${pad} / 25`;
+
+      const data = slidesData[idx - 1];
+      document.getElementById('slide-topic').innerText = data.topic;
+      document.getElementById('slide-title').innerText = data.title;
+      document.getElementById('slide-takeaway').innerText = data.takeaway;
+
+      document.getElementById('btn-prev').disabled = (currentSlide === 1);
+      document.getElementById('btn-next').disabled = (currentSlide === 25);
+
+      // Highlight thumbnail
+      document.querySelectorAll('.thumb-item').forEach((t, i) => {
+        if (i === currentSlide - 1) {
+          t.classList.add('ring-2', 'ring-emerald-400', 'opacity-100');
+          t.classList.remove('opacity-50');
+          t.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        } else {
+          t.classList.remove('ring-2', 'ring-emerald-400', 'opacity-100');
+          t.classList.add('opacity-50');
+        }
+      });
+    }
+
+    function prevSlide() {
+      if (currentSlide > 1) {
+        currentSlide--;
+        renderSlide();
+      }
+    }
+
+    function nextSlide() {
+      if (currentSlide < 25) {
+        currentSlide++;
+        renderSlide();
+      }
+    }
+
+    function initThumbs() {
+      const container = document.getElementById('thumb-container');
+      slidesData.forEach((s, idx) => {
+        const pad = (idx + 1) < 10 ? `0${idx + 1}` : `${idx + 1}`;
+        const btn = document.createElement('button');
+        btn.className = 'thumb-item flex-shrink-0 w-24 aspect-video rounded-lg overflow-hidden border border-slate-800 opacity-50 hover:opacity-100 transition-all';
+        btn.onclick = () => { currentSlide = idx + 1; renderSlide(); };
+        btn.innerHTML = `<img src="gallery_phytochemicals_25/Slide_${pad}.PNG" alt="Thumb ${pad}" class="w-full h-full object-cover">`;
+        container.appendChild(btn);
+      });
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+      if (e.key === 'ArrowLeft') prevSlide();
+    });
+
+    initThumbs();
+    renderSlide();
+  </script>
+</body>
+</html>
