@@ -1,6 +1,9 @@
 <resources>
     <color name="oxford_navy">#0F1D36</color>
     <color name="champagne_gold">#D4A017</color>
-    <color name="slate_dark">#0B1528</color>
+    <color name="slate_dark">#080C16</color>
     <color name="white">#FFFFFF</color>
+    <color name="icon_bg">#080C16</color>
+    <color name="primary_indigo">#6366F1</color>
+    <color name="gold_accent">#F59E0B</color>
 </resources>
