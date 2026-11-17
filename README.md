@@ -249,6 +249,12 @@ Inspect the raw generated deliverables in the repository:
 - 🖼️ **[Heart Infographic Gallery (12 Slides)](samples/gallery_heart_infographic/)** — Rendered 1080p PNG previews.
 - 🌐 **[interactive_heart_infographic.html](outputs/heart_infographic/interactive_heart_infographic.html)** — Standalone responsive interactive vector SVG/HTML medical infographic.
 
+### 4. Web-Curated Botanical & Nutrition Workshop Presentation (18 Slides)
+- 🌿 **[phytochemicals_web_template_deck.pptx](samples/phytochemicals_web_template_deck.pptx)** — 18-Slide presentation built with the web-curated Botanical & Nutrition Workshop design system (Forest Moss `#123524`, Botanical Sage `#3E7B54`, Warm Saffron `#D97706`, Calico Cream Canvas `#FAF8F5`). Includes high-res photographic plates, biochemical pathways, bioavailability surges, and pharmacology matrix.
+- 📄 **[phytochemicals_web_template_deck.pdf](samples/phytochemicals_web_template_deck.pdf)** — Crisp 18-page 300 DPI vector PDF exported via Microsoft PowerPoint COM.
+- 🖼️ **[Web Botanical High-Res Gallery (18 Slides)](samples/gallery_web_botanical/)** — Rendered 1080p PNG previews.
+- ⚙️ **[web_template_engine.py](academic-presentation-engine/templates/web_template_engine.py)** — Web template curator & slide compiler.
+
 ---
 
 ## ⚡ Key Capabilities
